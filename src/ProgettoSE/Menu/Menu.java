@@ -1,4 +1,6 @@
-package ProgettoSE;
+package ProgettoSE.Menu;
+
+import ProgettoSE.Piatto;
 
 import java.util.ArrayList;
 

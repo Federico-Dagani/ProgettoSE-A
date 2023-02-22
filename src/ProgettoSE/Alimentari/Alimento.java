@@ -1,4 +1,4 @@
-package ProgettoSE;
+package ProgettoSE.Alimentari;
 
 abstract public class Alimento {
     private String nome;

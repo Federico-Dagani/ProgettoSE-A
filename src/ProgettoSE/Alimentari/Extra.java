@@ -1,4 +1,6 @@
-package ProgettoSE;
+package ProgettoSE.Alimentari;
+
+import ProgettoSE.Alimentari.Alimento;
 
 public class Extra extends Alimento {
     private final float cons_procapite;

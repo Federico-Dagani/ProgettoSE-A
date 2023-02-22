@@ -1,6 +1,8 @@
-package ProgettoSE;
+package ProgettoSE.Alimentari;
 
-public class Bevanda extends Alimento{
+import ProgettoSE.Alimentari.Alimento;
+
+public class Bevanda extends Alimento {
     private final float cons_procapite;
 
     public Bevanda(String nome, float qta, String misura, float cons_procapite) {

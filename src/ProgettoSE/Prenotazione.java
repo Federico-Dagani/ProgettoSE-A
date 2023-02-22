@@ -1,5 +1,9 @@
 package ProgettoSE;
 
+import ProgettoSE.Alimentari.Bevanda;
+import ProgettoSE.Alimentari.Extra;
+import ProgettoSE.Attori.Cliente;
+
 import java.util.Date;
 import java.util.HashMap;
 

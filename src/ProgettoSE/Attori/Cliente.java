@@ -1,4 +1,4 @@
-package ProgettoSE;
+package ProgettoSE.Attori;
 
 public class Cliente extends Persona {
 
