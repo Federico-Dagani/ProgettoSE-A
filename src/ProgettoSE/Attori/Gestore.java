@@ -3,9 +3,11 @@ package ProgettoSE.Attori;
 import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Extra;
 import ProgettoSE.Alimentari.Ingrediente;
+import ProgettoSE.Costanti;
 import ProgettoSE.Magazzino;
 import ProgettoSE.Prenotazione;
 import ProgettoSE.Ristorante;
+import ProgettoSE.ServiziFileXML.LetturaFileXML;
 
 import java.util.ArrayList;
 
@@ -15,10 +17,13 @@ public class Gestore extends Persona {
         super(nome);
     }
 
+    Ristorante ristorante;
+/*
     public void inizializza() {
         //fare lettura da csv
+
         int n_posti = 100;
-        float lavoro_persona = 0.5f;
+        int lavoro_persona = 0;
         ArrayList prenotazioni = new ArrayList<Prenotazione>();
         Ristorante ristorante = new Ristorante(n_posti, lavoro_persona, prenotazioni);
         Magazzino magazzino = new Magazzino();
@@ -37,8 +42,12 @@ public class Gestore extends Persona {
             //creare prenotazion
         }
 
-    }
+    }*/
 
     //METODI
+    public void inizializzaRistorante() {
+        LetturaFileXML letturaFileXML = new LetturaFileXML();
+        ristorante = letturaFileXML.leggiRistorante(Costanti.FILE_RISTORANTE);
+    }
 
 }

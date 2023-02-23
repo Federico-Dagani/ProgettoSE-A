@@ -1,16 +1,21 @@
 package ProgettoSE;
 
+import ProgettoSE.Attori.AddettoPrenotazione;
+import ProgettoSE.Attori.Magazziniere;
+
 import java.util.ArrayList;
 
 public class Ristorante {
     private int n_posti;
-    private float lavoro_persona;
-    private ArrayList<Prenotazione> prenotazioni;
+    private int lavoro_persona;
+    private AddettoPrenotazione addettoPrenotazione;
+    private Magazziniere magazziniere;
 
-    public Ristorante(int n_posti, float lavoro_persona, ArrayList<Prenotazione> prenotazioni) {
+    public Ristorante(int n_posti, int lavoro_persona, AddettoPrenotazione addettoPrenotazione, Magazziniere magazziniere) {
         this.n_posti = n_posti;
         this.lavoro_persona = lavoro_persona;
-        this.prenotazioni = prenotazioni;
+        this.addettoPrenotazione = addettoPrenotazione;
+        this.magazziniere = magazziniere;
     }
 
     public int getN_posti() {
@@ -21,26 +26,27 @@ public class Ristorante {
         this.n_posti = n_posti;
     }
 
-    public float getLavoro_persona() {
+    public int getLavoro_persona() {
         return lavoro_persona;
     }
 
-    public void setLavoro_persona(float lavoro_persona) {
+    public void setLavoro_persona(int lavoro_persona) {
         this.lavoro_persona = lavoro_persona;
     }
 
-    public ArrayList<Prenotazione> getPrenotazioni() {
-        return prenotazioni;
+    public AddettoPrenotazione getAddettoPrenotazione() {
+        return addettoPrenotazione;
     }
 
-    public void setPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
-        this.prenotazioni = prenotazioni;
+    public void setAddettoPrenotazione(AddettoPrenotazione addettoPrenotazione) {
+        this.addettoPrenotazione = addettoPrenotazione;
     }
 
-    public void addPrenotazione(Prenotazione prenotazione) {
-        this.prenotazioni.add(prenotazione);
+    public Magazziniere getMagazziniere() {
+        return magazziniere;
     }
 
-
-
+    public void setMagazziniere(Magazziniere magazziniere) {
+        this.magazziniere = magazziniere;
+    }
 }

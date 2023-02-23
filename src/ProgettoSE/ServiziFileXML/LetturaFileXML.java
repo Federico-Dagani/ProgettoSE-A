@@ -2,33 +2,29 @@ package ProgettoSE.ServiziFileXML;
 
 import ProgettoSE.Alimentari.*;
 import ProgettoSE.Attori.*;
+import ProgettoSE.Magazzino;
 import ProgettoSE.Menu.*;
+import ProgettoSE.Prenotazione;
+import ProgettoSE.Ristorante;
+import ProgettoSE.Costanti;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class LetturaFileXML {
 
     /**
-     * <h3>Metodo per la lettura del file (contenente le città da leggere) che produce un grafo che contiene un Set di Luoghi e una Map indicante le connessioni che associa ad ogni Id un Set di Id </h3>
-     * @param filename ovvero il nome del file
-     * @return Grafo che identifica l'intera mappa
+     * <h3>Metodo per la lettura del file
+     * * @param filename ovvero il nome del file
+     * @return ristorante
      */
-    public static  leggiMappa(String filename){
+    public Ristorante leggiRistorante(String filename){
         XMLInputFactory xmlif;
         XMLStreamReader xmlreader = null;
-        //creo un Set di luoghi, e un Map che rappresenta le connessioni, che avrà come key l'id del luogo e come value le sue connessioni, ovvero un set di id degli altri luoghi
-        Set<Luogo> lista_luoghi = new HashSet<>();
-        Map<Integer, Set<Integer>> connessioni = new HashMap<>();
-        Set<Integer> connessioni_luogo_singolo = new HashSet<>();
-
 
         //try catch per gestire eventuali eccezioni durante l'inizializzazione
         try{
@@ -41,9 +37,10 @@ public class LetturaFileXML {
 
         //try catch per gestire errori durante la lettura dei luoghi
         try {
-            //creo il nuovo_luogo e la posizione
-            Luogo nuovo_luogo = new Luogo();
-            Posizione pos = new Posizione();
+
+            int n_posti = 0;
+            int lavoro_persone = 0;
+
             //esegue finchè ha eventi ha disposizione
             while (xmlreader.hasNext()){
 
@@ -61,29 +58,62 @@ public class LetturaFileXML {
                         switch (xmlreader.getLocalName()){
 
                             //lettura tag <city ...>
-                            case Costanti.CITY:
-                                //quando entro nel tag city vuol dire che ho una nuova città da aggiungere, quindi resetto i parametri del luogo, pos
-                                nuovo_luogo = new Luogo();
-                                pos = new Posizione();
-                                //azzero il set delle connessioni del nuovo luogo singolo
-                                connessioni_luogo_singolo = new HashSet<>();
-                                //itero sul numero di attributi presenti nel tag (anche se sono sempre 5)
+                            case Costanti.RISTORANTE:
+                                //creo gli attributi del ristorante
+                                int n_posti = 0;
+                                int lavoro_persone = 0;
+
+                                ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
+                                ArrayList<Menu> menu = new ArrayList<>();
+                                AddettoPrenotazione addetto_prenotazione = new AddettoPrenotazione("Addetto prenotazione", prenotazioni, menu);
+
+                                ArrayList<Alimento> bevande = new ArrayList<>();
+                                ArrayList<Alimento> extras = new ArrayList<>();
+                                ArrayList<Alimento> ingredienti = new ArrayList<>();
+                                Magazzino magazzino = new Magazzino(bevande, extras, ingredienti);
+                                ArrayList<Alimento> lista_spesa = new ArrayList<>();
+                                Magazziniere magazziniere = new Magazziniere("Addetto magazzino", magazzino, lista_spesa);
+
+                                //itero sul numero di attributi presenti nel tag ristorante e li leggo
                                 for (int i=0; i<xmlreader.getAttributeCount(); i++){
                                     //switcho sui tipi di attributi
                                     switch (xmlreader.getAttributeLocalName(i)){
                                         //attributo id
-                                        case Costanti.ID:
-                                            //aggiungo l'id, visto che ritorna una stringa dal metodom faccio il cast
-                                            nuovo_luogo.setId(Integer.parseInt(xmlreader.getAttributeValue(i)));
+                                        case Costanti.N_POSTI:
+                                            //leggo n_posti , visto che ritorna una stringa dal metodo faccio il cast
+                                            n_posti = Integer.parseInt(xmlreader.getAttributeValue(i));
                                             break;
-                                        //attributo name
-                                        case Costanti.NAME:
-                                            //aggiungo il nome
-                                            nuovo_luogo.setNome(xmlreader.getAttributeValue(i));
+                                        //attributo lavoro_persone
+                                        case Costanti.LAVORO_PERSONE:
+                                            //leggo lavoro_persona , visto che ritorna una stringa dal metodo faccio il cast
+                                            lavoro_persone = Integer.parseInt(xmlreader.getAttributeValue(i));
                                             break;
-                                        //attributo x
-                                        case Costanti.X:
-                                            pos.setX(Integer.parseInt(xmlreader.getAttributeValue(i)));
+                                        //attributo magazzino
+                                        case Costanti.MAGAZZINO:
+                                            for (int j=0; j<xmlreader.getAttributeCount(); j++){
+                                                switch (xmlreader.getAttributeLocalName(j)){
+                                                    //attributo bevande
+                                                    case Costanti.BEVANDE:
+                                                        for (int k=0; k<xmlreader.getAttributeCount(); k++){
+                                                            switch (xmlreader.getAttributeLocalName(k)){
+                                                                Bevanda bevanda = new Bevanda("f", 0, "gfs", 0);
+                                                                //attributo nome
+                                                                case Costanti.NOME:
+                                                                    bevanda.setNome(xmlreader.getAttributeValue(k));
+                                                                    break;
+                                                                //attributo cognome
+                                                                case Costanti.COGNOME:
+                                                                    magazziniere.setCognome(xmlreader.getAttributeValue(k));
+                                                                    break;
+                                                            }
+                                                        }
+                                                        break;
+                                                    //attributo cognome
+                                                    case Costanti.COGNOME:
+                                                        magazziniere.setCognome(xmlreader.getAttributeValue(j));
+                                                        break;
+                                                }
+                                            }
                                             break;
                                         //atributo y
                                         case Costanti.Y:
@@ -101,11 +131,6 @@ public class LetturaFileXML {
                                 lista_luoghi.add(nuovo_luogo);
                                 break;
 
-                            //lettura tag <link ...>
-                            case Costanti.LINK:
-                                //aggiungo l'id al set relativo alle connessioni di un singolo luogo
-                                connessioni_luogo_singolo.add(Integer.parseInt(xmlreader.getAttributeValue(0)));
-                                break;
                         }
                         break;
 
@@ -123,8 +148,8 @@ public class LetturaFileXML {
         } catch (XMLStreamException e) {
             System.out.printf(Costanti.ERRORE_LETTURA_FILE, filename, e.getMessage());
         }
-        //creo il grafo da ritornare
-        Grafo grafo = new Grafo(lista_luoghi, connessioni);
-        return grafo;
+        //creo il ristorante da ritornare
+        Ristorante ristorante = new Ristorante(n_posti, lavoro_persona, addetto_prenotazioni, magazziniere);
+        return ristorante;
     }
 }
