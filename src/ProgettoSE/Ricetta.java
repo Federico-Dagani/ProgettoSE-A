@@ -16,10 +16,6 @@ public class    Ricetta {
         this.lavoro_porzione = lavoro_porzione;
     }
 
-    public Ricetta() {
-
-    }
-
     public ArrayList<Ingrediente> getIngredienti() {
         return ingredienti;
     }

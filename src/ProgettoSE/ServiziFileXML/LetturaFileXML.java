@@ -2,7 +2,10 @@ package ProgettoSE.ServiziFileXML;
 
 import ProgettoSE.*;
 import ProgettoSE.Alimentari.*;
+import ProgettoSE.Attori.AddettoPrenotazione;
+import ProgettoSE.Attori.Magazziniere;
 import ProgettoSE.Menu.Menu;
+import ProgettoSE.Menu.MenuTematico;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -24,14 +27,26 @@ public class LetturaFileXML {
         XMLInputFactory xmlif;
         XMLStreamReader xmlreader = null;
 
-        Ristorante ristorante = new Ristorante();
-        Magazzino magazzino = new Magazzino();
+        //attributi magazziniere
         ArrayList<Bevanda> bevande = new ArrayList<Bevanda>();
         ArrayList<Ingrediente> ingredienti = new ArrayList<Ingrediente>();
         ArrayList<Extra> extras = new ArrayList<Extra>();
-        Menu menu = new Menu();
-        Ricetta ricetta = new Ricetta();
-        Piatto piatto = new Piatto();
+        Magazzino magazzino = new Magazzino(bevande, extras, ingredienti);
+        ArrayList<Alimento> lista_spesa = new ArrayList<>();
+
+        //attributi addetto prenotazione
+        ArrayList<Prenotabile> menu = new ArrayList<Prenotabile>();
+        ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
+
+        //attributi ristorante e creazione oggetto ristorante
+        AddettoPrenotazione addetto_prenotazione = new AddettoPrenotazione("addetto",prenotazioni, menu);
+        Magazziniere magazziniere = new Magazziniere("magazziniere", magazzino, lista_spesa);
+        Ristorante ristorante = new Ristorante(0, 0, addetto_prenotazione, magazziniere);
+
+        Menu menu_carta = new Menu(new ArrayList<Piatto>());
+        MenuTematico menu_tematico = new MenuTematico(new ArrayList<Piatto>(), 0, new ArrayList<LocalDate>());
+        Ricetta ricetta = new Ricetta(new ArrayList<Ingrediente>(), 0, 0);
+        Piatto piatto = new Piatto(null, new ArrayList<LocalDate>(), 0, ricetta);
 
         //try catch per gestire eventuali eccezioni durante l'inizializzazione
         try{
@@ -191,7 +206,7 @@ public class LetturaFileXML {
 
                             case Costanti.PIATTO:
 
-                                piatto = new Piatto();
+                                piatto = new Piatto(null, new ArrayList<LocalDate>(), 0, ricetta);
                                 String nome_piatto = null;
                                 ArrayList<LocalDate> disponibilita_piatto = new ArrayList<LocalDate>();
 
@@ -203,6 +218,18 @@ public class LetturaFileXML {
                                             nome_piatto = xmlreader.getAttributeValue(i);
                                             piatto.setNome(nome_piatto);
                                             break;
+                                    }
+                                }
+
+                                break;
+
+                            case Costanti.DISPONIBILITA:
+
+                                disponibilita_piatto = new ArrayList<LocalDate>();
+
+                                for (int i = 0; i < xmlreader.getAttributeCount(); i++){
+
+                                    switch (xmlreader.getAttributeLocalName(i)){
 
                                         case Costanti.INIZIO:
                                             disponibilita_piatto.add(LocalDate.parse(xmlreader.getAttributeValue(i)));
@@ -212,15 +239,15 @@ public class LetturaFileXML {
                                             disponibilita_piatto.add(LocalDate.parse(xmlreader.getAttributeValue(i)));
                                             piatto.setDisponibilità(disponibilita_piatto);
                                             break;
+
                                     }
                                 }
-
                                 break;
 
                             case Costanti.RICETTA:
 
                                 ingredienti = new ArrayList<Ingrediente>();
-                                ricetta = new Ricetta();
+                                ricetta = new Ricetta(new ArrayList<Ingrediente>(), 0, 0);
 
 
                                 int n_porzioni = 0;
@@ -236,6 +263,63 @@ public class LetturaFileXML {
 
                                         case Costanti.LAVORO_PORZIONE:
                                             ricetta.setLavoro_porzione(Float.parseFloat(xmlreader.getAttributeValue(i)));
+                                            break;
+                                    }
+                                }
+                                break;
+
+                            case Costanti.DISPONIBILITA_MENU:
+
+                                ArrayList<LocalDate> disponibilita_menu = new ArrayList<LocalDate>();
+
+                                for (int i = 0; i < xmlreader.getAttributeCount(); i++){
+
+                                    switch (xmlreader.getAttributeLocalName(i)){
+
+                                        case Costanti.INIZIO:
+                                            disponibilita_menu.add(LocalDate.parse(xmlreader.getAttributeValue(i)));
+                                            break;
+
+                                        case Costanti.FINE:
+                                            disponibilita_menu.add(LocalDate.parse(xmlreader.getAttributeValue(i)));
+                                            menu_tematico.aggiungiDisponibilita(disponibilita_menu);
+                                            break;
+
+                                    }
+                                }
+                                break;
+
+                            case Costanti.PORTATA:
+
+                                for (int i = 0; i < xmlreader.getAttributeCount(); i++){
+
+                                    switch (xmlreader.getAttributeLocalName(i)){
+
+                                        case Costanti.NOME:
+                                            String nome_portata = xmlreader.getAttributeValue(i);
+                                            Piatto portata = menu_carta.getPiatto(nome_portata);
+                                            menu_tematico.aggiungiPiatto(portata);
+                                            break;
+                                    }
+                                }
+                                break;
+
+                            case Costanti.MENU_TEMATICO:
+
+                                menu_tematico = new MenuTematico(new ArrayList<Piatto>(), 0, new ArrayList<LocalDate>());
+
+                                for (int i = 0; i < xmlreader.getAttributeCount(); i++){
+
+                                    switch (xmlreader.getAttributeLocalName(i)){
+
+                                        case Costanti.NOME:
+                                            String nome_menu = xmlreader.getAttributeValue(i);
+                                            menu_tematico.setNome(nome_menu);
+                                            break;
+
+                                        case Costanti.LAVORO_MENU:
+                                            float lavoro_menu = Float.parseFloat(xmlreader.getAttributeValue(i));
+                                            menu_tematico.setLavoro_menu(lavoro_menu);
                                             break;
                                     }
                                 }
@@ -259,15 +343,23 @@ public class LetturaFileXML {
                             case Costanti.PIATTO:
                                 piatto.setLavoro_piatto(ricetta.getLavoro_porzione());
                                 piatto.setRicetta(ricetta);
-                                menu.aggiungiPiatto(piatto);
+                                menu_carta.aggiungiPiatto(piatto);
+                                break;
+
+                            case Costanti.MENU_TEMATICO:
+                                addetto_prenotazione.aggiungiMenu_tematico(menu_tematico);
                                 break;
                         }
+                        break;
                 }
                 xmlreader.next();
             }
         }catch (XMLStreamException e) {
             System.out.printf(Costanti.ERRORE_LETTURA_FILE, filename, e.getMessage());
         }
+
+        addetto_prenotazione.aggiungiMenu_carta(menu_carta);
+
         return ristorante;
     }
 }

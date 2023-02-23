@@ -17,10 +17,6 @@ public class Piatto implements Prenotabile {
         this.ricetta = ricetta;
     }
 
-    public Piatto() {
-
-    }
-
     @Override
     public String getNome() {
         return nome;

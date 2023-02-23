@@ -35,4 +35,14 @@ public class AddettoPrenotazione extends Persona {
         this.menu = menu;
     }
 
+    public void aggiungiMenu_carta(Menu menu_carta){
+        for(Piatto piatto : menu_carta.getPiatti_menu()){
+            menu.add(piatto);
+        }
+    }
+
+    public void aggiungiMenu_tematico(MenuTematico menu_tematico){
+        menu.add(menu_tematico);
+    }
+
 }
