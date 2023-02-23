@@ -5,37 +5,43 @@ import java.util.ArrayList;
 
 public class Magazzino {
     //ATTRIBUTI
-    private ArrayList<Alimento> bevande = new ArrayList<>();
-    private ArrayList<Alimento> extras = new ArrayList<>() ;
-    private ArrayList<Alimento> ingredienti = new ArrayList<>();
+    private ArrayList<Bevanda> bevande = new ArrayList<>();
+    private ArrayList<Extra> extras = new ArrayList<>() ;
+    private ArrayList<Ingrediente> ingredienti = new ArrayList<>();
 
     //METODI
     //costruttore
-    public Magazzino(ArrayList<Alimento> bevande, ArrayList<Alimento> extras, ArrayList<Alimento> ingredienti) {
+    public  Magazzino(){ }
+
+    public Magazzino(ArrayList<Bevanda> bevande, ArrayList<Extra> extras, ArrayList<Ingrediente> ingredienti) {
         this.bevande = bevande;
         this.extras = extras;
         this.ingredienti = ingredienti;
     }
-    //getters
-    public ArrayList<Alimento> getBevande() {
+
+    //get e set
+
+    public ArrayList<Bevanda> getBevande() {
         return bevande;
     }
-    public ArrayList<Alimento> getExtras() {
-        return extras;
-    }
-    public ArrayList<Alimento> getIngredienti() {
-        return ingredienti;
-    }
-    //setters
-    public void setBevande(ArrayList<Alimento> bevande) {
+
+    public void setBevande(ArrayList<Bevanda> bevande) {
         this.bevande = bevande;
     }
-    public void setExtras(ArrayList<Alimento> extras) {
+
+    public ArrayList<Extra> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(ArrayList<Extra> extras) {
         this.extras = extras;
     }
-    public void setIngredienti(ArrayList<Alimento> ingredienti) {
-        this.ingredienti = ingredienti;
+
+    public ArrayList<Ingrediente> getIngredienti() {
+        return ingredienti;
     }
 
-
+    public void setIngredienti(ArrayList<Ingrediente> ingredienti) {
+        this.ingredienti = ingredienti;
+    }
 }

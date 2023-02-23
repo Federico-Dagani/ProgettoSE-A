@@ -11,6 +11,8 @@ public class Ristorante {
     private AddettoPrenotazione addettoPrenotazione;
     private Magazziniere magazziniere;
 
+    public Ristorante() { }
+
     public Ristorante(int n_posti, int lavoro_persona, AddettoPrenotazione addettoPrenotazione, Magazziniere magazziniere) {
         this.n_posti = n_posti;
         this.lavoro_persona = lavoro_persona;

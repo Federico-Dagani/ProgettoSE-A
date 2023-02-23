@@ -10,6 +10,9 @@ abstract public class Alimento {
         this.qta = qta;
         this.misura = misura;
     }
+
+    public Alimento() { }
+
     //getters
     public String getNome() {
         return nome;
