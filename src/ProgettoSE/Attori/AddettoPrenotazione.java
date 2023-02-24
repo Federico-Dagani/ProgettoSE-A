@@ -1,6 +1,8 @@
 package ProgettoSE.Attori;
 
-import ProgettoSE.Menu.Menu;
+import ProgettoSE.Menu.*;
+import ProgettoSE.Piatto;
+import ProgettoSE.Prenotabile;
 import ProgettoSE.Prenotazione;
 
 import java.util.ArrayList;
@@ -12,10 +14,10 @@ public class AddettoPrenotazione extends Persona {
         super(nome);
     }
     private ArrayList<Prenotazione> prenotazioni;
-    private ArrayList<Menu> menu;
+    private ArrayList<Prenotabile> menu;
     //METODI
     //costruttore
-    public AddettoPrenotazione(String nome, ArrayList<Prenotazione> prenotazioni, ArrayList<Menu> menu) {
+    public AddettoPrenotazione(String nome, ArrayList<Prenotazione> prenotazioni, ArrayList<Prenotabile> menu) {
         super(nome);
         this.prenotazioni = prenotazioni;
         this.menu = menu;
@@ -24,14 +26,14 @@ public class AddettoPrenotazione extends Persona {
     public ArrayList<Prenotazione> getPrenotazioni() {
         return prenotazioni;
     }
-    public ArrayList<Menu> getMenu() {
+    public ArrayList<Prenotabile> getMenu() {
         return menu;
     }
     //setters
     public void setPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
         this.prenotazioni = prenotazioni;
     }
-    public void setMenu(ArrayList<Menu> menu) {
+    public void setMenu(ArrayList<Prenotabile> menu) {
         this.menu = menu;
     }
 
