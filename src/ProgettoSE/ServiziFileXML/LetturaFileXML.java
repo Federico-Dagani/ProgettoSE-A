@@ -28,14 +28,14 @@ public class LetturaFileXML {
         XMLStreamReader xmlreader = null;
 
         //attributi magazziniere
-        ArrayList<Bevanda> bevande = new ArrayList<Bevanda>();
-        ArrayList<Ingrediente> ingredienti = new ArrayList<Ingrediente>();
-        ArrayList<Extra> extras = new ArrayList<Extra>();
+        ArrayList<Bevanda> bevande = new ArrayList<>();
+        ArrayList<Ingrediente> ingredienti = new ArrayList<>();
+        ArrayList<Extra> extras = new ArrayList<>();
         Magazzino magazzino = new Magazzino(bevande, extras, ingredienti);
         ArrayList<Alimento> lista_spesa = new ArrayList<>();
 
         //attributi addetto prenotazione
-        ArrayList<Prenotabile> menu = new ArrayList<Prenotabile>();
+        ArrayList<Prenotabile> menu = new ArrayList<>();
         ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
 
         //attributi ristorante e creazione oggetto ristorante
@@ -341,13 +341,17 @@ public class LetturaFileXML {
                                 break;
 
                             case Costanti.PIATTO:
-                                piatto.setLavoro_piatto(ricetta.getLavoro_porzione());
-                                piatto.setRicetta(ricetta);
-                                menu_carta.aggiungiPiatto(piatto);
+                                if(xmlreader.isEndElement()){
+                                    piatto.setLavoro_piatto(ricetta.getLavoro_porzione());
+                                    piatto.setRicetta(ricetta);
+                                    menu_carta.aggiungiPiatto(piatto);
+                                }
                                 break;
 
                             case Costanti.MENU_TEMATICO:
-                                addetto_prenotazione.aggiungiMenu_tematico(menu_tematico);
+                                if(xmlreader.isEndElement()){
+                                    addetto_prenotazione.aggiungiMenu_tematico(menu_tematico);
+                                }
                                 break;
                         }
                         break;
