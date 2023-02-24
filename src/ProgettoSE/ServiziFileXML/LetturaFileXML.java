@@ -2,10 +2,8 @@ package ProgettoSE.ServiziFileXML;
 
 import ProgettoSE.*;
 import ProgettoSE.Alimentari.*;
-import ProgettoSE.Attori.AddettoPrenotazione;
-import ProgettoSE.Attori.Magazziniere;
-import ProgettoSE.Menu.Menu;
-import ProgettoSE.Menu.MenuTematico;
+import ProgettoSE.Attori.*;
+import ProgettoSE.Menu.*;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -22,6 +20,7 @@ public class LetturaFileXML {
      * * @param filename ovvero il nome del file
      * @return ristorante
      */
+
     public Ristorante leggiRistorante(String filename){
 
         XMLInputFactory xmlif;
