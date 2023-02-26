@@ -7,7 +7,7 @@ import java.util.UUID;
 public class Piatto implements Prenotabile {
     private String nome;
     private ArrayList<LocalDate> disponibilità;
-    private float lavoro_piatto; //coincide x def con lavoro_porzione
+    private float lavoro_piatto; //coincide per definizione con lavoro_porzione
     private Ricetta ricetta;
 
     public Piatto(String nome, ArrayList<LocalDate> disponibilità, float lavoro_piatto, Ricetta ricetta) {
@@ -48,5 +48,10 @@ public class Piatto implements Prenotabile {
 
     public void setRicetta(Ricetta ricetta) {
         this.ricetta = ricetta;
+    }
+
+    public void aggiungiDisponibilita(ArrayList<LocalDate> disponibilita){
+        for (LocalDate data : disponibilita)
+            disponibilità.add(data);
     }
 }

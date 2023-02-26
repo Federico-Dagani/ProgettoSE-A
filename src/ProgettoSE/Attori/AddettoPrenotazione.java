@@ -47,4 +47,7 @@ public class AddettoPrenotazione extends Persona {
         menu.add(menu_tematico);
     }
 
+    public void aggiungiPrenotazione(Prenotazione prenotazione){
+        prenotazioni.add(prenotazione);
+    }
 }
