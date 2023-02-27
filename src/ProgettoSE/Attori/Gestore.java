@@ -20,10 +20,21 @@ public class Gestore extends Persona {
         this.ristorante = ristorante;
     }
 
+    //get e set
+    public Ristorante getRistorante() {
+        return ristorante;
+    }
+
+    public void setRistorante(Ristorante ristorante) {
+        this.ristorante = ristorante;
+    }
+
     //METODI
     public void inizializzaRistorante() {
         LetturaFileXML letturaFileXML = new LetturaFileXML();
         ristorante = letturaFileXML.leggiRistorante(Costanti.FILE_RISTORANTE);
     }
+
+
 
 }

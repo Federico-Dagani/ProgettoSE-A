@@ -38,8 +38,8 @@ public class LetturaFileXML {
         ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
 
         //attributi ristorante e creazione oggetto ristorante
-        AddettoPrenotazione addetto_prenotazione = new AddettoPrenotazione("addetto",prenotazioni, menu);
-        Magazziniere magazziniere = new Magazziniere("magazziniere", magazzino, lista_spesa);
+        AddettoPrenotazione addetto_prenotazione = new AddettoPrenotazione(null,prenotazioni, menu);
+        Magazziniere magazziniere = new Magazziniere(null, magazzino, lista_spesa);
         Ristorante ristorante = new Ristorante(0, 0, addetto_prenotazione, magazziniere);
 
         Menu menu_carta = new Menu(new ArrayList<>());

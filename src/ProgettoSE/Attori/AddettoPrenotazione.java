@@ -5,6 +5,7 @@ import ProgettoSE.Piatto;
 import ProgettoSE.Prenotabile;
 import ProgettoSE.Prenotazione;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class AddettoPrenotazione extends Persona {
@@ -15,6 +16,7 @@ public class AddettoPrenotazione extends Persona {
     }
     private ArrayList<Prenotazione> prenotazioni;
     private ArrayList<Prenotabile> menu;
+
     //METODI
     //costruttore
     public AddettoPrenotazione(String nome, ArrayList<Prenotazione> prenotazioni, ArrayList<Prenotabile> menu) {

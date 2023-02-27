@@ -6,7 +6,8 @@ public class Costanti {
     //nomi file
     public static final String FILE_RISTORANTE = "src/ProgettoSE/Ristorante.xml" ;
 
-    //tag
+    //TAG XML
+    public static final String ATTORI = "attori";
     public static final String RISTORANTE = "ristorante";
     public static final String N_POSTI = "n_posti";
     public static final String LAVORO_PERSONE = "lavoro_persone";
@@ -31,9 +32,9 @@ public class Costanti {
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
 
     //comunicazioni di inzio/fine lettura/scrittura file
-    public static final String INIZIO_FILE = "\nInizio a %s il file: %s ...\n";
+    public static final String INIZIO_FILE = "\n%s file: %s ...\n";
     public static final String FINE_FILE = "\nFine della %s del file :)\n";
-    public static final String LETTURA = "lettura";
+    public static final String LETTURA = "Lettura";
     public static final String SCRITTURA = "scrittura";
     //errori vari nei servizi xml
     public static final String ERRORE_INIZIALIZZAZIONE_READER = "Errore nell'inizializzazione del reader: ";
@@ -51,22 +52,14 @@ public class Costanti {
     public static final String ERR_ID_NON_TROVATO = "id non trovato:(";
     public static final String ERRORE_NUM_CITTA = "Il numero per le città inserito non è corretto";
     //benvenuto
-    public static final String CORNICE_SUP = "┌———————————————————————————————————————————————————————————————————————————————————————┐";
-    public static final String BENVENUTO = "Benvenut* nel programma RovinePerdute del gruppo Programmazione di fondamenti :)";
-    public static final  String CORNICE_INF = "└———————————————————————————————————————————————————————————————————————————————————————┘";
-    //fase iniziale
-    public static final String CINQUE = "5 citta";
-    public static final String DODICI = "12 citta";
-    public static final String CINQUANTA = "50 citta";
-    public static final String DUECENTO = "200 citta";
-    public static final String DUEMILA = "2000 citta";
-    public static final String DIECIMILA = "10000 citta";
-    //altro
-    public static final String NUM_CITTA = "numeri città";
-    public static final String INSERIMENTO_NUM_CITTA = "Inserisci il numero delle città per la generazione del grafo: ";
-    public static final String TONATHIU = "tonathiu";
-    public static final String METZTLI = "metztli";
-    public static final String CALCOLO_IN_CORSO = "\nSto calcolando il percorso del veicolo %s, potrebbe volerci del tempo :)\n";
+    public static final String CORNICE_SUP = "┌———————————————————————————————————————————————————————┐";
+    public static final String BENVENUTO = "Progetto di Ingegneria del Software A.A. 2022-2023";
+    public static final  String CORNICE_INF = "└———————————————————————————————————————————————————————┘";
+
+    //main
+    //attori
+    public static final String UTENTE = "utente";
+    public static final String GESTORE = "gestore";
 
 }
 
