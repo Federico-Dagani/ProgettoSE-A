@@ -8,12 +8,16 @@ import ProgettoSE.Attori.Gestore;
 import ProgettoSE.Menu.MenuTematico;
 import ProgettoSE.mylib.MyMenu;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class Main {
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException {
 
         benvenuto();
 
@@ -24,21 +28,36 @@ public class Main {
         inizializzazione(gestore);
 
         MyMenu menu_attori = nuovoMenu(Costanti.ATTORI);
-        switch (menu_attori.scegliConUscita()){
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-            case 0:
-                System.out.println(Costanti.USCITA_MENU + Costanti.ATTORI.toUpperCase(Locale.ROOT));
-                System.out.println(Costanti.END);
-                break;
+        int scelta_attore = menu_attori.scegliConUscita();
+        while (scelta_attore != 0){
+            switch (scelta_attore){
 
-            case 1:
-                MyMenu menu_gestore = nuovoMenu(Costanti.GESTORE);
-                scegliFunzionalitaGestore(menu_gestore.scegliConUscita(), gestore);
-                break;
+                case 1:
+                    MyMenu menu_gestore = nuovoMenu(Costanti.GESTORE);
 
-            case 2:
-                break;
+                    int scelta_funz_gestore = menu_gestore.scegliConUscita();
+                    while (scelta_funz_gestore != 0){
+                        scegliFunzionalitaGestore(scelta_funz_gestore, gestore);
+                        System.out.println("Premere un tasto per continuare ... ");
+                        br.readLine();
+                        scelta_funz_gestore = menu_gestore.scegliConUscita();
+                    }
+                    System.out.println("\n" + Costanti.USCITA_MENU + Costanti.GESTORE.toUpperCase(Locale.ROOT));
+                    break;
+
+                case 2:
+                    inserisciPrenotazione(gestore, data_attuale.getData_corrente());
+                    break;
+            }
+            System.out.println("\n" + "Premere un tasto per continuare ... ");
+            br.readLine();
+            scelta_attore = menu_attori.scegliConUscita();
         }
+
+        System.out.println("\n" + Costanti.USCITA_MENU + Costanti.ATTORI.toUpperCase(Locale.ROOT));
+        System.out.println("\n" + Costanti.END);
 
         //stampaMenuDelGiorno(gestore, data_attuale);
 
@@ -53,35 +72,27 @@ public class Main {
 
     private static void scegliFunzionalitaGestore(int scelta, Gestore gestore){
         switch (scelta){
-            case 0:
+            case 1: System.out.println("\nIl carico di lavoro per persona è: " + gestore.getRistorante().getLavoro_persona());
                 break;
-            case 1:
-                System.out.println("\n Il carico di lavoro per persona è: " + gestore.getRistorante().getLavoro_persona());
+            case 2: System.out.println("\nIl numero dei posti disponibili nel ristorante è: " + gestore.getRistorante().getN_posti());
                 break;
-            case 2:
-                System.out.println("\n Il numero dei posti disponibili nel ristorante è: " + gestore.getRistorante().getN_posti());
+            case 3: mostraAlimento(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
                 break;
-            case 3:
-                mostraAlimento(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
-                break;
-            case 4:
-                mostraAlimento(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
+            case 4: mostraAlimento(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
                 break;
             case 5: mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
                 break;
             case 6: mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
                 break;
-            case 7:mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+            case 7: mostraMenuTematici(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
-            case 8:mostraRicette(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+            case 8: mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
-            case 9:mostraMenuTematici(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+            case 9: mostraRicette(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
 
         }
-
     }
-
 
     private static void mostraMenuTematici(ArrayList<Prenotabile> menu){
         System.out.println("\n\nI menu tematici del menù alla carta sono i seguenti: ");
