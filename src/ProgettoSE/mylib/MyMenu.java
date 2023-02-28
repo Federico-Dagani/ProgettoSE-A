@@ -61,7 +61,7 @@ public class MyMenu {
     public void stampaMenuSenzaUscita() {
         String cornice_sup = "";
         cornice_sup += CORNICE_ANGOLO_SX_SUP;
-        cornice_sup += generaCorniceSenzaAngolo();
+        cornice_sup += generaCorniceSenzaAngolo() ;
         cornice_sup += CORNICE_ANGOLO_DX_SUP;
         String cornice_inf = "";
         cornice_inf += CORNICE_ANGOLO_SX_INF;

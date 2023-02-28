@@ -4,8 +4,10 @@ import ProgettoSE.Menu.*;
 import ProgettoSE.Piatto;
 import ProgettoSE.Prenotabile;
 import ProgettoSE.Prenotazione;
+import ProgettoSE.mylib.InputDati;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class AddettoPrenotazione extends Persona {
@@ -109,4 +111,36 @@ public class AddettoPrenotazione extends Persona {
 
         return menu_del_giorno;
     }
+
+    /**
+     *
+     * @param data_attuale
+     * @param stringa_data_prenotazione
+     * @return un intero che identifica il tipo di messaggio di errore
+     * 1 se il "Formato data non valido."
+     * 2 se "La data inserita deve essere sucessiva alla data attuale (" + data_attuale + ")"
+     * 0 se è ok
+     */
+    public int controlloDataPrenotazione(LocalDate data_attuale, String stringa_data_prenotazione){
+        LocalDate data_prenotazione = null;
+        try{
+            data_prenotazione = LocalDate.parse(stringa_data_prenotazione);
+        }catch (DateTimeParseException e){
+            return 1;
+        }if(data_prenotazione.isBefore(data_attuale) || data_prenotazione.isEqual(data_attuale))
+            return 2;
+        return 0;
+    }
+
+    public int calcolaPostiOccupati(LocalDate data_prenotazione){
+        int posti_occupati = 0;
+        for (Prenotazione prenotazione : prenotazioni){
+            if(prenotazione.getData().isEqual(data_prenotazione)){
+                posti_occupati += prenotazione.getN_coperti();
+            }
+        }
+        return posti_occupati;
+    }
+
+
 }

@@ -58,8 +58,8 @@ public class Costanti {
 
     //main
     //attori
-    public static final String UTENTE = "utente";
-    public static final String GESTORE = "gestore";
+    public static final String UTENTE = "Cliente";
+    public static final String GESTORE = "Gestore";
 
 }
 

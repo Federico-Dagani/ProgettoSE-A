@@ -7,13 +7,16 @@ import ProgettoSE.Alimentari.Extra;
 import ProgettoSE.Attori.Gestore;
 import ProgettoSE.Menu.MenuTematico;
 import ProgettoSE.mylib.MyMenu;
+import ProgettoSE.mylib.InputDati;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Locale;
+
 
 public class Main {
 
@@ -23,7 +26,7 @@ public class Main {
 
         Gestore gestore = new Gestore("CAPO", null);
 
-        LocalDate data_attuale = LocalDate.parse("2023-03-02");
+        Tempo data_attuale = new Tempo(LocalDate.now());
 
         inizializzazione(gestore);
 
@@ -94,6 +97,34 @@ public class Main {
         }
     }
 
+    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale){
+        //NOME
+        String nome_cliente = InputDati.leggiStringaNonVuota("Nome cliente: ");
+
+        //DATA
+        String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+        int msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale,stringa_data_prenotazione);
+        while (msg != 0){
+            switch (msg) {
+                case 1:
+                    System.out.println("Formato data non valido.");
+                    break;
+                case 2:
+                    System.out.println("La data inserita deve essere sucessiva alla data attuale (" + data_attuale + ")");
+                    break;
+            }
+            stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+            msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione);
+        }
+        LocalDate data_prenotazione = LocalDate.parse(stringa_data_prenotazione);
+
+        //POSTI
+        int max = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
+        int n_persone = InputDati.leggiInteroConMinimoMassimo("Numero persone: ", 1 , max );
+
+        //DA CONTINUARE....................
+
+    }
     private static void mostraMenuTematici(ArrayList<Prenotabile> menu){
         System.out.println("\n\nI menu tematici del menù alla carta sono i seguenti: ");
         for( Prenotabile prenotabile : menu){
@@ -164,10 +195,10 @@ public class Main {
                 azioni_gestore[3] = "insieme dei generi extra";
                 azioni_gestore[4] = "consumo pro-capite di bevande";
                 azioni_gestore[5] = "consumo pro-capite di generi extra";
-                azioni_gestore[6] = "informazioni di ciascun piatto";
-                azioni_gestore[7] = "ricette presenti";
-                azioni_gestore[8] = "menu tematici presenti";
-                MyMenu menu_gestore = new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.GESTORE.toUpperCase(Locale.ROOT), azioni_gestore);
+                azioni_gestore[6] = "menu tematici presenti nel menu";
+                azioni_gestore[7] = "piatti presenti nel menu";
+                azioni_gestore[8] = "il ricettario";
+                MyMenu menu_gestore = new MyMenu( Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.GESTORE.toUpperCase(Locale.ROOT) , azioni_gestore);
                 return menu_gestore;
 
             case Costanti.UTENTE:
