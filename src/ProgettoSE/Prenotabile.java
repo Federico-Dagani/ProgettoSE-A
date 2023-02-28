@@ -1,5 +1,10 @@
 package ProgettoSE;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 public interface Prenotabile {
-    public String getNome();
+    String getNome();
+
+    ArrayList<LocalDate> getDisponibilità();
 }

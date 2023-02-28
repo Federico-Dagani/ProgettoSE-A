@@ -1,7 +1,11 @@
 package ProgettoSE;
 
+import ProgettoSE.Alimentari.Ingrediente;
 import ProgettoSE.Attori.Gestore;
+import ProgettoSE.Menu.MenuTematico;
 import ProgettoSE.mylib.MyMenu;
+
+import java.time.LocalDate;
 import java.util.Locale;
 
 public class Main {
@@ -10,6 +14,8 @@ public class Main {
         benvenuto();
 
         Gestore gestore = new Gestore("CAPO", null);
+
+        LocalDate data_attuale = LocalDate.parse("2023-03-02");
 
         inizializzazione(gestore);
 
@@ -22,6 +28,7 @@ public class Main {
                 break;
         }
 
+        stampaMenuDelGiorno(gestore, data_attuale);
 
     }
 
@@ -79,5 +86,34 @@ public class Main {
         gestore.inizializzaRistorante();
         System.out.println("Inizializzazione automatica del ristorante completata.");
         System.out.println();
+    }
+
+    private static void stampaMenuDelGiorno(Gestore gestore, LocalDate data){
+        if (gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data).isEmpty())
+            System.out.println("Non ci sono piatti disponibili per il giorno " + data);
+        else {
+            System.out.println("Il menù disponibile per il giorno " + data + " offre queste specialità:\n");
+            for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data)) {
+                if (prenotabile instanceof Piatto) {
+                    Piatto piatto = (Piatto) prenotabile;
+                    System.out.println(piatto.getNome().toUpperCase());
+                    System.out.printf("(Ingredienti: ");
+                    for (Ingrediente ingrediente : piatto.getRicetta().getIngredienti()) {
+                        System.out.printf("" + ingrediente.getNome() + ", ");
+                    }
+                    System.out.printf(")\n\n");
+
+                } else if (prenotabile instanceof MenuTematico) {
+                    MenuTematico menu_tematico = (MenuTematico) prenotabile;
+                    System.out.println("MENU' " + menu_tematico.getNome().toUpperCase());
+                    System.out.printf("Piatti: ");
+                    for (Piatto piatto : menu_tematico.getPiatti_menu()) {
+                        System.out.printf("" + piatto.getNome() + ", ");
+                    }
+                    System.out.printf("\n\n");
+
+                }
+            }
+        }
     }
 }
