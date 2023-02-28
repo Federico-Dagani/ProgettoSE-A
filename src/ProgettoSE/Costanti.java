@@ -33,6 +33,7 @@ public class Costanti {
     public static final String LAVORO_PORZIONE = "lavoro_porzione";
     public static final String DISPONIBILITA = "disponibilita";
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
+    final private static String FRECCETTA = "→";//⟼
 
     //comunicazioni di inzio/fine lettura/scrittura file
     public static final String INIZIO_FILE = "\n%s file: %s ...\n";
