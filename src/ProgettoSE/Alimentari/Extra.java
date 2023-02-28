@@ -9,4 +9,8 @@ public class Extra extends Alimento {
         super(nome, qta, misura);
         this.cons_procapite = cons_procapite;
     }
+
+    public float getCons_procapite() {
+        return cons_procapite;
+    }
 }

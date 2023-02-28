@@ -27,9 +27,9 @@ public class LetturaFileXML {
         XMLStreamReader xmlreader = null;
 
         //attributi magazziniere
-        ArrayList<Bevanda> bevande = new ArrayList<>();
-        ArrayList<Ingrediente> ingredienti = new ArrayList<>();
-        ArrayList<Extra> extras = new ArrayList<>();
+        ArrayList<Alimento> bevande = new ArrayList<>();
+        ArrayList<Alimento> ingredienti = new ArrayList<>();
+        ArrayList<Alimento> extras = new ArrayList<>();
         Magazzino magazzino = new Magazzino(bevande, extras, ingredienti);
         ArrayList<Alimento> lista_spesa = new ArrayList<>();
 

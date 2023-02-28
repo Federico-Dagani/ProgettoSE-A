@@ -62,15 +62,16 @@ public class Main {
                 System.out.println("\n Il numero dei posti disponibili nel ristorante è: " + gestore.getRistorante().getN_posti());
                 break;
             case 3:
-                //mostraAlimento(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
+                mostraAlimento(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
                 break;
             case 4:
+                mostraAlimento(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
                 break;
-            case 5:
+            case 5: mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
                 break;
-            case 6: mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+            case 6: mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
                 break;
-            case 7:
+            case 7: mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
             case 8:
                 break;
@@ -154,7 +155,7 @@ public class Main {
                     Piatto piatto = (Piatto) prenotabile;
                     System.out.println(piatto.getNome().toUpperCase());
                     System.out.printf("(Ingredienti: ");
-                    for (Ingrediente ingrediente : piatto.getRicetta().getIngredienti()) {
+                    for (Alimento ingrediente : piatto.getRicetta().getIngredienti()) {
                         System.out.printf("" + ingrediente.getNome() + ", ");
                     }
                     System.out.printf(")\n\n");
@@ -175,15 +176,31 @@ public class Main {
 
     private static void mostraAlimento(ArrayList<Alimento> alimenti){
         if(alimenti.get(0) instanceof Bevanda){
-            System.out.println("Lista delle bevande presenti nel ristorante: ");
+            System.out.println("\nLista delle bevande presenti nel ristorante: ");
         }else if(alimenti.get(0) instanceof Extra){
-            System.out.println("Lista degli extra presenti nel ristorante:");
+            System.out.println("\nLista degli extra presenti nel ristorante:");
         }
         for (Alimento alimento : alimenti){
-            System.out.printf("[ ");
-            System.out.printf("nome: " + alimento.getNome() + ", ");
-            System.out.printf("quantità: " + alimento.getQta() + " " + alimento.getMisura());
-            System.out.println(" ]");
+            System.out.printf("- " + alimento.getNome() + "\n");
+            //System.out.printf("quantità: " + alimento.getQta() + " " + alimento.getMisura() + "\n");
         }
+    }
+
+    private static void mostraConsumoProcapite(ArrayList<Alimento> alimenti){
+        if(alimenti.get(0) instanceof Bevanda){
+            System.out.println("\nLista delle bevande con i relativi consumi procapite: ");
+        }else if(alimenti.get(0) instanceof Extra){
+            System.out.println("\nLista degli extra con i relativi consumi procapite: ");
+        }
+        for(Alimento alimento : alimenti){
+            if(alimento instanceof Bevanda){
+                System.out.printf("- " + alimento.getNome() + ", ");
+                System.out.printf("consumo procapite: " + ((Bevanda) alimento).getCons_procapite() + "\n");
+            }else if(alimento instanceof Extra){
+                System.out.printf("- " + alimento.getNome() + ", ");
+                System.out.printf("consumo procapite: " + ((Extra)alimento).getCons_procapite() + "\n");
+            }
+        }
+
     }
 }
