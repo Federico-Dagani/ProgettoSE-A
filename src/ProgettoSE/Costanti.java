@@ -8,6 +8,8 @@ public class Costanti {
 
     //TAG XML
     public static final String FUNZIONALITA = "funzionalità ";
+    public static final String USCITA_MENU = "Uscita dal menu ";
+    public static final String END = "Programma terminato.";
     public static final String ATTORI = "attori";
     public static final String RISTORANTE = "ristorante";
     public static final String N_POSTI = "n_posti";

@@ -1,11 +1,15 @@
 package ProgettoSE;
 
+import ProgettoSE.Alimentari.Alimento;
+import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Ingrediente;
+import ProgettoSE.Alimentari.Extra;
 import ProgettoSE.Attori.Gestore;
 import ProgettoSE.Menu.MenuTematico;
 import ProgettoSE.mylib.MyMenu;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Main {
@@ -22,9 +26,17 @@ public class Main {
         MyMenu menu_attori = nuovoMenu(Costanti.ATTORI);
         switch (menu_attori.scegliConUscita()){
 
+            case 0:
+                System.out.println(Costanti.USCITA_MENU + Costanti.ATTORI.toUpperCase(Locale.ROOT));
+                System.out.println(Costanti.END);
+                break;
+
             case 1:
                 MyMenu menu_gestore = nuovoMenu(Costanti.GESTORE);
-                menu_gestore.scegliConUscita();
+                scegliFunzionalitaGestore(menu_gestore.scegliConUscita(), gestore);
+                break;
+
+            case 2:
                 break;
         }
 
@@ -114,6 +126,20 @@ public class Main {
 
                 }
             }
+        }
+    }
+
+    private static void mostraAlimento(ArrayList<Alimento> alimenti){
+        if(alimenti.get(0) instanceof Bevanda){
+            System.out.println("Lista delle bevande presenti nel ristorante: ");
+        }else if(alimenti.get(0) instanceof Extra){
+            System.out.println("Lista degli extra presenti nel ristorante:");
+        }
+        for (Alimento alimento : alimenti){
+            System.out.printf("[ ");
+            System.out.printf("nome: " + alimento.getNome() + ", ");
+            System.out.printf("quantità: " + alimento.getQta() + " " + alimento.getMisura());
+            System.out.println(" ]");
         }
     }
 }
