@@ -47,10 +47,6 @@ public class Costanti {
     public static final String ENCODING = "utf-8";
     public static final String VERSION = "1.0";
 
-    //GESTIONE MAIN
-    //errori vari nel main
-    public static final String ERR_ID_NON_TROVATO = "id non trovato:(";
-    public static final String ERRORE_NUM_CITTA = "Il numero per le città inserito non è corretto";
     //benvenuto
     public static final String CORNICE_SUP = "┌———————————————————————————————————————————————————————┐";
     public static final String BENVENUTO = "Progetto di Ingegneria del Software A.A. 2022-2023";

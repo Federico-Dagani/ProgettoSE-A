@@ -14,7 +14,7 @@ public class MyMenu
   final private static String CORNICE_CONTORNO_ORIZZ = "-";
   final private static String CORNICE_CONTORNO_VERT = "|";
   final private static String FRECCETTA = "→";//⟼
-  final private static String VOCE_USCITA = "0\tEsci";
+  final private static String VOCE_USCITA = "0 → Esci";
   final private static String RICHIESTA_INSERIMENTO = "Digita il numero dell'opzione desiderata > ";
 
   private String titolo;
@@ -53,13 +53,13 @@ public class MyMenu
 	System.out.println(cornice_sup);
 	System.out.println(generaRigaCentrale());
 	System.out.println(cornice_inf);
+	System.out.println(cornice_sup);
     for (int i=0; i<voci.length; i++)
 	 {
-	  System.out.println(generaVoce((i+1) +FRECCETTA+"\t"+ voci[i]));
+         System.out.println(generaVoce((i+1) +" " + FRECCETTA+" "+ voci[i]));
 	 }
-    System.out.println();
-	System.out.println(VOCE_USCITA);
-    System.out.println();
+    System.out.println(generaVoce((0) +" " + FRECCETTA+" "+ "esci"));
+    System.out.println(cornice_inf);
   }
 
     public void stampaMenuSenzaUscita ()
