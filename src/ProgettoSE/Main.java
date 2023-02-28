@@ -40,7 +40,7 @@ public class Main {
                 break;
         }
 
-        stampaMenuDelGiorno(gestore, data_attuale);
+        //stampaMenuDelGiorno(gestore, data_attuale);
 
     }
 
@@ -49,6 +49,50 @@ public class Main {
         System.out.printf("|\t"+Costanti.BENVENUTO+"\t|\n");
         System.out.println(Costanti.CORNICE_INF);
         System.out.println();
+    }
+
+    private static void scegliFunzionalitaGestore(int scelta, Gestore gestore){
+        switch (scelta){
+            case 0:
+                break;
+            case 1:
+                System.out.println("\n Il carico di lavoro per persona è: " + gestore.getRistorante().getLavoro_persona());
+                break;
+            case 2:
+                System.out.println("\n Il numero dei posti disponibili nel ristorante è: " + gestore.getRistorante().getN_posti());
+                break;
+            case 3:
+                //mostraAlimento(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6: mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+
+        }
+
+    }
+
+    private static void mostraPiatti(ArrayList<Prenotabile> menu){
+        System.out.println("I piatti del menù alla carta sono i seguenti: ");
+        for( Prenotabile prenotabile : menu){
+         if (prenotabile instanceof  Piatto){
+             Piatto piatto = (Piatto) prenotabile;
+             System.out.println("Nome " + piatto.getNome());
+             System.out.println("\nPeriodi disponibilità ");
+             int inizio=0;
+             for(int i=0; i < piatto.getDisponibilità().toArray().length/2; i++){
+                 System.out.println("Inizio: " + piatto.getDisponibilità().get(inizio) + "\tFine: " + piatto.getDisponibilità().get(inizio+1));
+                 inizio += 2;
+             }
+         }
+      }
     }
 
     /**
