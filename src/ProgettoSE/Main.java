@@ -71,22 +71,40 @@ public class Main {
                 break;
             case 6: mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
                 break;
-            case 7: mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+            case 7:mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
-            case 8:
+            case 8:mostraRicette(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+                break;
+            case 9:mostraMenuTematici(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
 
         }
 
     }
 
+
+    private static void mostraMenuTematici(ArrayList<Prenotabile> menu){
+        System.out.println("\n\nI menu tematici del menù alla carta sono i seguenti: ");
+        for( Prenotabile prenotabile : menu){
+            if (prenotabile instanceof  MenuTematico){
+                MenuTematico menuTematico = (MenuTematico) prenotabile;
+                System.out.println("\nNome " + menuTematico.getNome());
+                System.out.println("Periodi disponibilità: ");
+                int inizio=0;
+                for(int i=0; i < menuTematico.getDisponibilità().toArray().length/2; i++){
+                    System.out.println("Inizio: " + menuTematico.getDisponibilità().get(inizio) + "\tFine: " + menuTematico.getDisponibilità().get(inizio+1));
+                    inizio += 2;
+                }
+            }
+        }
+    }
     private static void mostraPiatti(ArrayList<Prenotabile> menu){
-        System.out.println("I piatti del menù alla carta sono i seguenti: ");
+        System.out.println("\n\nI piatti del menù alla carta sono i seguenti: ");
         for( Prenotabile prenotabile : menu){
          if (prenotabile instanceof  Piatto){
              Piatto piatto = (Piatto) prenotabile;
-             System.out.println("Nome " + piatto.getNome());
-             System.out.println("\nPeriodi disponibilità ");
+             System.out.println("\nNome " + piatto.getNome());
+             System.out.println("Periodi disponibilità: ");
              int inizio=0;
              for(int i=0; i < piatto.getDisponibilità().toArray().length/2; i++){
                  System.out.println("Inizio: " + piatto.getDisponibilità().get(inizio) + "\tFine: " + piatto.getDisponibilità().get(inizio+1));
@@ -94,6 +112,19 @@ public class Main {
              }
          }
       }
+    }
+    private static void mostraRicette(ArrayList<Prenotabile> menu){
+        System.out.println("\n\nLe ricette del menù alla carta sono le seguenti: ");
+        for( Prenotabile prenotabile : menu){
+            if (prenotabile instanceof  Piatto){
+                Piatto piatto = (Piatto) prenotabile;
+                System.out.println("\n" + piatto.getNome().toUpperCase());
+                System.out.println("Ricetta: ");
+                for(Alimento ingrediente : piatto.getRicetta().getIngredienti()){
+                    System.out.println("  °\t"  + ingrediente.getQta() + " " + ingrediente.getMisura() + " di " + ingrediente.getNome());
+                }
+            }
+        }
     }
 
     /**
