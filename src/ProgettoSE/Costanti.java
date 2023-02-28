@@ -7,6 +7,7 @@ public class Costanti {
     public static final String FILE_RISTORANTE = "src/ProgettoSE/Ristorante.xml" ;
 
     //TAG XML
+    public static final String FUNZIONALITA = "funzionalità ";
     public static final String ATTORI = "attori";
     public static final String RISTORANTE = "ristorante";
     public static final String N_POSTI = "n_posti";

@@ -26,12 +26,13 @@ public class MyMenu
   {
 	this.titolo = titolo;
 	this.voci = voci;
+	this.lunghezza_cornice_orizz = this.titolo.length();
   }
 
   public int scegliConUscita ()
   {
 	stampaMenuConUscita();
-	return InputDati.leggiIntero(RICHIESTA_INSERIMENTO, 0, voci.length);	 
+	return InputDati.leggiIntero(RICHIESTA_INSERIMENTO, 0, voci.length);
   }
 
     public int scegliSenzaUscita ()
@@ -90,7 +91,7 @@ public class MyMenu
             cornice += CORNICE_CONTORNO_ORIZZ;
             cornice += CORNICE_CONTORNO_ORIZZ;
         }
-        lunghezza_cornice_orizz = titolo.length()*2 +2;
+        lunghezza_cornice_orizz = titolo.length()*2 + 2;
         return cornice;
     }
 
@@ -98,7 +99,7 @@ public class MyMenu
         char[] riga_centrale = new char[lunghezza_cornice_orizz];
         riga_centrale[0] = CORNICE_CONTORNO_VERT.charAt(0);
         riga_centrale[lunghezza_cornice_orizz-1] = CORNICE_CONTORNO_VERT.charAt(0);
-        int caratteri_vuoti_meta = ((lunghezza_cornice_orizz-2) - titolo.length())/2 +1;
+        int caratteri_vuoti_meta = ((lunghezza_cornice_orizz-2) - titolo.length())/2 + 1;
         int c= 0;
         for (int i=caratteri_vuoti_meta; i<(titolo.length()+caratteri_vuoti_meta); i++){
             riga_centrale[i] = titolo.charAt(c);
