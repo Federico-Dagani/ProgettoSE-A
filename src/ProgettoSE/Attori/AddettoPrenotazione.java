@@ -108,7 +108,6 @@ public class AddettoPrenotazione extends Persona {
                 inizio += 2;
             }
         }
-
         return menu_del_giorno;
     }
 
@@ -142,5 +141,57 @@ public class AddettoPrenotazione extends Persona {
         return posti_occupati;
     }
 
+    public int stimaPostiRimanenti(LocalDate data_prenotazione, int lavoro_persona, int n_posti){
 
+        float lavoro_rimanente = n_posti*lavoro_persona - calcolaLavoro(filtraPrenotazioniPerData(this.prenotazioni, data_prenotazione));
+
+        //è corretto?
+        return Math.floorDiv((int) lavoro_rimanente, lavoro_persona);
+    }
+
+    public boolean validaCaricoLavoro(LocalDate data_prenotazione, int lavoro_persona, int n_posti, Prenotazione possibile_prenotazione){
+
+        ArrayList<Prenotazione> possibili_prenotazioni = filtraPrenotazioniPerData(this.prenotazioni, data_prenotazione);
+        possibili_prenotazioni.add(possibile_prenotazione);
+
+       //ora calcolo il lavoro totale della somma delle prenotazioni(questo array che ho creato: possibili_prenotazioni)
+        if(calcolaLavoro(possibili_prenotazioni) > lavoro_persona*n_posti + (20/100)*lavoro_persona*n_posti){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    //devo creare una prenotazione complessiva, che corrisponderà ad una data precisa, poi invoherò il metodo calolaLavoroPrenotazione()
+    public float calcolaLavoro(ArrayList<Prenotazione> prenotazioni_in_corso){
+        HashMap<Prenotabile, Integer> scelte_complessive = new HashMap<>();
+
+        for(Prenotazione prenotazione : prenotazioni_in_corso){
+
+            for(Map.Entry<Prenotabile, Integer> scelta_prenotazione : prenotazione.getScelte().entrySet()) {
+
+                Prenotabile prenotabile_scelto = scelta_prenotazione.getKey();
+
+                if (scelte_complessive.containsKey(prenotabile_scelto)) {
+                    //il prenotabile è già presente nell'hash map complessivo, dunque devo solo incrementare il numero di porzioni che voglio di quello
+                    int n_porzioni = scelte_complessive.get(prenotabile_scelto) + scelta_prenotazione.getValue();
+                    scelte_complessive.put(prenotabile_scelto, n_porzioni);
+                } else {
+                    //il prenotabile non è presente, lo agguiungo
+                    scelte_complessive.put(scelta_prenotazione.getKey(), scelta_prenotazione.getValue());
+                }
+            }
+        }
+        return new Prenotazione(scelte_complessive).getLavoro_prenotazione();
+    }
+
+
+    public ArrayList<Prenotazione> filtraPrenotazioniPerData(ArrayList<Prenotazione> prenotazioni_da_filtrare, LocalDate data){
+        ArrayList<Prenotazione> prenotazioni_filtrate = new ArrayList<>();
+        for (Prenotazione prenotazione : prenotazioni_da_filtrare){
+            if(prenotazione.getData().equals(data))
+                prenotazioni_filtrate.add(prenotazione);
+        }
+        return prenotazioni_filtrate;
+    }
 }

@@ -1,9 +1,13 @@
 package ProgettoSE.Attori;
 
 import ProgettoSE.Alimentari.Alimento;
+import ProgettoSE.Alimentari.Bevanda;
+import ProgettoSE.Alimentari.Extra;
+import ProgettoSE.Costanti;
 import ProgettoSE.Magazzino;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Magazziniere extends Persona {
     //ATTRIBUTI
@@ -34,5 +38,15 @@ public class Magazziniere extends Persona {
         this.lista_spesa = lista_spesa;
     }
 
+    public HashMap<Alimento, Float> calcolaConsumoAlimento(int n_persone, String tipologia){
 
+        HashMap<Alimento, Float> consumi = new HashMap<>();
+        for (Alimento alimento : magazzino.getBevande()){
+            if(tipologia.equals(Costanti.BEVANDA) && alimento instanceof Bevanda)
+                consumi.put(alimento, n_persone * ((Bevanda) alimento).getCons_procapite());
+            else if(tipologia.equals(Costanti.EXTRA) && alimento instanceof Extra)
+                consumi.put(alimento, n_persone * ((Extra) alimento).getCons_procapite());
+        }
+        return consumi;
+    }
 }

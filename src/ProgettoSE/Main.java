@@ -62,7 +62,7 @@ public class Main {
         System.out.println("\n" + Costanti.USCITA_MENU + Costanti.ATTORI.toUpperCase(Locale.ROOT));
         System.out.println("\n" + Costanti.END);
 
-        //stampaMenuDelGiorno(gestore, data_attuale);
+        stampaMenuDelGiorno(gestore, data_attuale.getData_corrente());
 
     }
 
@@ -103,7 +103,7 @@ public class Main {
 
         //DATA
         String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
-        int msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale,stringa_data_prenotazione);
+        int msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale,stringa_data_prenotazione, gestore.getRistorante().getN_posti());
         while (msg != 0){
             switch (msg) {
                 case 1:
@@ -114,17 +114,64 @@ public class Main {
                     break;
             }
             stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
-            msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione);
+            msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
         }
         LocalDate data_prenotazione = LocalDate.parse(stringa_data_prenotazione);
 
         //POSTI
         int max = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
         int n_persone = InputDati.leggiInteroConMinimoMassimo("Numero persone: ", 1 , max );
+        int n_coperti = n_persone;
 
-        //DA CONTINUARE....................
+        //SCELTE
+        HashMap<Prenotabile, Integer> scelte = new HashMap<>();
+        do {
+            stampaMenuDelGiorno(gestore, data_prenotazione);
+
+            Boolean validita = false;
+            Prenotabile portata = null;
+            Integer quantità = 0;
+            do {
+                if(quantità != 0)
+                    System.out.println("Persone rimanenti senza una portata assegnata: " + n_persone + "\n");
+                String scelta = InputDati.leggiStringaNonVuota("Inserisca il nome della portata da ordinare: ");
+                for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
+                    if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
+                        portata = prenotabile;
+                        validita = true;
+                    }else System.out.println("IL nome della portata non è corretto o non presente in menu.");
+                }
+                }while(!validita);
+            quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": ",1);
+            scelte.put(portata, quantità);
+
+
+            n_persone -= quantità;
+        }while(n_persone > 0 || InputDati.yesOrNo("Vuoi ordinare altre portate?"));
+
+
+        //CALCOLO CONSUMO BEVANDE E GENERI EXTRA
+        HashMap<Alimento,Float> cons_bevande = gestore.getRistorante().getMagazziniere().calcolaConsumoAlimento(n_coperti, Costanti.BEVANDA);
+        HashMap<Alimento,Float> cons_extra = gestore.getRistorante().getMagazziniere().calcolaConsumoAlimento(n_coperti, Costanti.EXTRA);
+
+        //Costruzione Prenotazione
+        Cliente cliente = new Cliente(nome_cliente);
+        Prenotazione prenotazione = new Prenotazione(cliente,n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
+
+        //Controllo
+        //variabili di supporto
+        int lavoro_persona = gestore.getRistorante().getLavoro_persona();
+        int n_posti = gestore.getRistorante().getN_posti();
+
+        if(gestore.getRistorante().getAddettoPrenotazione().validaCaricoLavoro(data_prenotazione, lavoro_persona, n_posti, prenotazione)){
+
+            gestore.getRistorante().getAddettoPrenotazione().getPrenotazioni().add(prenotazione);
+            System.out.println("Prenotazione Registrata.\n");
+
+        }else System.out.println("Prenotazione Annullata, hai superato il carico di lavoro massimo del ristorante.");
 
     }
+
     private static void mostraMenuTematici(ArrayList<Prenotabile> menu){
         System.out.println("\n\nI menu tematici del menù alla carta sono i seguenti: ");
         for( Prenotabile prenotabile : menu){
@@ -140,6 +187,7 @@ public class Main {
             }
         }
     }
+
     private static void mostraPiatti(ArrayList<Prenotabile> menu){
         System.out.println("\n\nI piatti del menù alla carta sono i seguenti: ");
         for( Prenotabile prenotabile : menu){
@@ -155,6 +203,7 @@ public class Main {
          }
       }
     }
+
     private static void mostraRicette(ArrayList<Prenotabile> menu){
         System.out.println("\n\nLe ricette del menù alla carta sono le seguenti: ");
         for( Prenotabile prenotabile : menu){
@@ -222,23 +271,32 @@ public class Main {
         if (gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data).isEmpty())
             System.out.println("Non ci sono piatti disponibili per il giorno " + data);
         else {
-            System.out.println("Il menù disponibile per il giorno " + data + " offre queste specialità:\n");
+            System.out.println("\nIl menù disponibile per il giorno " + data + " offre queste specialità:");
+            System.out.println("(puoi scegliere sia i piatti all'interno del menù alla carta che i menù tematici presenti) \n");
             for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data)) {
                 if (prenotabile instanceof Piatto) {
                     Piatto piatto = (Piatto) prenotabile;
-                    System.out.println(piatto.getNome().toUpperCase());
-                    System.out.printf("(Ingredienti: ");
-                    for (Alimento ingrediente : piatto.getRicetta().getIngredienti()) {
-                        System.out.printf("" + ingrediente.getNome() + ", ");
+                    System.out.printf("- " + piatto.getNome().toUpperCase());
+                    System.out.printf(" con ingredienti: ");
+                    ArrayList<Alimento> ingredienti = piatto.getRicetta().getIngredienti();
+                    for (Alimento ingrediente : ingredienti) {
+                        if(ingrediente.equals(piatto.getRicetta().getIngredienti().get(ingredienti.toArray().length-1)))
+                            System.out.printf(ingrediente.getNome() + ".");
+                        else
+                            System.out.printf(ingrediente.getNome() + ", ");
                     }
-                    System.out.printf(")\n\n");
+                    System.out.printf("\n\n");
 
                 } else if (prenotabile instanceof MenuTematico) {
                     MenuTematico menu_tematico = (MenuTematico) prenotabile;
-                    System.out.println("MENU' " + menu_tematico.getNome().toUpperCase());
-                    System.out.printf("Piatti: ");
+                    System.out.printf("- Menù " + menu_tematico.getNome().toUpperCase());
+                    System.out.printf(" con i seguenti piatti: ");
+                    ArrayList<Piatto> piatti = menu_tematico.getPiatti_menu();
                     for (Piatto piatto : menu_tematico.getPiatti_menu()) {
-                        System.out.printf("" + piatto.getNome() + ", ");
+                        if(piatto.equals(piatti.get(piatti.toArray().length-1)))
+                            System.out.printf("" + piatto.getNome() + ".");
+                        else
+                            System.out.printf("" + piatto.getNome() + ", ");
                     }
                     System.out.printf("\n\n");
 
@@ -274,6 +332,5 @@ public class Main {
                 System.out.printf("consumo procapite: " + ((Extra)alimento).getCons_procapite() + "\n");
             }
         }
-
     }
 }
