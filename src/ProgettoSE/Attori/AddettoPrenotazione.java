@@ -162,9 +162,9 @@ public class AddettoPrenotazione extends Persona {
 
        //ora calcolo il lavoro totale della somma delle prenotazioni(questo array che ho creato: possibili_prenotazioni)
         if(calcolaLavoro(possibili_prenotazioni) > lavoro_persona*n_posti + (20/100)*lavoro_persona*n_posti){
-            return true;
-        }else {
             return false;
+        }else {
+            return true;
         }
     }
 

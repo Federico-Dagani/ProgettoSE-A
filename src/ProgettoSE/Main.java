@@ -99,14 +99,14 @@ public class Main {
         }
     }
 
-    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale){
+    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) {
         //NOME
         String nome_cliente = InputDati.leggiStringaNonVuota("Nome cliente: ");
 
         //DATA
         String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
-        int msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale,stringa_data_prenotazione, gestore.getRistorante().getN_posti());
-        while (msg != 0){
+        int msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
+        while (msg != 0) {
             switch (msg) {
                 case 1:
                     System.out.println("Formato data non valido.");
@@ -123,10 +123,17 @@ public class Main {
         LocalDate data_prenotazione = LocalDate.parse(stringa_data_prenotazione);
 
         //POSTI
-        System.out.printf("Attenzione: abbiamo stimato che rimangono %d posti prenotabili, assumendo che ogni persona prenoti in media 2 piatti, rispettala ca**o!!", gestore.getRistorante().getAddettoPrenotazione().stimaPostiRimanenti(data_prenotazione, gestore.getRistorante().getLavoro_persona(), gestore.getRistorante().getN_posti()));
-
-        int max = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
-        int n_persone = InputDati.leggiInteroConMinimoMassimo("Numero persone: ", 1 , max );
+        int p_stima_lav_rimanenti = gestore.getRistorante().getAddettoPrenotazione().stimaPostiRimanenti(data_prenotazione, gestore.getRistorante().getLavoro_persona(), gestore.getRistorante().getN_posti());
+        int p_effettivi_rimanenti = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
+        if (p_stima_lav_rimanenti > 0) {
+            System.out.printf("Attenzione: abbiamo stimato che rimangono %d posti prenotabili, assumendo che ogni persona prenoti in media 2 piatti, rispettala ca**o!!", Math.min(p_stima_lav_rimanenti, p_effettivi_rimanenti));
+        }else{
+            System.out.println("\nCi scusiamo ma il carico di lavoro non ci permette di accettare altre prenotazioni in questa data");
+            return;
+        }
+        //ATTENTO FEDE CONTROLLA SE LOGICAMENTE HA SENSO
+        //OBBLIGO IL CLIENTE A ORDINARE PER UN NUMERO DI POSTI AL MASSIMO PARI AL MIN(POSTI STIMATI, POSTI EFFETTIVI)
+        int n_persone = InputDati.leggiInteroConMinimoMassimo("\nNumero persone: ", 1 , Math.min(p_stima_lav_rimanenti, p_effettivi_rimanenti));
         int n_coperti = n_persone;
 
         //SCELTE
@@ -140,20 +147,22 @@ public class Main {
             do {
                 if(quantità != 0)
                     System.out.println("Persone rimanenti senza una portata assegnata: " + n_persone + "\n");
-                String scelta = InputDati.leggiStringaNonVuota("Inserisca il nome della portata da ordinare: ");
+                String scelta = InputDati.leggiStringa("Inserisca il nome della portata da ordinare: ");
                 for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
                     if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
                         portata = prenotabile;
                         validita = true;
-                    }else System.out.println("IL nome della portata non è corretto o non presente in menu.");
+                    }
                 }
+                if(!validita)
+                    System.out.println("Portata non presente nel menu del giorno.");
                 }while(!validita);
             quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": ",1);
+
             scelte.put(portata, quantità);
 
-
             n_persone -= quantità;
-        }while(n_persone > 0 || InputDati.yesOrNo("Vuoi ordinare altre portate?"));
+        }while(n_persone > 0 || InputDati.yesOrNo("Vuole ordinare altre portate?"));
 
 
         //CALCOLO CONSUMO BEVANDE E GENERI EXTRA
@@ -174,7 +183,7 @@ public class Main {
             gestore.getRistorante().getAddettoPrenotazione().getPrenotazioni().add(prenotazione);
             System.out.println("Prenotazione Registrata.\n");
 
-        }else System.out.println("Prenotazione Annullata, hai superato il carico di lavoro massimo del ristorante.");
+        }else System.out.println("Prenotazione Annullata, ha superato il carico di lavoro massimo del ristorante.");
 
     }
 
@@ -278,16 +287,17 @@ public class Main {
             System.out.println("Non ci sono piatti disponibili per il giorno " + data);
         else {
             System.out.println("\nIl menù disponibile per il giorno " + data + " offre queste specialità:");
-            System.out.println("(puoi scegliere sia i piatti all'interno del menù alla carta che i menù tematici presenti) \n");
+            System.out.println("(può scegliere sia i piatti all'interno del menù alla carta che i menù tematici presenti) \n");
             for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data)) {
                 if (prenotabile instanceof Piatto) {
                     Piatto piatto = (Piatto) prenotabile;
                     System.out.printf("- " + piatto.getNome().toUpperCase());
-                    System.out.printf(" con ingredienti: ");
+                   // System.out.printf(" con ingredienti: (");
+                    System.out.printf(": (");
                     ArrayList<Alimento> ingredienti = piatto.getRicetta().getIngredienti();
                     for (Alimento ingrediente : ingredienti) {
                         if(ingrediente.equals(piatto.getRicetta().getIngredienti().get(ingredienti.toArray().length-1)))
-                            System.out.printf(ingrediente.getNome() + ".");
+                            System.out.printf(ingrediente.getNome() + ".)");
                         else
                             System.out.printf(ingrediente.getNome() + ", ");
                     }
