@@ -230,7 +230,12 @@ public class LetturaFileXML {
 
                             case Costanti.MENU_TEMATICO:
                                 if(xmlreader.isEndElement()){
-                                    addetto_prenotazione.aggiungiMenu_tematico(menu_tematico);
+                                    //controllo aggiuntivo che il lavoro del menu tematico non ecceda 4/3 del lavoro per persona
+                                    if (menu_tematico.getLavoro_menu() <= 4/3 * ristorante.getLavoro_persona()){
+                                        addetto_prenotazione.aggiungiMenu_tematico(menu_tematico);
+                                    }else{
+                                        System.out.println("Il menu tematico " + menu_tematico.getNome() + " e' stato rifiutato perche' eccede il vincolo di lavoro di 4/3 del lavoro per persona.");
+                                    }
                                 }
                                 break;
                         }

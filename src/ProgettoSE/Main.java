@@ -4,6 +4,7 @@ import ProgettoSE.Alimentari.Alimento;
 import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Ingrediente;
 import ProgettoSE.Alimentari.Extra;
+import ProgettoSE.Attori.Cliente;
 import ProgettoSE.Attori.Gestore;
 import ProgettoSE.Menu.MenuTematico;
 import ProgettoSE.mylib.MyMenu;
@@ -15,6 +16,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 
@@ -112,6 +114,8 @@ public class Main {
                 case 2:
                     System.out.println("La data inserita deve essere sucessiva alla data attuale (" + data_attuale + ")");
                     break;
+                case 3:
+                    System.out.println("Il ristorante non ha posti disponibili in questa data (" + stringa_data_prenotazione + ")");
             }
             stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
             msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
@@ -119,6 +123,8 @@ public class Main {
         LocalDate data_prenotazione = LocalDate.parse(stringa_data_prenotazione);
 
         //POSTI
+        System.out.printf("Attenzione: abbiamo stimato che rimangono %d posti prenotabili, assumendo che ogni persona prenoti in media 2 piatti, rispettala ca**o!!", gestore.getRistorante().getAddettoPrenotazione().stimaPostiRimanenti(data_prenotazione, gestore.getRistorante().getLavoro_persona(), gestore.getRistorante().getN_posti()));
+
         int max = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
         int n_persone = InputDati.leggiInteroConMinimoMassimo("Numero persone: ", 1 , max );
         int n_coperti = n_persone;

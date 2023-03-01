@@ -89,7 +89,7 @@ public class Prenotazione {
         return cons_extra;
     }
 
-    public void setCons_extra(HashMap<Extra, Float> cons_extra) {
+    public void setCons_extra(HashMap<Alimento, Float> cons_extra) {
         this.cons_extra = cons_extra;
     }
 

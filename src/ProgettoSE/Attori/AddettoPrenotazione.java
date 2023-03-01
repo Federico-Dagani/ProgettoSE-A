@@ -9,6 +9,8 @@ import ProgettoSE.mylib.InputDati;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddettoPrenotazione extends Persona {
 
@@ -120,14 +122,18 @@ public class AddettoPrenotazione extends Persona {
      * 2 se "La data inserita deve essere sucessiva alla data attuale (" + data_attuale + ")"
      * 0 se è ok
      */
-    public int controlloDataPrenotazione(LocalDate data_attuale, String stringa_data_prenotazione){
+    public int controlloDataPrenotazione(LocalDate data_attuale, String stringa_data_prenotazione, int posti_ristorante) {
         LocalDate data_prenotazione = null;
-        try{
+        try {
             data_prenotazione = LocalDate.parse(stringa_data_prenotazione);
-        }catch (DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             return 1;
-        }if(data_prenotazione.isBefore(data_attuale) || data_prenotazione.isEqual(data_attuale))
+        }
+        if (data_prenotazione.isBefore(data_attuale) || data_prenotazione.isEqual(data_attuale))
             return 2;
+        else if (posti_ristorante - calcolaPostiOccupati(data_prenotazione) == 0){
+            return 3;
+        }
         return 0;
     }
 

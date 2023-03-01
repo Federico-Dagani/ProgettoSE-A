@@ -21,4 +21,6 @@ public class Tempo {
     public void setData_corrente(LocalDate data_corrente) {
         this.data_corrente = data_corrente;
     }
+
+    //
 }

@@ -31,7 +31,7 @@
  	</magazzino>
   	<piatto nome="Torta salata">
 		<disponibilita inizio="2023-02-24" fine="2023-03-24"/>
-		<ricetta n_porzioni="10" lavoro_porzione="0.1">
+		<ricetta n_porzioni="3" lavoro_porzione="1.3">
 			<ingrediente nome="Pasta sfoglia" qta="0.5" misura="kg"/>
 			<ingrediente nome="Uova" qta="5" misura="pz"/>
 			<ingrediente nome="Ricotta" qta="1" misura="kg"/>
@@ -86,7 +86,7 @@
 			<ingrediente nome="Panna" qta="3.2" misura="l"/>
 		</ricetta>
 	</piatto>
-	<menu_tematico nome="special" lavoro_menu="10">
+	<menu_tematico nome="special" lavoro_menu="3.0">
 		<disponibilita_menu inizio="2023-01-07" fine="2023-01-31"/>
 		<disponibilita_menu inizio="2023-02-25" fine="2023-03-23"/>
 		<portata nome="Kebab"/>
