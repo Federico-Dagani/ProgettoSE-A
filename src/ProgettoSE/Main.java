@@ -127,33 +127,39 @@ public class Main {
         int p_stima_lav_rimanenti = gestore.getRistorante().getAddettoPrenotazione().stimaPostiRimanenti(data_prenotazione, gestore.getRistorante().getLavoro_persona(), gestore.getRistorante().getN_posti());
         int p_effettivi_rimanenti = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
         if (p_stima_lav_rimanenti > 0) {
-            System.out.printf("Attenzione: abbiamo stimato che rimangono %d posti prenotabili, assumendo che ogni persona prenoti in media 2 piatti, rispettala ca**o!!", Math.min(p_stima_lav_rimanenti, p_effettivi_rimanenti));
+            //System.out.printf("Attenzione: abbiamo stimato che rimangono %d posti prenotabili, assumendo che ogni persona prenoti in media 2 piatti, rispettala ca**o!!", Math.min(p_stima_lav_rimanenti, p_effettivi_rimanenti));
+            System.out.printf("\nI posti liberi nel ristorante sono %d.", p_effettivi_rimanenti);
+            System.out.printf("\nAbbiamo stimato di poter soddisfare %d commensali, assumendo che ogni persona prenoti in media 2 piatti.", p_stima_lav_rimanenti);
         }else{
-            System.out.println("\nCi scusiamo ma il carico di lavoro non ci permette di accettare altre prenotazioni in questa data");
+            System.out.println("\nCi scusiamo ma la stima del carico di lavoro non ci permette di accettare altre prenotazioni in questa data");
             return;
         }
         //ATTENTO FEDE CONTROLLA SE LOGICAMENTE HA SENSO
         //OBBLIGO IL CLIENTE A ORDINARE PER UN NUMERO DI POSTI AL MASSIMO PARI AL MIN(POSTI STIMATI, POSTI EFFETTIVI)
-        int n_persone = InputDati.leggiInteroConMinimoMassimo("\nNumero persone: ", 1 , Math.min(p_stima_lav_rimanenti, p_effettivi_rimanenti));
-        int n_coperti = n_persone;
-
+        int n_coperti = InputDati.leggiInteroConMinimoMassimo("\nNumero persone: ", 1 , p_effettivi_rimanenti);
         //variabili di supporto
         int lavoro_persona = gestore.getRistorante().getLavoro_persona();
         int n_posti = gestore.getRistorante().getN_posti();
 
         //SCELTE
         HashMap<Prenotabile, Integer> scelte = new HashMap<>();
+        Integer n_portate = 0;
         do {
             stampaMenuDelGiorno(gestore, data_prenotazione);
             stampaScelte(scelte);
+            if(n_portate < n_coperti)
+                System.out.printf("\nDeve scelgliere almeno altre %d portate per convalidare la prenotazione.", n_coperti-n_portate);
+
 
             Boolean validita = false;
             Prenotabile portata = null;
             Integer quantità = 0;
+
+
             do {
-                if(quantità != 0)
-                    System.out.println("Persone rimanenti senza una portata assegnata: " + n_persone + "\n");
-                String scelta = InputDati.leggiStringa("\n\n\nInserisca il nome della portata da ordinare: \n");
+                String scelta = InputDati.leggiStringa("\n\nInserisca il nome della portata da ordinare: ('esci' per annullare tutta la prenotazione)\n");
+                if(scelta.equalsIgnoreCase("esci"))
+                    return;
                 for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
                     if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
                         portata = prenotabile;
@@ -165,25 +171,32 @@ public class Main {
                 }while(!validita);
             quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": \n",0);
 
-            //devo leggere il value precedente e sommrlo alla nuova quantità aggiunta, dopodichè rimetto la value nuova nella Map
+            //devo leggere il value precedente e sommarlo alla nuova quantità aggiunta, dopodichè rimetto la value nuova nella Map
             Integer quantita_precedente = scelte.get(portata);
             if(quantita_precedente == null)
                 quantita_precedente = 0;
-
-            scelte.put(portata, quantità+quantita_precedente);
+            if(quantita_precedente+quantità !=0)
+                scelte.put(portata, quantità+quantita_precedente);
 
             Prenotazione prenotazione = new Prenotazione(null, n_coperti, data_prenotazione, scelte, null, null);
             if(gestore.getRistorante().getAddettoPrenotazione().validaCaricoLavoro(data_prenotazione, lavoro_persona, n_posti, prenotazione)){
                 System.out.println("Portata aggiunta all'ordine.");
-                n_persone -= quantità;
             }else{
-                System.out.println("Il carico di lavoro non ci permette di accettare un così alto numero di portate. Rimosso dalla lista: " + portata.getNome());
+                System.out.println("Il carico di lavoro non ci permette di accettare un così alto numero di portate. Rimosso dalla lista: " + portata.getNome() + " x" + quantità);
+                //tolgo la portata inserita che mi fa sballare il carico di lavoro totale e reinserisco
                 scelte.remove(portata);
+                if(quantita_precedente != 0)
+                    scelte.put(portata, quantita_precedente);
             }
+
             System.out.println("\n" + "Premere un tasto per continuare ... ");
             br.readLine();
 
-        }while(n_persone > 0 || InputDati.yesOrNo("Ogni commensale ha ordinato almeno una portata ciascuno, vuole ordinare altre portate?"));
+            n_portate = 0;
+            for(Integer value : scelte.values())
+                n_portate +=value;
+
+        }while(n_portate < n_coperti || InputDati.yesOrNo("Ogni commensale ha ordinato almeno una portata ciascuno, vuole ordinare altre portate?"));
 
 
         //CALCOLO CONSUMO BEVANDE E GENERI EXTRA
@@ -194,15 +207,6 @@ public class Main {
         Prenotazione prenotazione = new Prenotazione(cliente, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
         gestore.getRistorante().getAddettoPrenotazione().getPrenotazioni().add(prenotazione);
         System.out.println("\nPrenotazione Registrata.\n");
-
-        //Controllo
-        /*
-        if(gestore.getRistorante().getAddettoPrenotazione().validaCaricoLavoro(data_prenotazione, lavoro_persona, n_posti, prenotazione)){
-            gestore.getRistorante().getAddettoPrenotazione().getPrenotazioni().add(prenotazione);
-            System.out.println("Prenotazione Registrata.\n");
-
-        }else System.out.println("Prenotazione Annullata, ha superato il carico di lavoro massimo del ristorante.");*/
-
     }
 
     private static void mostraMenuTematici(ArrayList<Prenotabile> menu){
@@ -373,7 +377,7 @@ public class Main {
         if(scelte.isEmpty()){
             return;
         }
-        System.out.println("\nLe scelte effettuate finora sono le seguenti: ");
+        System.out.println("Le scelte effettuate finora sono le seguenti: ");
         for (Prenotabile prenotabile : scelte.keySet()){
             if(prenotabile instanceof Piatto){
                 System.out.printf("- " + ((Piatto) prenotabile).getNome() + ", ");
