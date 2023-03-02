@@ -64,8 +64,6 @@ public class Main {
         System.out.println("\n" + Costanti.USCITA_MENU + Costanti.ATTORI.toUpperCase(Locale.ROOT));
         System.out.println("\n" + Costanti.END);
 
-        stampaMenuDelGiorno(gestore, data_attuale.getData_corrente());
-
     }
 
     private static void benvenuto(){
@@ -99,7 +97,9 @@ public class Main {
         }
     }
 
-    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) {
+    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         //NOME
         String nome_cliente = InputDati.leggiStringaNonVuota("Nome cliente: ");
         Cliente cliente = new Cliente(nome_cliente);
@@ -153,7 +153,7 @@ public class Main {
             do {
                 if(quantità != 0)
                     System.out.println("Persone rimanenti senza una portata assegnata: " + n_persone + "\n");
-                String scelta = InputDati.leggiStringa("Inserisca il nome della portata da ordinare: ");
+                String scelta = InputDati.leggiStringa("\n\n\nInserisca il nome della portata da ordinare: \n");
                 for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
                     if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
                         portata = prenotabile;
@@ -163,20 +163,27 @@ public class Main {
                 if(!validita)
                     System.out.println("Portata non presente nel menu del giorno.");
                 }while(!validita);
-            quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": ",1);
+            quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": \n",0);
 
-            scelte.put(portata, quantità);
+            //devo leggere il value precedente e sommrlo alla nuova quantità aggiunta, dopodichè rimetto la value nuova nella Map
+            Integer quantita_precedente = scelte.get(portata);
+            if(quantita_precedente == null)
+                quantita_precedente = 0;
+
+            scelte.put(portata, quantità+quantita_precedente);
 
             Prenotazione prenotazione = new Prenotazione(null, n_coperti, data_prenotazione, scelte, null, null);
             if(gestore.getRistorante().getAddettoPrenotazione().validaCaricoLavoro(data_prenotazione, lavoro_persona, n_posti, prenotazione)){
                 System.out.println("Portata aggiunta all'ordine.");
-
+                n_persone -= quantità;
             }else{
                 System.out.println("Il carico di lavoro non ci permette di accettare un così alto numero di portate. Rimosso dalla lista: " + portata.getNome());
                 scelte.remove(portata);
             }
-            n_persone -= quantità;
-        }while(n_persone > 0 || InputDati.yesOrNo("Vuole ordinare altre portate?"));
+            System.out.println("\n" + "Premere un tasto per continuare ... ");
+            br.readLine();
+
+        }while(n_persone > 0 || InputDati.yesOrNo("Ogni commensale ha ordinato almeno una portata ciascuno, vuole ordinare altre portate?"));
 
 
         //CALCOLO CONSUMO BEVANDE E GENERI EXTRA
