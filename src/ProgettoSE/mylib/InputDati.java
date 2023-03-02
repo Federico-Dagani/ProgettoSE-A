@@ -18,13 +18,16 @@ public class InputDati {
 
 
     private static Scanner creaScanner() {
-        Scanner creato = new Scanner(System.in);
-        //creato.useDelimiter(System.getProperty("line.separator"));
-        return creato;
+        return new Scanner(System.in).useDelimiter("\n");
     }
 
     public static String leggiStringa(String messaggio) {
         System.out.print(messaggio);
+        return lettore.next();
+    }
+
+    public static String leggiStringaConSpazio(String messaggio){
+        System.out.println(messaggio);
         return lettore.next();
     }
 

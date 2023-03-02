@@ -45,7 +45,7 @@ public class Main {
                     int scelta_funz_gestore = menu_gestore.scegliConUscita();
                     while (scelta_funz_gestore != 0){
                         scegliFunzionalitaGestore(scelta_funz_gestore, gestore);
-                        System.out.println("Premere un tasto per continuare ... ");
+                        System.out.println("\nPremere un tasto per continuare ... ");
                         br.readLine();
                         scelta_funz_gestore = menu_gestore.scegliConUscita();
                     }
@@ -55,8 +55,20 @@ public class Main {
                 case 2:
                     inserisciPrenotazione(gestore, data_attuale.getData_corrente());
                     break;
+
+                case 3:
+                    MyMenu menu_tempo = nuovoMenu(Costanti.TEMPO);
+                    int scelta_funz_tempo = menu_tempo.scegliConUscita();
+                    while (scelta_funz_tempo != 0){
+                        scegliFunzionalitaTemporali(scelta_funz_tempo, data_attuale);
+                        System.out.println("\nPremere un tasto per continuare ... ");
+                        br.readLine();
+                        scelta_funz_tempo = menu_tempo.scegliConUscita();
+                    }
+                    System.out.println("\n" + Costanti.USCITA_MENU + Costanti.TEMPO.toUpperCase(Locale.ROOT));
+                    break;
             }
-            System.out.println("\n" + "Premere un tasto per continuare ... ");
+            System.out.println("\nPremere un tasto per continuare ... ");
             br.readLine();
             scelta_attore = menu_attori.scegliConUscita();
         }
@@ -97,6 +109,20 @@ public class Main {
         }
     }
 
+    private static void scegliFunzionalitaTemporali(int scelta, Tempo data_attuale){
+
+        switch (scelta){
+            case 1:
+                data_attuale.scorriGiorno();
+                System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente());
+                break;
+            case 2:
+                data_attuale.setData_corrente(LocalDate.parse(InputDati.leggiStringa("\nInserisci una data valida (yyyy-mm-dd) :")));
+                System.out.println("La data è stata impostata correttamente");
+                break;
+        }
+    }
+
     private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -127,7 +153,6 @@ public class Main {
         int p_stima_lav_rimanenti = gestore.getRistorante().getAddettoPrenotazione().stimaPostiRimanenti(data_prenotazione, gestore.getRistorante().getLavoro_persona(), gestore.getRistorante().getN_posti());
         int p_effettivi_rimanenti = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
         if (p_stima_lav_rimanenti > 0) {
-            //System.out.printf("Attenzione: abbiamo stimato che rimangono %d posti prenotabili, assumendo che ogni persona prenoti in media 2 piatti, rispettala ca**o!!", Math.min(p_stima_lav_rimanenti, p_effettivi_rimanenti));
             System.out.printf("\nI posti liberi nel ristorante sono %d.", p_effettivi_rimanenti);
             System.out.printf("\nAbbiamo stimato di poter soddisfare %d commensali, assumendo che ogni persona prenoti in media 2 piatti.", p_stima_lav_rimanenti);
         }else{
@@ -266,9 +291,10 @@ public class Main {
 
             case Costanti.ATTORI:
 
-                String[] utenti = new String[2];
+                String[] utenti = new String[3];
                 utenti[0] = Costanti.GESTORE;
                 utenti[1] = Costanti.UTENTE;
+                utenti[2] = Costanti.TEMPO;
                 MyMenu menu_attori = new MyMenu(Costanti.ATTORI.toUpperCase(Locale.ROOT), utenti);
                 return menu_attori;
 
@@ -293,6 +319,14 @@ public class Main {
 
                 MyMenu menu_utente = new MyMenu(Costanti.UTENTE.toUpperCase(Locale.ROOT), azioni_utente);
                 return menu_utente;
+
+            case Costanti.TEMPO:
+
+                String[] azioni_tempo = new String[2];
+                azioni_tempo[0] = "Incrementa di un giorno";
+                azioni_tempo[1] = "Scegli una data";
+                MyMenu menu_tempo = new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.TEMPO.toUpperCase(Locale.ROOT), azioni_tempo);
+                return menu_tempo;
         }
         return null;
     }
@@ -387,6 +421,5 @@ public class Main {
                 System.out.printf("quantità: " + scelte.get(prenotabile) + "\n");
             }
         }
-
     }
 }

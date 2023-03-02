@@ -149,15 +149,14 @@ public class AddettoPrenotazione extends Persona {
 
     public int stimaPostiRimanenti(LocalDate data_prenotazione, int lavoro_persona, int n_posti){
 
-        float lavoro_rimanente = n_posti*lavoro_persona - calcolaLavoro(filtraPrenotazioniPerData(this.prenotazioni, data_prenotazione));
+        float lavoro_rimanente = n_posti*lavoro_persona - calcolaLavoro(filtraPrenotazioniPerData(data_prenotazione));
 
-        //è corretto?
-        return Math.floorDiv((int) lavoro_rimanente, lavoro_persona);
+        return (int) Math.ceil(lavoro_rimanente/lavoro_persona);
     }
 
     public boolean validaCaricoLavoro(LocalDate data_prenotazione, int lavoro_persona, int n_posti, Prenotazione possibile_prenotazione){
 
-        ArrayList<Prenotazione> possibili_prenotazioni = filtraPrenotazioniPerData(this.prenotazioni, data_prenotazione);
+        ArrayList<Prenotazione> possibili_prenotazioni = filtraPrenotazioniPerData(data_prenotazione);
         possibili_prenotazioni.add(possibile_prenotazione);
 
        //ora calcolo il lavoro totale della somma delle prenotazioni(questo array che ho creato: possibili_prenotazioni)
@@ -191,10 +190,9 @@ public class AddettoPrenotazione extends Persona {
         return new Prenotazione(scelte_complessive).getLavoro_prenotazione();
     }
 
-
-    public ArrayList<Prenotazione> filtraPrenotazioniPerData(ArrayList<Prenotazione> prenotazioni_da_filtrare, LocalDate data){
+    public ArrayList<Prenotazione> filtraPrenotazioniPerData(LocalDate data){
         ArrayList<Prenotazione> prenotazioni_filtrate = new ArrayList<>();
-        for (Prenotazione prenotazione : prenotazioni_da_filtrare){
+        for (Prenotazione prenotazione : this.prenotazioni){
             if(prenotazione.getData().equals(data))
                 prenotazioni_filtrate.add(prenotazione);
         }

@@ -49,4 +49,11 @@ public class Magazziniere extends Persona {
         }
         return consumi;
     }
+
+
+    public void calcolaListaSpesa(ArrayList<Prenotazione> prenotazioni){
+
+
+    }
+
 }
