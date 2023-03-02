@@ -9,6 +9,7 @@ import ProgettoSE.Prenotazione;
 import ProgettoSE.Ristorante;
 import ProgettoSE.ServiziFileXML.LetturaFileXML;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Gestore extends Persona {
@@ -35,6 +36,10 @@ public class Gestore extends Persona {
         ristorante = letturaFileXML.leggiRistorante(Costanti.FILE_RISTORANTE);
     }
 
-
+    //
+    public boolean comunica(LocalDate data_attuale) {
+      ristorante.getMagazziniere().calcolaListaSpesa(ristorante.getAddettoPrenotazione().filtraPrenotazioniPerData(data_attuale));
+      return ristorante.getAddettoPrenotazione().eliminaPrenotazioni(data_attuale);
+    }
 
 }

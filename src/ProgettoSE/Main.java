@@ -154,14 +154,12 @@ public class Main {
         int p_effettivi_rimanenti = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
         if (p_stima_lav_rimanenti > 0) {
             System.out.printf("\nI posti liberi nel ristorante sono %d.", p_effettivi_rimanenti);
-            System.out.printf("\nAbbiamo stimato di poter soddisfare %d commensali, assumendo che ogni persona prenoti in media 2 piatti.", p_stima_lav_rimanenti);
+            System.out.printf("\nAbbiamo stimato di poter cucinare %d portate (solitamente 2 portate a testa).", p_stima_lav_rimanenti*2);
         }else{
             System.out.println("\nCi scusiamo ma la stima del carico di lavoro non ci permette di accettare altre prenotazioni in questa data");
             return;
         }
-        //ATTENTO FEDE CONTROLLA SE LOGICAMENTE HA SENSO
-        //OBBLIGO IL CLIENTE A ORDINARE PER UN NUMERO DI POSTI AL MASSIMO PARI AL MIN(POSTI STIMATI, POSTI EFFETTIVI)
-        int n_coperti = InputDati.leggiInteroConMinimoMassimo("\nNumero persone: ", 1 , p_effettivi_rimanenti);
+        int n_coperti = InputDati.leggiInteroConMinimoMassimo("\nNumero persone : ", 1 , Math.min(p_effettivi_rimanenti, p_stima_lav_rimanenti*2));
         //variabili di supporto
         int lavoro_persona = gestore.getRistorante().getLavoro_persona();
         int n_posti = gestore.getRistorante().getN_posti();
@@ -182,9 +180,8 @@ public class Main {
 
 
             do {
-                String scelta = InputDati.leggiStringa("\n\nInserisca il nome della portata da ordinare: ('esci' per annullare tutta la prenotazione)\n");
-                if(scelta.equalsIgnoreCase("esci"))
-                    return;
+                String scelta = InputDati.leggiStringa("\n\nInserisca il nome della portata da ordinare: \n");
+
                 for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
                     if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
                         portata = prenotabile;

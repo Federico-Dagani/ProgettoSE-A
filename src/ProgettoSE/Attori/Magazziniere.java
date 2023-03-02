@@ -5,6 +5,7 @@ import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Extra;
 import ProgettoSE.Costanti;
 import ProgettoSE.Magazzino;
+import ProgettoSE.Prenotazione;
 
 import java.util.ArrayList;
 import java.util.HashMap;

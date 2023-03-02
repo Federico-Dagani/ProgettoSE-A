@@ -1,5 +1,7 @@
 package ProgettoSE;
 
+import ProgettoSE.mylib.InputDati;
+
 import java.time.LocalDate;
 
 public class Tempo {
@@ -22,5 +24,11 @@ public class Tempo {
         this.data_corrente = data_corrente;
     }
 
-    //
+    /**
+     * metodo che aumenta la data di 1 singolo giorno
+     */
+    public void scorriGiorno(){
+        data_corrente = data_corrente.plusDays(1);
+    }
+
 }
