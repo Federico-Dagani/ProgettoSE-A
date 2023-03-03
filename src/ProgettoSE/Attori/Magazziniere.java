@@ -49,7 +49,6 @@ public class Magazziniere extends Persona {
         return consumi;
     }
 
-
     public void calcolaListaSpesa(Prenotazione prenotazione_totale){
 
         for(Prenotabile prenotabile : prenotazione_totale.getScelte().keySet()){

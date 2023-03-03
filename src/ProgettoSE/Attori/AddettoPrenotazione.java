@@ -175,9 +175,7 @@ public class AddettoPrenotazione extends Persona {
         HashMap<Prenotabile, Integer> scelte_complessive = new HashMap<>();
 
         HashMap<Alimento, Float> cons_bevande_complessivo = new HashMap<>();
-        //HashMap<Extra, Float> cons_extra_complessivo = new HashMap<>();
-
-
+        HashMap<Alimento, Float> cons_extra_complessivo = new HashMap<>();
 
         for(Prenotazione prenotazione : prenotazioni_in_corso){
 
@@ -193,11 +191,11 @@ public class AddettoPrenotazione extends Persona {
                 }
 
                 for(Map.Entry<Alimento, Float> cons_extra : prenotazione.getCons_extra().entrySet()){
-                    if(!cons_bevande_complessivo.containsKey(cons_extra.getKey())){
-                        cons_bevande_complessivo.put(cons_extra.getKey(), cons_extra.getValue());
+                    if(!cons_extra_complessivo.containsKey(cons_extra.getKey())){
+                        cons_extra_complessivo.put(cons_extra.getKey(), cons_extra.getValue());
                     }else{
-                        float nuovo_cons = cons_bevande_complessivo.get(cons_extra.getKey()) + cons_extra.getValue();
-                        cons_bevande_complessivo.put(cons_extra.getKey(), nuovo_cons);
+                        float nuovo_cons = cons_extra_complessivo.get(cons_extra.getKey()) + cons_extra.getValue();
+                        cons_extra_complessivo.put(cons_extra.getKey(), nuovo_cons);
                     }
                 }
 
