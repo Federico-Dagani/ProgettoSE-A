@@ -4,9 +4,6 @@ import ProgettoSE.*;
 import ProgettoSE.Alimentari.Alimento;
 import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Extra;
-import ProgettoSE.Costanti;
-import ProgettoSE.Magazzino;
-import ProgettoSE.Prenotazione;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,9 +50,11 @@ public class Magazziniere extends Persona {
     }
 
 
-    public void calcolaListaSpesa(ArrayList<Prenotazione> prenotazioni){
+    public void calcolaListaSpesa(Prenotazione prenotazione_totale){
 
-
+        for(Prenotabile prenotabile : prenotazione_totale.getScelte().keySet()){
+            if(prenotabile instanceof Piatto);
+        }
     }
 
 }

@@ -7,10 +7,7 @@ import ProgettoSE.Attori.Cliente;
 import ProgettoSE.Menu.MenuTematico;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public class Prenotazione {
     private Cliente nominativo;
@@ -35,13 +32,13 @@ public class Prenotazione {
     }
 
     //metodo cotruttore fittizio perchè serve in AddettoPrenotazioni, nel metodo calcolaLavoro()
-    public Prenotazione(HashMap<Prenotabile, Integer> scelte){
+    public Prenotazione(HashMap<Prenotabile, Integer> scelte, HashMap<Alimento, Float> cons_bevande, HashMap<Alimento, Float> cons_extra){
         this.nominativo = null;
         this.n_coperti = 0;
         this.data = null;
         this.scelte = scelte;
-        this.cons_bevande = null;
-        this.cons_extra = null;
+        this.cons_bevande = cons_bevande;
+        this.cons_extra = cons_extra;
 
     }
 

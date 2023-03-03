@@ -152,7 +152,7 @@ public class AddettoPrenotazione extends Persona {
 
     public int stimaPostiRimanenti(LocalDate data_prenotazione, int lavoro_persona, int n_posti){
 
-        float lavoro_rimanente = n_posti*lavoro_persona - calcolaLavoro(filtraPrenotazioniPerData(data_prenotazione));
+        float lavoro_rimanente = n_posti*lavoro_persona - unisciPrenotazioni(filtraPrenotazioniPerData(data_prenotazione)).getLavoro_prenotazione();
 
         return (int) Math.ceil(lavoro_rimanente/lavoro_persona);
     }
@@ -163,7 +163,7 @@ public class AddettoPrenotazione extends Persona {
         possibili_prenotazioni.add(possibile_prenotazione);
 
        //ora calcolo il lavoro totale della somma delle prenotazioni(questo array che ho creato: possibili_prenotazioni)
-        if(calcolaLavoro(possibili_prenotazioni) > lavoro_persona*n_posti + (20/100)*lavoro_persona*n_posti){
+        if(unisciPrenotazioni(possibili_prenotazioni).getLavoro_prenotazione() > lavoro_persona*n_posti + (20/100)*lavoro_persona*n_posti){
             return false;
         }else {
             return true;
@@ -174,9 +174,32 @@ public class AddettoPrenotazione extends Persona {
 
         HashMap<Prenotabile, Integer> scelte_complessive = new HashMap<>();
 
+        HashMap<Alimento, Float> cons_bevande_complessivo = new HashMap<>();
+        //HashMap<Extra, Float> cons_extra_complessivo = new HashMap<>();
+
+
+
         for(Prenotazione prenotazione : prenotazioni_in_corso){
 
             for(Map.Entry<Prenotabile, Integer> scelta_prenotazione : prenotazione.getScelte().entrySet()) {
+
+                for(Map.Entry<Alimento, Float> cons_bevanda : prenotazione.getCons_bevande().entrySet()){
+                    if(!cons_bevande_complessivo.containsKey(cons_bevanda.getKey())){
+                        cons_bevande_complessivo.put(cons_bevanda.getKey(), cons_bevanda.getValue());
+                    }else{
+                        float nuovo_cons = cons_bevande_complessivo.get(cons_bevanda.getKey()) + cons_bevanda.getValue();
+                        cons_bevande_complessivo.put(cons_bevanda.getKey(), nuovo_cons);
+                    }
+                }
+
+                for(Map.Entry<Alimento, Float> cons_extra : prenotazione.getCons_extra().entrySet()){
+                    if(!cons_bevande_complessivo.containsKey(cons_extra.getKey())){
+                        cons_bevande_complessivo.put(cons_extra.getKey(), cons_extra.getValue());
+                    }else{
+                        float nuovo_cons = cons_bevande_complessivo.get(cons_extra.getKey()) + cons_extra.getValue();
+                        cons_bevande_complessivo.put(cons_extra.getKey(), nuovo_cons);
+                    }
+                }
 
                 Prenotabile prenotabile_scelto = scelta_prenotazione.getKey();
 
@@ -190,7 +213,7 @@ public class AddettoPrenotazione extends Persona {
                 }
             }
         }
-        return new Prenotazione(scelte_complessive).getLavoro_prenotazione();
+        return new Prenotazione(scelte_complessive, null, null);
     }
 
     public ArrayList<Prenotazione> filtraPrenotazioniPerData(LocalDate data){
