@@ -1,16 +1,10 @@
 package ProgettoSE.Attori;
 
-import ProgettoSE.Alimentari.Bevanda;
-import ProgettoSE.Alimentari.Extra;
-import ProgettoSE.Alimentari.Ingrediente;
 import ProgettoSE.Costanti;
-import ProgettoSE.Magazzino;
-import ProgettoSE.Prenotazione;
 import ProgettoSE.Ristorante;
 import ProgettoSE.ServiziFileXML.LetturaFileXML;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public class Gestore extends Persona {
 
@@ -38,7 +32,7 @@ public class Gestore extends Persona {
 
     //
     public void comunica(LocalDate data_precedente, LocalDate data_attuale) {
-        ristorante.getMagazziniere().calcolaListaSpesa(ristorante.getAddettoPrenotazione().unisciPrenotazioni(ristorante.getAddettoPrenotazione().filtraPrenotazioniPerData(data_attuale)));
+        ristorante.getMagazziniere().creaListaSpesa(ristorante.getAddettoPrenotazione().unisciPrenotazioni(ristorante.getAddettoPrenotazione().filtraPrenotazioniPerData(data_attuale)));
 
 
         for (LocalDate data = data_precedente; data.isEqual(data_attuale); data = data.plusDays(1)) {

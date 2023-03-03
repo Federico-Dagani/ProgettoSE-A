@@ -34,5 +34,4 @@ abstract public class Alimento {
         this.misura = misura;
     }
 
-
 }

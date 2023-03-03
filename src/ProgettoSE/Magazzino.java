@@ -20,7 +20,6 @@ public class Magazzino {
     }
 
     //get e set
-
     public ArrayList<Alimento> getBevande() {
         return bevande;
     }
@@ -43,5 +42,30 @@ public class Magazzino {
 
     public void setIngredienti(ArrayList<Alimento> ingredienti) {
         this.ingredienti = ingredienti;
+    }
+
+    public Alimento getAlimento(String nome_alimento){
+        for (Alimento alimento : this.ingredienti)
+            if(alimento.getNome().equals(nome_alimento)) return alimento;
+        for(Alimento alimento : this.bevande)
+            if(alimento.getNome().equals(nome_alimento)) return alimento;
+        for (Alimento alimento : this.extras)
+            if(alimento.getNome().equals(nome_alimento)) return alimento;
+        return null;
+    }
+
+    public void setAlimento(Alimento alimento){
+        String nome_alimento = alimento.getNome();
+        float qta_alimento = alimento.getQta();
+
+        if(alimento instanceof Ingrediente)
+            for (Alimento ingrediente : ingredienti)
+                if (nome_alimento.equals(ingrediente.getNome())) ingrediente.setQta(qta_alimento);
+        if(alimento instanceof Bevanda)
+            for(Alimento bevanda : bevande)
+                if(nome_alimento.equals(bevanda.getNome())) bevanda.setQta(qta_alimento);
+        if(alimento instanceof Extra)
+            for (Alimento extra : extras)
+                if(nome_alimento.equals(extra.getNome())) extra.setQta(qta_alimento);
     }
 }

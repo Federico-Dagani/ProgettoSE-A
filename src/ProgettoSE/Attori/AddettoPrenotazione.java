@@ -211,7 +211,7 @@ public class AddettoPrenotazione extends Persona {
                 }
             }
         }
-        return new Prenotazione(scelte_complessive, null, null);
+        return new Prenotazione(scelte_complessive, cons_bevande_complessivo, cons_extra_complessivo);
     }
 
     public ArrayList<Prenotazione> filtraPrenotazioniPerData(LocalDate data){
