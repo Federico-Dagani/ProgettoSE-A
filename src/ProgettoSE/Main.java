@@ -60,7 +60,7 @@ public class Main {
                     MyMenu menu_tempo = nuovoMenu(Costanti.TEMPO);
                     int scelta_funz_tempo = menu_tempo.scegliConUscita();
                     while (scelta_funz_tempo != 0){
-                        scegliFunzionalitaTemporali(scelta_funz_tempo, data_attuale);
+                        scegliFunzionalitaTemporali(scelta_funz_tempo, data_attuale, gestore);
                         System.out.println("\nPremere un tasto per continuare ... ");
                         br.readLine();
                         scelta_funz_tempo = menu_tempo.scegliConUscita();
@@ -109,18 +109,19 @@ public class Main {
         }
     }
 
-    private static void scegliFunzionalitaTemporali(int scelta, Tempo data_attuale){
-
+    private static void scegliFunzionalitaTemporali(int scelta, Tempo data_attuale, Gestore gestore){
+        LocalDate data_precedente = data_attuale.getData_corrente();
         switch (scelta){
             case 1:
                 data_attuale.scorriGiorno();
-                System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente());
                 break;
             case 2:
+                data_precedente = data_attuale.getData_corrente();
                 data_attuale.setData_corrente(LocalDate.parse(InputDati.leggiStringa("\nInserisci una data valida (yyyy-mm-dd) :")));
-                System.out.println("La data è stata impostata correttamente");
                 break;
         }
+        System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente() + ". La lista spesa è stata aggiornata.");
+        gestore.comunica(data_precedente, data_attuale.getData_corrente());
     }
 
     private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) throws IOException {
