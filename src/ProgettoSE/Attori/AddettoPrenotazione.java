@@ -1,5 +1,8 @@
 package ProgettoSE.Attori;
 
+import ProgettoSE.Alimentari.Alimento;
+import ProgettoSE.Alimentari.Bevanda;
+import ProgettoSE.Alimentari.Extra;
 import ProgettoSE.Menu.*;
 import ProgettoSE.Piatto;
 import ProgettoSE.Prenotabile;
@@ -167,8 +170,8 @@ public class AddettoPrenotazione extends Persona {
         }
     }
 
-    //devo creare una prenotazione complessiva, che corrisponderà ad una data precisa, poi invoherò il metodo calolaLavoroPrenotazione()
-    public float calcolaLavoro(ArrayList<Prenotazione> prenotazioni_in_corso){
+    public Prenotazione unisciPrenotazioni(ArrayList<Prenotazione> prenotazioni_in_corso){
+
         HashMap<Prenotabile, Integer> scelte_complessive = new HashMap<>();
 
         for(Prenotazione prenotazione : prenotazioni_in_corso){

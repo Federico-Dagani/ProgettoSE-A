@@ -1,5 +1,6 @@
 package ProgettoSE.Attori;
 
+import ProgettoSE.*;
 import ProgettoSE.Alimentari.Alimento;
 import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Extra;

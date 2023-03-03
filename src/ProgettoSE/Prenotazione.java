@@ -18,6 +18,7 @@ public class Prenotazione {
     private LocalDate data;
     private HashMap<Prenotabile, Integer> scelte;
     //N.B. bisogna fare un controllo che la somma di tutti gli Integer sia >= n_coperti
+    //ci starebbe usare Map.Entry<> che crea solo una coppia e non un lista di coppie
     private HashMap<Alimento,Float> cons_bevande;  //calcolo del cons_procapite delle bevande * n_coperti
     private HashMap<Alimento,Float> cons_extra; //calcolo del cons_procapite degli extra * n_coperti
 
