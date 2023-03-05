@@ -122,7 +122,8 @@ public class Main {
                 break;
         }
         System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente() + ". La lista spesa è stata aggiornata.");
-        gestore.comunica(data_precedente, data_attuale.getData_corrente());
+        //dopo aer modificato il giorno, il gestore comunica al magazziniere di aggiornare la lista spesa e rifornire il magazzino, all'addeetto prenotazione di aggiornare le prenotazioni
+        System.out.println(gestore.comunica(data_precedente, data_attuale.getData_corrente()));
     }
 
     private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) throws IOException {

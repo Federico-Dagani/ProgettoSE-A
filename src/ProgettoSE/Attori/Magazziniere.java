@@ -91,6 +91,50 @@ public class Magazziniere extends Persona {
         }
 
     }
+    public void creaListaSpesa2(Prenotazione prenotazione_totale){
+        HashMap<Piatto, Integer> consumi = new HashMap<>();
+        //creo la mappa dei consumi (ogni piatto con la quantità totale)
+        for(Prenotabile prenotabile : prenotazione_totale.getScelte().keySet()){
+            //controllo se l'oggetto è un piatto
+            if(prenotabile instanceof Piatto){
+                if (!consumi.containsKey((Piatto) prenotabile))
+                        consumi.put((Piatto) prenotabile, prenotazione_totale.getScelte().get(prenotabile));
+                else
+                    consumi.put((Piatto) prenotabile, consumi.get(prenotabile) + prenotazione_totale.getScelte().get(prenotabile));
+            }else if(prenotabile instanceof MenuTematico){
+                //ciclo sui piatti presenti nel menu
+                for (Piatto piatto : ((MenuTematico) prenotabile).getPiatti_menu()){
+                    if (!consumi.containsKey(piatto))
+                        consumi.put(piatto, prenotazione_totale.getScelte().get(prenotabile));
+                    else
+                        consumi.put(piatto, consumi.get(piatto) + prenotazione_totale.getScelte().get(prenotabile));
+                }
+            }
+        }
+        //per ogni piatto, calcolo la quantità di ingredienti necessaria
+        for (Piatto piatto : consumi.keySet()){
+            valutaQtaIngredientiPiatto2(piatto, consumi.get(piatto));
+        }
+
+        //ciclare sugli extra e sulle bevande
+        for(Map.Entry<Alimento, Float> alimento : prenotazione_totale.getCons_extra().entrySet()){
+            if(alimento.getKey() instanceof Extra){
+                float qta_rimanente = magazzino.getAlimento(alimento.getKey().getNome()).getQta() - alimento.getValue();
+                if(qta_rimanente < 0)
+                    this.lista_spesa.add(new Extra(alimento.getKey().getNome(), Math.abs(qta_rimanente), alimento.getKey().getMisura(), ((Extra) alimento.getKey()).getCons_procapite()));
+            }
+        }
+
+        for(Map.Entry<Alimento, Float> alimento : prenotazione_totale.getCons_bevande().entrySet()){
+            if(alimento.getKey() instanceof Bevanda){
+                float qta_rimanente = magazzino.getAlimento(alimento.getKey().getNome()).getQta() - alimento.getValue();
+                if(qta_rimanente < 0)
+                    this.lista_spesa.add(new Bevanda(alimento.getKey().getNome(), Math.abs(qta_rimanente), alimento.getKey().getMisura(), ((Bevanda) alimento.getKey()).getCons_procapite()));
+            }
+        }
+
+    }
+
 
     private void valutaQtaIngredientiPiatto(Prenotabile prenotabile, int qta_richiesta_piatto){
 
@@ -102,7 +146,22 @@ public class Magazziniere extends Persona {
             float qta_richiesta_ingrediente = ingrediente.getQta() * n_porzioni;
             float qta_rimanente = magazzino.getAlimento(ingrediente.getNome()).getQta() - qta_richiesta_ingrediente;
             if (qta_rimanente < 0)
-                this.lista_spesa.add(new Ingrediente(ingrediente.getNome(), Math.abs(qta_richiesta_ingrediente), ingrediente.getMisura()));
+                //compro l'ingrediente in una quantità arrotondata per eccesso
+                this.lista_spesa.add(new Ingrediente(ingrediente.getNome(), (float) Math.ceil(Math.abs(qta_richiesta_ingrediente)), ingrediente.getMisura()));
+        }
+    }
+    private void valutaQtaIngredientiPiatto2(Piatto piatto, int qta_richiesta_piatto){
+
+        int n_porzioni_ricetta = piatto.getRicetta().getN_porzioni();
+        int n_porzioni = (int) Math.ceil(qta_richiesta_piatto/n_porzioni_ricetta);
+        //ciclo sugli ingredienti del piatto
+        for (Alimento ingrediente : piatto.getRicetta().getIngredienti()) {
+            //per trovare il numero di porzioni da fare mi interessa il numero di porzioni che genera la ricetta, in relazione al numero di porzioni che mi servono di quel piatto
+            float qta_richiesta_ingrediente = ingrediente.getQta() * n_porzioni;
+            float qta_rimanente = magazzino.getAlimento(ingrediente.getNome()).getQta() - qta_richiesta_ingrediente;
+            if (qta_rimanente < 0)
+                //compro l'ingrediente in una quantità arrotondata per eccesso
+                this.lista_spesa.add(new Ingrediente(ingrediente.getNome(), (float) Math.ceil(Math.abs(qta_richiesta_ingrediente)), ingrediente.getMisura()));
         }
     }
 
@@ -117,6 +176,8 @@ public class Magazziniere extends Persona {
             alimento.setQta(nuova_qta);
             magazzino.setAlimento(alimento);
         }
+        //svuoto la lista della spesa una volta aggiornato il magazzino
+        this.lista_spesa.clear();
         return messaggio;
     }
 

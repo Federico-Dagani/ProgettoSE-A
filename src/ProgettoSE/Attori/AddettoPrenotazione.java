@@ -101,6 +101,12 @@ public class AddettoPrenotazione extends Persona {
         else return false;
     }
 
+    public void aggiornaPrenotazioni(LocalDate data_precedente, LocalDate data_attuale) {
+        for (LocalDate data = data_precedente; data.isEqual(data_attuale); data = data.plusDays(1)) {
+            eliminaPrenotazioni(data);
+        }
+    }
+
     public ArrayList<Prenotabile> calcolaMenuDelGiorno(LocalDate data_attuale) {
         ArrayList<Prenotabile> menu_del_giorno = new ArrayList<>();
         for (Prenotabile prenotabile : menu) {
@@ -181,24 +187,26 @@ public class AddettoPrenotazione extends Persona {
 
             for(Map.Entry<Prenotabile, Integer> scelta_prenotazione : prenotazione.getScelte().entrySet()) {
 
-                for(Map.Entry<Alimento, Float> cons_bevanda : prenotazione.getCons_bevande().entrySet()){
-                    if(!cons_bevande_complessivo.containsKey(cons_bevanda.getKey())){
-                        cons_bevande_complessivo.put(cons_bevanda.getKey(), cons_bevanda.getValue());
-                    }else{
-                        float nuovo_cons = cons_bevande_complessivo.get(cons_bevanda.getKey()) + cons_bevanda.getValue();
-                        cons_bevande_complessivo.put(cons_bevanda.getKey(), nuovo_cons);
+                if(prenotazione.getCons_bevande() != null) {
+                    for (Map.Entry<Alimento, Float> cons_bevanda : prenotazione.getCons_bevande().entrySet()) {
+                        if (!cons_bevande_complessivo.containsKey(cons_bevanda.getKey())) {
+                            cons_bevande_complessivo.put(cons_bevanda.getKey(), cons_bevanda.getValue());
+                        } else {
+                            float nuovo_cons = cons_bevande_complessivo.get(cons_bevanda.getKey()) + cons_bevanda.getValue();
+                            cons_bevande_complessivo.put(cons_bevanda.getKey(), nuovo_cons);
+                        }
                     }
                 }
-
-                for(Map.Entry<Alimento, Float> cons_extra : prenotazione.getCons_extra().entrySet()){
-                    if(!cons_extra_complessivo.containsKey(cons_extra.getKey())){
-                        cons_extra_complessivo.put(cons_extra.getKey(), cons_extra.getValue());
-                    }else{
-                        float nuovo_cons = cons_extra_complessivo.get(cons_extra.getKey()) + cons_extra.getValue();
-                        cons_extra_complessivo.put(cons_extra.getKey(), nuovo_cons);
+                if(prenotazione.getCons_extra() != null) {
+                    for (Map.Entry<Alimento, Float> cons_extra : prenotazione.getCons_extra().entrySet()) {
+                        if (!cons_extra_complessivo.containsKey(cons_extra.getKey())) {
+                            cons_extra_complessivo.put(cons_extra.getKey(), cons_extra.getValue());
+                        } else {
+                            float nuovo_cons = cons_extra_complessivo.get(cons_extra.getKey()) + cons_extra.getValue();
+                            cons_extra_complessivo.put(cons_extra.getKey(), nuovo_cons);
+                        }
                     }
                 }
-
                 Prenotabile prenotabile_scelto = scelta_prenotazione.getKey();
 
                 if (scelte_complessive.containsKey(prenotabile_scelto)) {
