@@ -86,14 +86,14 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * @param data_corrente data del giorno da controllare
+     * @param data data del giorno da controllare
      * @return true se è stata eliminata almeno 1 prenotazione dalla lista prenotazioni,
      * false se non è stata eliminata alcuna prenotazione
      */
-    public boolean eliminaPrenotazioni(LocalDate data_corrente) {
+    public boolean eliminaPrenotazioni(LocalDate data) {
         int l_iniziale = prenotazioni.toArray().length;
         for (Prenotazione prenotazione : prenotazioni) {
-            if (prenotazione.getData().isEqual(data_corrente)) {
+            if (prenotazione.getData().isEqual(data)) {
                 prenotazioni.remove(prenotazione);
             }
         }

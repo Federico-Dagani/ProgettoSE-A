@@ -1,17 +1,19 @@
 package ProgettoSE;
 
 import ProgettoSE.Alimentari.*;
+
 import java.util.ArrayList;
 
 public class Magazzino {
     //ATTRIBUTI
     private ArrayList<Alimento> bevande = new ArrayList<>();
-    private ArrayList<Alimento> extras = new ArrayList<>() ;
+    private ArrayList<Alimento> extras = new ArrayList<>();
     private ArrayList<Alimento> ingredienti = new ArrayList<>();
 
     //METODI
     //costruttore
-    public  Magazzino(){ }
+    public Magazzino() {
+    }
 
     public Magazzino(ArrayList<Alimento> bevande, ArrayList<Alimento> extras, ArrayList<Alimento> ingredienti) {
         this.bevande = bevande;
@@ -44,39 +46,45 @@ public class Magazzino {
         this.ingredienti = ingredienti;
     }
 
-    public Alimento getAlimento(String nome_alimento){
+    public Alimento getAlimento(String nome_alimento) {
         for (Alimento alimento : this.ingredienti)
-            if(alimento.getNome().equals(nome_alimento)) return alimento;
-        for(Alimento alimento : this.bevande)
-            if(alimento.getNome().equals(nome_alimento)) return alimento;
+            if (alimento.getNome().equals(nome_alimento)) return alimento;
+        for (Alimento alimento : this.bevande)
+            if (alimento.getNome().equals(nome_alimento)) return alimento;
         for (Alimento alimento : this.extras)
-            if(alimento.getNome().equals(nome_alimento)) return alimento;
+            if (alimento.getNome().equals(nome_alimento)) return alimento;
         return null;
     }
 
-    public void setAlimento(Alimento alimento){
+    public void setAlimento(Alimento alimento) {
         String nome_alimento = alimento.getNome();
         float qta_alimento = alimento.getQta();
 
-        if(alimento instanceof Ingrediente)
+        if (alimento instanceof Ingrediente)
             for (Alimento ingrediente : ingredienti)
                 if (nome_alimento.equals(ingrediente.getNome())) ingrediente.setQta(qta_alimento);
-        if(alimento instanceof Bevanda)
-            for(Alimento bevanda : bevande)
-                if(nome_alimento.equals(bevanda.getNome())) bevanda.setQta(qta_alimento);
-        if(alimento instanceof Extra)
+        if (alimento instanceof Bevanda)
+            for (Alimento bevanda : bevande)
+                if (nome_alimento.equals(bevanda.getNome())) bevanda.setQta(qta_alimento);
+        if (alimento instanceof Extra)
             for (Alimento extra : extras)
-                if(nome_alimento.equals(extra.getNome())) extra.setQta(qta_alimento);
+                if (nome_alimento.equals(extra.getNome())) extra.setQta(qta_alimento);
     }
 
-    public void prelevaAlimento(Alimento alimento){
+    public void prelevaAlimento(String nome, float qta) {
+        ingredienti.forEach(ingrediente -> {
+            if (ingrediente.getNome().equals(nome))
+                ingrediente.setQta(ingrediente.getQta() - qta);
+        });
+        bevande.forEach(bevanda -> {
+            if (bevanda.getNome().equals(nome))
+                bevanda.setQta(bevanda.getQta() - qta);
+        });
+        extras.forEach(extra -> {
+            if(extra.getNome().equals(nome))
+                extra.setQta(extra.getQta() - qta);
+        });
 
-        if(alimento instanceof Ingrediente)
-            ingredienti.forEach(ingrediente -> ingrediente.setQta(ingrediente.getQta() - alimento.getQta()));
-        if(alimento instanceof Bevanda)
-            bevande.forEach(bevanda -> bevanda.setQta(bevanda.getQta() - alimento.getQta()));
-        if(alimento instanceof Extra)
-            extras.forEach(extra -> extra.setQta(extra.getQta() - alimento.getQta()));
     }
 
 }

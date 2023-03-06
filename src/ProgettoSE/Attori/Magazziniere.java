@@ -16,8 +16,10 @@ public class Magazziniere extends Persona {
     public Magazziniere(String nome) {
         super(nome);
     }
+
     private Magazzino magazzino;
     private ArrayList<Alimento> lista_spesa;
+
     //METODI
     //costruttore
     public Magazziniere(String nome, Magazzino magazzino, ArrayList<Alimento> lista_spesa) {
@@ -25,34 +27,33 @@ public class Magazziniere extends Persona {
         this.magazzino = magazzino;
         this.lista_spesa = lista_spesa;
     }
+
     //getters
     public Magazzino getMagazzino() {
         return magazzino;
     }
+
     public ArrayList<Alimento> getLista_spesa() {
         return lista_spesa;
     }
+
     //setters
     public void setMagazzino(Magazzino magazzino) {
         this.magazzino = magazzino;
     }
+
     public void setLista_spesa(ArrayList<Alimento> lista_spesa) {
         this.lista_spesa = lista_spesa;
     }
 
-    public HashMap<Alimento, Float> calcolaConsumoAlimento(int n_persone, String tipologia){
-
-        HashMap<Alimento, Float> consumi = new HashMap<>();
-        for (Alimento alimento : magazzino.getBevande()){
-            if(tipologia.equals(Costanti.BEVANDA) && alimento instanceof Bevanda)
-                consumi.put(alimento, n_persone * ((Bevanda) alimento).getCons_procapite());
-            else if(tipologia.equals(Costanti.EXTRA) && alimento instanceof Extra)
-                consumi.put(alimento, n_persone * ((Extra) alimento).getCons_procapite());
-        }
-        return consumi;
+    public HashMap<Alimento, Float> calcolaConsumoBevande(int n_persone) {
+        HashMap<Alimento, Float> consumo_bevande = new HashMap<>();
+        magazzino.getBevande().forEach(bevanda -> consumo_bevande.put(bevanda, n_persone * ((Bevanda) bevanda).getCons_procapite()));
+        return consumo_bevande;
     }
 
-    public void creaListaSpesa(Prenotazione prenotazione_totale){
+    public void creaListaSpesa(Prenotazione prenotazione_totale) {
+
         HashMap<Piatto, Integer> consumi = calcolaPiattiPrenotazione(prenotazione_totale);
 
         //per ogni piatto, calcolo la quantità di ingredienti necessaria
@@ -77,10 +78,10 @@ public class Magazziniere extends Persona {
 
     }
 
-    private void valutaQtaIngredientiPiatto(Piatto piatto, int qta_richiesta_piatto){
+    private void valutaQtaIngredientiPiatto(Piatto piatto, int qta_richiesta_piatto) {
 
         int n_porzioni_ricetta = piatto.getRicetta().getN_porzioni();   //ricetta x5
-        int n_ricette = (int) Math.ceil(qta_richiesta_piatto/n_porzioni_ricetta);  //   14/5   = 3 ricette
+        int n_ricette = (int) Math.ceil(qta_richiesta_piatto / n_porzioni_ricetta);  //   14/5   = 3 ricette
         //ciclo sugli ingredienti del piatto
         for (Alimento ingrediente : piatto.getRicetta().getIngredienti()) {
             //per trovare il numero di porzioni da fare mi interessa il numero di porzioni che genera la ricetta, in relazione al numero di porzioni che mi servono di quel piatto
@@ -93,11 +94,11 @@ public class Magazziniere extends Persona {
         }
     }
 
-    public String aggiungiSpesaInMagazzino(){
-        if(this.lista_spesa.isEmpty())
+    public String aggiungiSpesaInMagazzino() {
+        if (this.lista_spesa.isEmpty())
             return "\nLe disponibilità in magazzino riescono a soddisfare tutte le prenotazioni della giornata senza richiedere l'acquisto di ulteriori alimenti\n";
         String messaggio = "\nIl magazziniere sta aggiornando il magazzino andando ad aggiungere degli alimenti secondo la seguente lista della spesa: \n";
-        for(Alimento alimento : lista_spesa){
+        for (Alimento alimento : lista_spesa) {
             messaggio += "- " + alimento.getNome() + " in quantità pari a: " + String.format("%.2f", alimento.getQta()) + " " + alimento.getMisura() + "\n";
             float qta_in_magazzino = magazzino.getAlimento(alimento.getNome()).getQta();
             float nuova_qta = qta_in_magazzino + alimento.getQta();
@@ -113,29 +114,38 @@ public class Magazziniere extends Persona {
     public void portaInCucina(Prenotazione prenotazione_complessiva) {
 
         HashMap<Piatto, Integer> consumi_prenotazione = calcolaPiattiPrenotazione(prenotazione_complessiva);
-
-        consumi_prenotazione.keySet().forEach(piatto -> {
-            piatto.getRicetta().getIngredienti().forEach(ingrediente -> {
-                //setto all'ingrediente la quantità richiesta dai clienti (non dalla ricetta)
-                ingrediente.setQta(ingrediente.getQta() / piatto.getRicetta().getN_porzioni() * consumi_prenotazione.get(piatto));
-                this.magazzino.prelevaAlimento(ingrediente);
-            });
-        });
+        //porto gli ingredienti necessari in cucina
+        for (Piatto piatto : consumi_prenotazione.keySet()) {
+            for (Alimento ingrediente : piatto.getRicetta().getIngredienti()) {//setto all'ingrediente la quantità richiesta dai clienti (non dalla ricetta)
+                float qta_da_prelevare = ingrediente.getQta() / piatto.getRicetta().getN_porzioni() * consumi_prenotazione.get(piatto);
+                this.magazzino.prelevaAlimento(ingrediente.getNome(), qta_da_prelevare);
+            }
+        }
+        //porto le bevande necessarie in cucina
+        for(Map.Entry<Alimento, Float> cons_bevande : prenotazione_complessiva.getCons_bevande().entrySet()){
+            float qta_da_prelevare = cons_bevande.getValue();
+            this.magazzino.prelevaAlimento(cons_bevande.getKey().getNome(), qta_da_prelevare);
+        }
+        //porto gli extra necessari in cucina
+        for(Map.Entry<Alimento, Float> cons_extra : prenotazione_complessiva.getCons_extra().entrySet()){
+            float qta_da_prelevare = cons_extra.getValue();
+            this.magazzino.prelevaAlimento(cons_extra.getKey().getNome(), qta_da_prelevare);
+        }
 
     }
 
-    private HashMap<Piatto, Integer> calcolaPiattiPrenotazione(Prenotazione prenotazione_totale){
+    private HashMap<Piatto, Integer> calcolaPiattiPrenotazione(Prenotazione prenotazione_totale) {
         HashMap<Piatto, Integer> consumi = new HashMap<>();
-        for(Prenotabile prenotabile : prenotazione_totale.getScelte().keySet()){
+        for (Prenotabile prenotabile : prenotazione_totale.getScelte().keySet()) {
             //controllo se l'oggetto è un piatto
-            if(prenotabile instanceof Piatto){
+            if (prenotabile instanceof Piatto) {
                 if (!consumi.containsKey((Piatto) prenotabile))
                     consumi.put((Piatto) prenotabile, prenotazione_totale.getScelte().get(prenotabile));
                 else
                     consumi.put((Piatto) prenotabile, consumi.get(prenotabile) + prenotazione_totale.getScelte().get(prenotabile));
-            }else if(prenotabile instanceof MenuTematico){
+            } else if (prenotabile instanceof MenuTematico) {
                 //ciclo sui piatti presenti nel menu
-                for (Piatto piatto : ((MenuTematico) prenotabile).getPiatti_menu()){
+                for (Piatto piatto : ((MenuTematico) prenotabile).getPiatti_menu()) {
                     if (!consumi.containsKey(piatto))
                         consumi.put(piatto, prenotazione_totale.getScelte().get(prenotabile));
                     else
@@ -145,8 +155,6 @@ public class Magazziniere extends Persona {
         }
         return consumi;
     }
-
-
 
 
 }
