@@ -163,6 +163,10 @@ public class Main {
         int lavoro_persona = gestore.getRistorante().getLavoro_persona();
         int n_posti = gestore.getRistorante().getN_posti();
 
+        //CALCOLO CONSUMO BEVANDE E GENERI EXTRA
+        HashMap<Alimento,Float> cons_bevande = gestore.getRistorante().getMagazziniere().calcolaConsumoBevande(n_coperti);
+        HashMap<Alimento,Float> cons_extra = gestore.getRistorante().getMagazziniere().calcolaConsumoExtras(n_coperti);
+
         //SCELTE
         HashMap<Prenotabile, Integer> scelte = new HashMap<>();
         Integer n_portate = 0;
@@ -199,7 +203,7 @@ public class Main {
             if(quantita_precedente+quantità !=0)
                 scelte.put(portata, quantità+quantita_precedente);
 
-            Prenotazione prenotazione = new Prenotazione(null, n_coperti, data_prenotazione, scelte, null, null);
+            Prenotazione prenotazione = new Prenotazione(null, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
             if(gestore.getRistorante().getAddettoPrenotazione().validaCaricoLavoro(data_prenotazione, lavoro_persona, n_posti, prenotazione)){
                 System.out.println("Portata aggiunta all'ordine.");
             }else{
@@ -219,10 +223,6 @@ public class Main {
 
         }while(n_portate < n_coperti || InputDati.yesOrNo("Ogni commensale ha ordinato almeno una portata ciascuno, vuole ordinare altre portate?"));
 
-
-        //CALCOLO CONSUMO BEVANDE E GENERI EXTRA
-        HashMap<Alimento,Float> cons_bevande = gestore.getRistorante().getMagazziniere().calcolaConsumoAlimento(n_coperti, Costanti.BEVANDA);
-        HashMap<Alimento,Float> cons_extra = gestore.getRistorante().getMagazziniere().calcolaConsumoAlimento(n_coperti, Costanti.EXTRA);
 
         //Costruzione Prenotazione
         Prenotazione prenotazione = new Prenotazione(cliente, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);

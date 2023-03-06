@@ -180,37 +180,31 @@ public class AddettoPrenotazione extends Persona {
     public Prenotazione unisciPrenotazioni(ArrayList<Prenotazione> prenotazioni_in_corso){
 
         HashMap<Prenotabile, Integer> scelte_complessive = new HashMap<>();
-
         HashMap<Alimento, Float> cons_bevande_complessivo = new HashMap<>();
         HashMap<Alimento, Float> cons_extra_complessivo = new HashMap<>();
 
         for(Prenotazione prenotazione : prenotazioni_in_corso){
 
+            for(Map.Entry<Alimento, Float> cons_bevanda : prenotazione.getCons_bevande().entrySet()) {
+                if (!cons_bevande_complessivo.containsKey(cons_bevanda.getKey())) {
+                    cons_bevande_complessivo.put(cons_bevanda.getKey(), cons_bevanda.getValue());
+                } else {
+                    float nuovo_cons = cons_bevande_complessivo.get(cons_bevanda.getKey()) + cons_bevanda.getValue();
+                    cons_bevande_complessivo.put(cons_bevanda.getKey(), nuovo_cons);
+                }
+            }
+
+            for (Map.Entry<Alimento, Float> cons_extra : prenotazione.getCons_extra().entrySet()) {
+                if (!cons_extra_complessivo.containsKey(cons_extra.getKey())) {
+                    cons_extra_complessivo.put(cons_extra.getKey(), cons_extra.getValue());
+                } else {
+                    float nuovo_cons = cons_extra_complessivo.get(cons_extra.getKey()) + cons_extra.getValue();
+                    cons_extra_complessivo.put(cons_extra.getKey(), nuovo_cons);
+                }
+            }
+
             for(Map.Entry<Prenotabile, Integer> scelta_prenotazione : prenotazione.getScelte().entrySet()) {
-
-                if(prenotazione.getCons_bevande() != null) {
-                    for (Map.Entry<Alimento, Float> cons_bevanda : prenotazione.getCons_bevande().entrySet()) {
-                        if (!cons_bevande_complessivo.containsKey(cons_bevanda.getKey())) {
-                            cons_bevande_complessivo.put(cons_bevanda.getKey(), cons_bevanda.getValue());
-                        } else {
-                            float nuovo_cons = cons_bevande_complessivo.get(cons_bevanda.getKey()) + cons_bevanda.getValue();
-                            cons_bevande_complessivo.put(cons_bevanda.getKey(), nuovo_cons);
-                        }
-                    }
-                }
-
-                if(prenotazione.getCons_extra() != null) {
-                    for (Map.Entry<Alimento, Float> cons_extra : prenotazione.getCons_extra().entrySet()) {
-                        if (!cons_extra_complessivo.containsKey(cons_extra.getKey())) {
-                            cons_extra_complessivo.put(cons_extra.getKey(), cons_extra.getValue());
-                        } else {
-                            float nuovo_cons = cons_extra_complessivo.get(cons_extra.getKey()) + cons_extra.getValue();
-                            cons_extra_complessivo.put(cons_extra.getKey(), nuovo_cons);
-                        }
-                    }
-                }
                 Prenotabile prenotabile_scelto = scelta_prenotazione.getKey();
-
                 if (scelte_complessive.containsKey(prenotabile_scelto)) {
                     //il prenotabile è già presente nell'hash map complessivo, dunque devo solo incrementare il numero di porzioni che voglio di quello
                     int n_porzioni = scelte_complessive.get(prenotabile_scelto) + scelta_prenotazione.getValue();

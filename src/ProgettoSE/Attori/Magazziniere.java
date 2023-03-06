@@ -52,6 +52,12 @@ public class Magazziniere extends Persona {
         return consumo_bevande;
     }
 
+    public HashMap<Alimento, Float> calcolaConsumoExtras(int n_persone) {
+        HashMap<Alimento, Float> consumo_extras = new HashMap<>();
+        magazzino.getExtras().forEach(extra -> consumo_extras.put(extra, n_persone * ((Extra) extra).getCons_procapite()));
+        return consumo_extras;
+    }
+
     public void creaListaSpesa(Prenotazione prenotazione_totale) {
 
         HashMap<Piatto, Integer> consumi = calcolaPiattiPrenotazione(prenotazione_totale);
