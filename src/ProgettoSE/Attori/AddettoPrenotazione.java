@@ -161,6 +161,7 @@ public class AddettoPrenotazione extends Persona {
         float lavoro_rimanente = n_posti*lavoro_persona - unisciPrenotazioni(filtraPrenotazioniPerData(data_prenotazione)).getLavoro_prenotazione();
 
         return (int) Math.ceil(lavoro_rimanente/lavoro_persona);
+
     }
 
     public boolean validaCaricoLavoro(LocalDate data_prenotazione, int lavoro_persona, int n_posti, Prenotazione possibile_prenotazione){
@@ -197,6 +198,7 @@ public class AddettoPrenotazione extends Persona {
                         }
                     }
                 }
+
                 if(prenotazione.getCons_extra() != null) {
                     for (Map.Entry<Alimento, Float> cons_extra : prenotazione.getCons_extra().entrySet()) {
                         if (!cons_extra_complessivo.containsKey(cons_extra.getKey())) {

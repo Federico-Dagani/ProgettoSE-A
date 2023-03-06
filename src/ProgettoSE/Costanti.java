@@ -35,6 +35,8 @@ public class Costanti {
     public static final String DISPONIBILITA = "disponibilita";
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
     final private static String FRECCETTA = "→";//⟼
+    public static final float IMPREVISTI_CUCINA = (float) (10.0/100);
+    public static final float ALIMENTI_SCARTATI = (float) (5.0/100);
 
     //comunicazioni di inzio/fine lettura/scrittura file
     public static final String INIZIO_FILE = "\n%s file: %s ...\n";

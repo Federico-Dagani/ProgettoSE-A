@@ -2,7 +2,6 @@ package ProgettoSE;
 
 import ProgettoSE.Alimentari.Alimento;
 import ProgettoSE.Alimentari.Bevanda;
-import ProgettoSE.Alimentari.Ingrediente;
 import ProgettoSE.Alimentari.Extra;
 import ProgettoSE.Attori.Cliente;
 import ProgettoSE.Attori.Gestore;
@@ -14,12 +13,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-
 
 public class Main {
 
