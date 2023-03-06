@@ -68,4 +68,15 @@ public class Magazzino {
             for (Alimento extra : extras)
                 if(nome_alimento.equals(extra.getNome())) extra.setQta(qta_alimento);
     }
+
+    public void prelevaAlimento(Alimento alimento){
+
+        if(alimento instanceof Ingrediente)
+            ingredienti.forEach(ingrediente -> ingrediente.setQta(ingrediente.getQta() - alimento.getQta()));
+        if(alimento instanceof Bevanda)
+            bevande.forEach(bevanda -> bevanda.setQta(bevanda.getQta() - alimento.getQta()));
+        if(alimento instanceof Extra)
+            extras.forEach(extra -> extra.setQta(extra.getQta() - alimento.getQta()));
+    }
+
 }

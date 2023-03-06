@@ -1,6 +1,7 @@
 package ProgettoSE.Attori;
 
 import ProgettoSE.Costanti;
+import ProgettoSE.Prenotazione;
 import ProgettoSE.Ristorante;
 import ProgettoSE.ServiziFileXML.LetturaFileXML;
 
@@ -32,9 +33,13 @@ public class Gestore extends Persona {
 
     //
     public String comunica(LocalDate data_precedente, LocalDate data_attuale) {
-        ristorante.getMagazziniere().creaListaSpesa2(ristorante.getAddettoPrenotazione().unisciPrenotazioni(ristorante.getAddettoPrenotazione().filtraPrenotazioniPerData(data_attuale)));
+        Prenotazione prenotazione_del_giorno = ristorante.getAddettoPrenotazione().unisciPrenotazioni(ristorante.getAddettoPrenotazione().filtraPrenotazioniPerData(data_attuale));
+        ristorante.getMagazziniere().creaListaSpesa(prenotazione_del_giorno);
+        String messaggio = ristorante.getMagazziniere().aggiungiSpesaInMagazzino();
+        ristorante.getMagazziniere().portaInCucina(prenotazione_del_giorno);
+
         ristorante.getAddettoPrenotazione().aggiornaPrenotazioni(data_precedente, data_attuale);
-        return ristorante.getMagazziniere().aggiornaMagazzino();
+        return messaggio;
     }
 
 }
