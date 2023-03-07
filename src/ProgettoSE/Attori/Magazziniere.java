@@ -48,13 +48,14 @@ public class Magazziniere extends Persona {
 
     public HashMap<Alimento, Float> calcolaConsumoBevande(int n_persone) {
         HashMap<Alimento, Float> consumo_bevande = new HashMap<>();
-        magazzino.getBevande().forEach(bevanda -> consumo_bevande.put(bevanda, n_persone * ((Bevanda) bevanda).getCons_procapite()));
+        //doppio cast perchè la consegna richiede che sia arrotondato all' intero superiore ma lo storiamo come float
+        magazzino.getBevande().forEach(bevanda -> consumo_bevande.put(bevanda, (float) (int) Math.ceil(n_persone * ((Bevanda) bevanda).getCons_procapite())));
         return consumo_bevande;
     }
 
     public HashMap<Alimento, Float> calcolaConsumoExtras(int n_persone) {
         HashMap<Alimento, Float> consumo_extras = new HashMap<>();
-        magazzino.getExtras().forEach(extra -> consumo_extras.put(extra, n_persone * ((Extra) extra).getCons_procapite()));
+        magazzino.getExtras().forEach(extra -> consumo_extras.put(extra,(float) (int) Math.ceil(n_persone * ((Extra) extra).getCons_procapite())));
         return consumo_extras;
     }
 

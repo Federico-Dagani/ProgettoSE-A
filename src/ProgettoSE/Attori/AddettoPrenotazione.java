@@ -85,26 +85,14 @@ public class AddettoPrenotazione extends Persona {
         } else return false;
     }
 
-    /**
-     * @param data data del giorno da controllare
-     * @return true se è stata eliminata almeno 1 prenotazione dalla lista prenotazioni,
-     * false se non è stata eliminata alcuna prenotazione
-     */
-    public boolean eliminaPrenotazioni(LocalDate data) {
-        int l_iniziale = prenotazioni.toArray().length;
-        for (Prenotazione prenotazione : prenotazioni) {
-            if (prenotazione.getData().isEqual(data)) {
-                prenotazioni.remove(prenotazione);
+    public void rimuoviPrenotazioniVecchie(LocalDate data_attuale) {
+        ArrayList<Prenotazione> prenotazioni_da_eliminare = new ArrayList<>();
+        prenotazioni.forEach(prenotazione -> {
+            if (prenotazione.getData().isBefore(data_attuale) || prenotazione.getData().isEqual(data_attuale)){
+                prenotazioni_da_eliminare.add(prenotazione);
             }
-        }
-        if (l_iniziale != prenotazioni.toArray().length) return true;
-        else return false;
-    }
-
-    public void aggiornaPrenotazioni(LocalDate data_precedente, LocalDate data_attuale) {
-        for (LocalDate data = data_precedente; data.isEqual(data_attuale); data = data.plusDays(1)) {
-            eliminaPrenotazioni(data);
-        }
+        });
+        prenotazioni_da_eliminare.forEach(prenotazione_da_eliminare -> prenotazioni.remove(prenotazione_da_eliminare));
     }
 
     public ArrayList<Prenotabile> calcolaMenuDelGiorno(LocalDate data_attuale) {
@@ -113,7 +101,7 @@ public class AddettoPrenotazione extends Persona {
             ArrayList<LocalDate> disponibilita = prenotabile.getDisponibilità();
             int inizio = 0;
             for (int i = 0; i < disponibilita.toArray().length / 2; i++) {
-                if (data_attuale.isAfter(disponibilita.get(inizio)) && data_attuale.isBefore(disponibilita.get(inizio + 1)) && !menu_del_giorno.contains(prenotabile)) {
+                if( data_attuale.getDayOfYear() >= disponibilita.get(inizio).getDayOfYear() && data_attuale.getDayOfYear() <= disponibilita.get(inizio+1).getDayOfYear() && !menu_del_giorno.contains(prenotabile)){
                     menu_del_giorno.add(prenotabile);
                 }
                 inizio += 2;

@@ -224,7 +224,10 @@ public class LetturaFileXML {
                                 if (xmlreader.isEndElement()) {
                                     piatto.setLavoro_piatto(ricetta.getLavoro_porzione());
                                     piatto.setRicetta(ricetta);
-                                    menu_carta.aggiungiPiatto(piatto);
+                                    if (piatto.getRicetta().getLavoro_porzione() < ristorante.getLavoro_persona())
+                                        menu_carta.aggiungiPiatto(piatto);
+                                    else
+                                        System.out.println("Il piatto " + piatto.getNome() + " è stato rifiutato perchè eccede il vincolo di lavoro per porzione minore del lavoro per persona");
                                 }
                                 break;
 
@@ -233,8 +236,8 @@ public class LetturaFileXML {
                                     //controllo aggiuntivo che il lavoro del menu tematico non ecceda 4/3 del lavoro per persona
                                     if (menu_tematico.getLavoro_menu() <= ristorante.getLavoro_persona() * 4 / 3) {
                                         addetto_prenotazione.aggiungiMenu_tematico(menu_tematico);
-                                    }else{
-                                        System.out.println("Il menu tematico " + menu_tematico.getNome() + " e' stato rifiutato perche' eccede il vincolo di lavoro di 4/3 del lavoro per persona.");
+                                    } else {
+                                        System.out.println("Il menu tematico " + menu_tematico.getNome() + " è stato rifiutato perchè eccede il vincolo di lavoro di 4/3 del lavoro per persona.");
                                     }
                                 }
                                 break;
