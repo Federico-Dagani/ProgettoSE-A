@@ -84,7 +84,6 @@ public class Magazzino {
             if(extra.getNome().equals(nome))
                 extra.setQta(extra.getQta() - qta);
         });
-
     }
 
 }

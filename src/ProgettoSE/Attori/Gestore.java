@@ -32,13 +32,13 @@ public class Gestore extends Persona {
     }
 
     //
-    public String comunica(LocalDate data_precedente, LocalDate data_attuale) {
+    public String comunica(LocalDate data_attuale) {
         Prenotazione prenotazione_del_giorno = ristorante.getAddettoPrenotazione().unisciPrenotazioni(ristorante.getAddettoPrenotazione().filtraPrenotazioniPerData(data_attuale));
         ristorante.getMagazziniere().creaListaSpesa(prenotazione_del_giorno);
         String messaggio = ristorante.getMagazziniere().aggiungiSpesaInMagazzino();
         //prob
         ristorante.getMagazziniere().portaInCucina(prenotazione_del_giorno);
-        ristorante.getAddettoPrenotazione().aggiornaPrenotazioni(data_precedente, data_attuale);
+        ristorante.getAddettoPrenotazione().rimuoviPrenotazioniVecchie(data_attuale);
         return messaggio;
     }
 

@@ -68,6 +68,7 @@ public class Magazziniere extends Persona {
         //ciclare sugli extra e sulle bevande
         prenotazione_totale.getCons_extra().forEach((key, value) -> {
             if (key instanceof Extra) {
+                value += value * Costanti.IMPREVISTI_CUCINA;
                 float qta_rimanente = magazzino.getAlimento(key.getNome()).getQta() - value;
                 if (qta_rimanente < 0)
                     this.lista_spesa.add(new Extra(key.getNome(), Math.abs(qta_rimanente), key.getMisura(), ((Extra) key).getCons_procapite()));
@@ -76,6 +77,7 @@ public class Magazziniere extends Persona {
 
         prenotazione_totale.getCons_bevande().forEach((key, value) -> {
             if (key instanceof Bevanda) {
+                value += value * Costanti.IMPREVISTI_CUCINA;
                 float qta_rimanente = magazzino.getAlimento(key.getNome()).getQta() - value;
                 if (qta_rimanente < 0)
                     this.lista_spesa.add(new Bevanda(key.getNome(), Math.abs(qta_rimanente), key.getMisura(), ((Bevanda) key).getCons_procapite()));
@@ -124,17 +126,20 @@ public class Magazziniere extends Persona {
         for (Piatto piatto : consumi_prenotazione.keySet()) {
             for (Alimento ingrediente : piatto.getRicetta().getIngredienti()) {//setto all'ingrediente la quantità richiesta dai clienti (non dalla ricetta)
                 float qta_da_prelevare = ingrediente.getQta() / piatto.getRicetta().getN_porzioni() * consumi_prenotazione.get(piatto);
+                qta_da_prelevare += qta_da_prelevare * Costanti.ALIMENTI_SCARTATI;
                 this.magazzino.prelevaAlimento(ingrediente.getNome(), qta_da_prelevare);
             }
         }
         //porto le bevande necessarie in cucina
         for(Map.Entry<Alimento, Float> cons_bevande : prenotazione_complessiva.getCons_bevande().entrySet()){
             float qta_da_prelevare = cons_bevande.getValue();
+            qta_da_prelevare += qta_da_prelevare * Costanti.ALIMENTI_SCARTATI;
             this.magazzino.prelevaAlimento(cons_bevande.getKey().getNome(), qta_da_prelevare);
         }
         //porto gli extra necessari in cucina
         for(Map.Entry<Alimento, Float> cons_extra : prenotazione_complessiva.getCons_extra().entrySet()){
             float qta_da_prelevare = cons_extra.getValue();
+            qta_da_prelevare += qta_da_prelevare * Costanti.ALIMENTI_SCARTATI;
             this.magazzino.prelevaAlimento(cons_extra.getKey().getNome(), qta_da_prelevare);
         }
 

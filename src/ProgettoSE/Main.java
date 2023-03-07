@@ -1,5 +1,6 @@
 package ProgettoSE;
 
+
 import ProgettoSE.Alimentari.Alimento;
 import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Extra;
@@ -77,7 +78,7 @@ public class Main {
 
     private static void benvenuto(){
         System.out.println(Costanti.CORNICE_SUP);
-        System.out.printf("|\t"+Costanti.BENVENUTO+"\t|\n");
+        System.out.println("|\t"+Costanti.BENVENUTO+"\t|");
         System.out.println(Costanti.CORNICE_INF);
         System.out.println();
     }
@@ -113,23 +114,15 @@ public class Main {
                 data_attuale.scorriGiorno();
                 break;
             case 2:
-                data_precedente = data_attuale.getData_corrente();
-                data_attuale.setData_corrente(LocalDate.parse(InputDati.leggiStringa("\nInserisci una data valida (yyyy-mm-dd) :")));
+                data_attuale.setData_corrente(gestisciData(gestore, data_precedente));
                 break;
         }
-        System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente() + ". La lista spesa è stata aggiornata.");
+        System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente() + ".\nLa lista spesa è stata aggiornata.");
         //dopo aer modificato il giorno, il gestore comunica al magazziniere di aggiornare la lista spesa e rifornire il magazzino, all'addeetto prenotazione di aggiornare le prenotazioni
-        System.out.println(gestore.comunica(data_precedente, data_attuale.getData_corrente()));
+        System.out.println(gestore.comunica(data_attuale.getData_corrente()));
     }
 
-    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        //NOME
-        String nome_cliente = InputDati.leggiStringaNonVuota("Nome cliente: ");
-        Cliente cliente = new Cliente(nome_cliente);
-
-        //DATA
+    private static LocalDate gestisciData(Gestore gestore, LocalDate data_attuale){
         String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
         int msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
         while (msg != 0) {
@@ -142,11 +135,26 @@ public class Main {
                     break;
                 case 3:
                     System.out.println("Il ristorante non ha posti disponibili in questa data (" + stringa_data_prenotazione + ")");
+                    break;
             }
             stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
             msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
         }
-        LocalDate data_prenotazione = LocalDate.parse(stringa_data_prenotazione);
+        return LocalDate.parse(stringa_data_prenotazione);
+    }
+
+    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        //NOME
+        String nome_cliente = InputDati.leggiStringaNonVuota("Nome cliente: ");
+        Cliente cliente = new Cliente(nome_cliente);
+
+        //MENU VUOTO
+        boolean menu_vuoto;
+
+        //DATA
+        LocalDate data_prenotazione = gestisciData(gestore, data_attuale);
 
         //POSTI
         int p_stima_lav_rimanenti = gestore.getRistorante().getAddettoPrenotazione().stimaPostiRimanenti(data_prenotazione, gestore.getRistorante().getLavoro_persona(), gestore.getRistorante().getN_posti());
@@ -171,63 +179,70 @@ public class Main {
         HashMap<Prenotabile, Integer> scelte = new HashMap<>();
         Integer n_portate = 0;
         do {
-            stampaMenuDelGiorno(gestore, data_prenotazione);
-            stampaScelte(scelte);
-            if(n_portate < n_coperti)
-                System.out.printf("\nDeve scelgliere almeno altre %d portate per convalidare la prenotazione.", n_coperti-n_portate);
+            menu_vuoto = stampaMenuDelGiorno(gestore, data_prenotazione);
+            if(!menu_vuoto){
+                stampaScelte(scelte);
+                if(n_portate < n_coperti)
+                    System.out.printf("\nDeve scelgliere almeno altre %d portate per convalidare la prenotazione.", n_coperti-n_portate);
 
 
-            Boolean validita = false;
-            Prenotabile portata = null;
-            Integer quantità = 0;
+                boolean validita = false;
+                Prenotabile portata = null;
+                Integer quantità;
 
 
-            do {
-                String scelta = InputDati.leggiStringa("\n\nInserisca il nome della portata da ordinare: \n");
+                do {
+                    String scelta = InputDati.leggiStringa("\n\nInserisca il nome della portata da ordinare: \n");
 
-                for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
-                    if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
-                        portata = prenotabile;
-                        validita = true;
+                    for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
+                        if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
+                            portata = prenotabile;
+                            validita = true;
+                        }
                     }
-                }
-                if(!validita)
-                    System.out.println("Portata non presente nel menu del giorno.");
+                    if(!validita)
+                        System.out.println("Portata non presente nel menu del giorno.");
                 }while(!validita);
-            quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": \n",0);
+                quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": \n",0);
 
-            //devo leggere il value precedente e sommarlo alla nuova quantità aggiunta, dopodichè rimetto la value nuova nella Map
-            Integer quantita_precedente = scelte.get(portata);
-            if(quantita_precedente == null)
-                quantita_precedente = 0;
-            if(quantita_precedente+quantità !=0)
-                scelte.put(portata, quantità+quantita_precedente);
+                //devo leggere il value precedente e sommarlo alla nuova quantità aggiunta, dopodichè rimetto la value nuova nella Map
+                Integer quantita_precedente = scelte.get(portata);
+                if(quantita_precedente == null)
+                    quantita_precedente = 0;
+                if(quantita_precedente+quantità !=0)
+                    scelte.put(portata, quantità+quantita_precedente);
 
-            Prenotazione prenotazione = new Prenotazione(null, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
-            if(gestore.getRistorante().getAddettoPrenotazione().validaCaricoLavoro(data_prenotazione, lavoro_persona, n_posti, prenotazione)){
-                System.out.println("Portata aggiunta all'ordine.");
-            }else{
-                System.out.println("Il carico di lavoro non ci permette di accettare un così alto numero di portate. Rimosso dalla lista: " + portata.getNome() + " x" + quantità);
-                //tolgo la portata inserita che mi fa sballare il carico di lavoro totale e reinserisco
-                scelte.remove(portata);
-                if(quantita_precedente != 0)
-                    scelte.put(portata, quantita_precedente);
+                Prenotazione prenotazione = new Prenotazione(null, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
+                boolean lavoro_validato = gestore.getRistorante().getAddettoPrenotazione().validaCaricoLavoro(data_prenotazione, lavoro_persona, n_posti, prenotazione);
+
+                if(lavoro_validato && quantità > 0){
+                    System.out.println("Portata aggiunta all'ordine.");
+                }else if(!lavoro_validato){
+                    System.out.println("Il carico di lavoro non ci permette di accettare un così alto numero di portate. Rimosso dalla lista: " + portata.getNome() + " x" + quantità);
+                    //tolgo la portata inserita che mi fa sballare il carico di lavoro totale e reinserisco
+                    scelte.remove(portata);
+                    if(quantita_precedente != 0)
+                        scelte.put(portata, quantita_precedente);
+                }else if(quantità == 0){
+                    System.out.println("Portata non aggiunta all'ordine.");
+                }
+
+                System.out.println("\n" + "Premere un tasto per continuare ... ");
+                br.readLine();
+
+                n_portate = 0;
+                for(Integer value : scelte.values())
+                    n_portate +=value;
             }
+        //cortocircuito
+        }while(!menu_vuoto && (n_portate < n_coperti || InputDati.yesOrNo("Ogni commensale ha ordinato almeno una portata ciascuno, vuole ordinare altre portate?")));
 
-            System.out.println("\n" + "Premere un tasto per continuare ... ");
-            br.readLine();
-
-            n_portate = 0;
-            for(Integer value : scelte.values())
-                n_portate +=value;
-
-        }while(n_portate < n_coperti || InputDati.yesOrNo("Ogni commensale ha ordinato almeno una portata ciascuno, vuole ordinare altre portate?"));
-
-
-        //Costruzione Prenotazione
-        Prenotazione prenotazione = new Prenotazione(cliente, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
-        gestore.getRistorante().getAddettoPrenotazione().getPrenotazioni().add(prenotazione);
-        System.out.println("\nPrenotazione Registrata.\n");
+        if(!menu_vuoto){
+            //Costruzione Prenotazione
+            Prenotazione prenotazione = new Prenotazione(cliente, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
+            gestore.getRistorante().getAddettoPrenotazione().getPrenotazioni().add(prenotazione);
+            System.out.println("\nPrenotazione Registrata.\n");
+        }
     }
 
     private static void mostraMenuTematici(ArrayList<Prenotabile> menu){
@@ -291,8 +306,7 @@ public class Main {
                 utenti[0] = Costanti.GESTORE;
                 utenti[1] = Costanti.UTENTE;
                 utenti[2] = Costanti.TEMPO;
-                MyMenu menu_attori = new MyMenu(Costanti.ATTORI.toUpperCase(Locale.ROOT), utenti);
-                return menu_attori;
+                return new MyMenu(Costanti.ATTORI.toUpperCase(Locale.ROOT), utenti);
 
             case Costanti.GESTORE:
 
@@ -306,23 +320,14 @@ public class Main {
                 azioni_gestore[6] = "menu tematici presenti nel menu";
                 azioni_gestore[7] = "piatti presenti nel menu";
                 azioni_gestore[8] = "il ricettario";
-                MyMenu menu_gestore = new MyMenu( Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.GESTORE.toUpperCase(Locale.ROOT) , azioni_gestore);
-                return menu_gestore;
-
-            case Costanti.UTENTE:
-
-                String[] azioni_utente = new String[0];
-
-                MyMenu menu_utente = new MyMenu(Costanti.UTENTE.toUpperCase(Locale.ROOT), azioni_utente);
-                return menu_utente;
+                return new MyMenu( Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.GESTORE.toUpperCase(Locale.ROOT) , azioni_gestore);
 
             case Costanti.TEMPO:
 
                 String[] azioni_tempo = new String[2];
                 azioni_tempo[0] = "Incrementa di un giorno";
                 azioni_tempo[1] = "Scegli una data";
-                MyMenu menu_tempo = new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.TEMPO.toUpperCase(Locale.ROOT), azioni_tempo);
-                return menu_tempo;
+                return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.TEMPO.toUpperCase(Locale.ROOT), azioni_tempo);
         }
         return null;
     }
@@ -334,11 +339,12 @@ public class Main {
         System.out.println();
     }
 
-    private static void stampaMenuDelGiorno(Gestore gestore, LocalDate data){
+    private static boolean stampaMenuDelGiorno(Gestore gestore, LocalDate data){
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        if (gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data).isEmpty())
+        if (gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data).isEmpty()){
             System.out.println("Non ci sono piatti disponibili per il giorno " + data);
-        else {
+            return true;
+        } else {
             System.out.println("\nIl menù disponibile per il giorno " + data + " offre queste specialità:");
             System.out.println("(può scegliere sia i piatti all'interno del menù alla carta che i menù tematici presenti) \n");
             for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data)) {
@@ -371,6 +377,7 @@ public class Main {
 
                 }
             }
+            return false;
         }
     }
 
@@ -410,10 +417,10 @@ public class Main {
         System.out.println("Le scelte effettuate finora sono le seguenti: ");
         for (Prenotabile prenotabile : scelte.keySet()){
             if(prenotabile instanceof Piatto){
-                System.out.printf("- " + ((Piatto) prenotabile).getNome() + ", ");
+                System.out.printf("- " + prenotabile.getNome() + ", ");
                 System.out.printf("quantità: " + scelte.get(prenotabile) + "\n");
             }else if(prenotabile instanceof MenuTematico){
-                System.out.printf("- Menù " + ((MenuTematico) prenotabile).getNome() + ", ");
+                System.out.printf("- Menù " + prenotabile.getNome() + ", ");
                 System.out.printf("quantità: " + scelte.get(prenotabile) + "\n");
             }
         }

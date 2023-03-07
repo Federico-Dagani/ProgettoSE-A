@@ -18,10 +18,10 @@ public class LetturaFileXML {
     /**
      * <h3>Metodo per la lettura del file
      * * @param filename ovvero il nome del file
+     *
      * @return ristorante
      */
-
-    public Ristorante leggiRistorante(String filename){
+    public Ristorante leggiRistorante(String filename) {
 
         XMLInputFactory xmlif;
         XMLStreamReader xmlreader = null;
@@ -38,7 +38,7 @@ public class LetturaFileXML {
         ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
 
         //attributi ristorante e creazione oggetto ristorante
-        AddettoPrenotazione addetto_prenotazione = new AddettoPrenotazione(null,prenotazioni, menu);
+        AddettoPrenotazione addetto_prenotazione = new AddettoPrenotazione(null, prenotazioni, menu);
         Magazziniere magazziniere = new Magazziniere(null, magazzino, lista_spesa);
         Ristorante ristorante = new Ristorante(0, 0, addetto_prenotazione, magazziniere);
 
@@ -48,10 +48,10 @@ public class LetturaFileXML {
         Piatto piatto = new Piatto(null, new ArrayList<>(), 0, ricetta);
 
         //try catch per gestire eventuali eccezioni durante l'inizializzazione
-        try{
-            xmlif=XMLInputFactory.newInstance();
-            xmlreader= xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
-        }catch(Exception e){
+        try {
+            xmlif = XMLInputFactory.newInstance();
+            xmlreader = xmlif.createXMLStreamReader(filename, new FileInputStream(filename));
+        } catch (Exception e) {
             System.out.println(Costanti.ERRORE_INIZIALIZZAZIONE_READER);
             System.out.println(e.getMessage());
         }
@@ -102,7 +102,7 @@ public class LetturaFileXML {
 
                             case Costanti.BEVANDA:
 
-                                Bevanda bevanda  = (Bevanda) creaAlimento(xmlreader, Costanti.BEVANDA);
+                                Bevanda bevanda = (Bevanda) creaAlimento(xmlreader, Costanti.BEVANDA);
                                 bevande.add(bevanda);
                                 break;
 
@@ -170,9 +170,9 @@ public class LetturaFileXML {
 
                             case Costanti.PORTATA:
 
-                                for (int i = 0; i < xmlreader.getAttributeCount(); i++){
+                                for (int i = 0; i < xmlreader.getAttributeCount(); i++) {
 
-                                    switch (xmlreader.getAttributeLocalName(i)){
+                                    switch (xmlreader.getAttributeLocalName(i)) {
 
                                         case Costanti.NOME:
                                             String nome_portata = xmlreader.getAttributeValue(i);
@@ -187,9 +187,9 @@ public class LetturaFileXML {
 
                                 menu_tematico = new MenuTematico(new ArrayList<>(), 0, new ArrayList<>());
 
-                                for (int i = 0; i < xmlreader.getAttributeCount(); i++){
+                                for (int i = 0; i < xmlreader.getAttributeCount(); i++) {
 
-                                    switch (xmlreader.getAttributeLocalName(i)){
+                                    switch (xmlreader.getAttributeLocalName(i)) {
 
                                         case Costanti.NOME:
                                             String nome_menu = xmlreader.getAttributeValue(i);
@@ -221,7 +221,7 @@ public class LetturaFileXML {
 
                             case Costanti.PIATTO:
                                 //controllo aggiuntivo necessario
-                                if(xmlreader.isEndElement()){
+                                if (xmlreader.isEndElement()) {
                                     piatto.setLavoro_piatto(ricetta.getLavoro_porzione());
                                     piatto.setRicetta(ricetta);
                                     menu_carta.aggiungiPiatto(piatto);
@@ -229,9 +229,9 @@ public class LetturaFileXML {
                                 break;
 
                             case Costanti.MENU_TEMATICO:
-                                if(xmlreader.isEndElement()){
+                                if (xmlreader.isEndElement()) {
                                     //controllo aggiuntivo che il lavoro del menu tematico non ecceda 4/3 del lavoro per persona
-                                    if (menu_tematico.getLavoro_menu() <= ristorante.getLavoro_persona() * 4/3){
+                                    if (menu_tematico.getLavoro_menu() <= ristorante.getLavoro_persona() * 4 / 3) {
                                         addetto_prenotazione.aggiungiMenu_tematico(menu_tematico);
                                     }else{
                                         System.out.println("Il menu tematico " + menu_tematico.getNome() + " e' stato rifiutato perche' eccede il vincolo di lavoro di 4/3 del lavoro per persona.");
@@ -243,7 +243,7 @@ public class LetturaFileXML {
                 }
                 xmlreader.next();
             }
-        }catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             System.out.printf(Costanti.ERRORE_LETTURA_FILE, filename, e.getMessage());
         }
 
@@ -252,7 +252,7 @@ public class LetturaFileXML {
         return ristorante;
     }
 
-    public Alimento creaAlimento(XMLStreamReader xmlreader, String tipologia){
+    public Alimento creaAlimento(XMLStreamReader xmlreader, String tipologia) {
         //inizializzo le variabili che rappresentano gli attributi dei diversi alimenti
         String nome = null;
         float qta = 0;
@@ -284,7 +284,7 @@ public class LetturaFileXML {
             }
         }
 
-        switch (tipologia){
+        switch (tipologia) {
 
             case Costanti.INGREDIENTE:
                 return new Ingrediente(nome, qta, misura);
@@ -299,13 +299,13 @@ public class LetturaFileXML {
         return null;
     }
 
-    public ArrayList<LocalDate> creaDisponibilita(XMLStreamReader xmlreader){
+    public ArrayList<LocalDate> creaDisponibilita(XMLStreamReader xmlreader) {
 
         ArrayList<LocalDate> disponibilita = new ArrayList<>();
 
-        for (int i = 0; i < xmlreader.getAttributeCount(); i++){
+        for (int i = 0; i < xmlreader.getAttributeCount(); i++) {
 
-            switch (xmlreader.getAttributeLocalName(i)){
+            switch (xmlreader.getAttributeLocalName(i)) {
 
                 case Costanti.INIZIO:
                     disponibilita.add(LocalDate.parse(xmlreader.getAttributeValue(i)));

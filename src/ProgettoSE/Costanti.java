@@ -7,7 +7,7 @@ public class Costanti {
     public static final String FILE_RISTORANTE = "src/ProgettoSE/Ristorante.xml" ;
 
     //TAG XML
-    public static final String TEMPO = "tempo";
+    public static final String TEMPO = "Tempo";
     public static final String FUNZIONALITA = "funzionalità ";
     public static final String USCITA_MENU = "... uscita dal menù ";
     public static final String END = "PROGRAMMA TERMINATO.";
@@ -36,7 +36,7 @@ public class Costanti {
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
     final private static String FRECCETTA = "→";//⟼
     public static final float IMPREVISTI_CUCINA = (float) (10.0/100);
-    public static final float ALIMENTI_SCARTATI = (float) (5.0/100);
+    public static final float ALIMENTI_SCARTATI = (float) (5.0/100); //rappresenta scarti scaduti o deteriorati, a fine giornata
 
     //comunicazioni di inzio/fine lettura/scrittura file
     public static final String INIZIO_FILE = "\n%s file: %s ...\n";
@@ -46,7 +46,6 @@ public class Costanti {
     //errori vari nei servizi xml
     public static final String ERRORE_INIZIALIZZAZIONE_READER = "Errore nell'inizializzazione del reader: ";
     public static final String ERRORE_LETTURA_FILE = "Errore nella lettura del file: %s, per ulteriori info: %s\n";
-    public static final String ERRORE_STRADA = "Errore strada non trovata :(";
     public static final String ERRORE_TIPOLOGIA = "Tipologia non esistente";
     public static final String ERRORE_INIZIALIZZAZIONE_WRITER = "Errore nell'inizializzazione del writer: %s\n";
     public static final String ERRORE_SCRITTURA_FILE = "Errore nella scrittura del file: %s\n";
