@@ -8,18 +8,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class MenuTematico extends Menu implements Prenotabile {
-
+    //ATTRIBUTI
     private String nome;
     private float lavoro_menu;
     private ArrayList<LocalDate> disponibilità;
 
+    //METODI
     public MenuTematico(ArrayList<Piatto> piatti_menu, float lavoro_menu, ArrayList<LocalDate> disponibilità) {
         super(piatti_menu);
         this.lavoro_menu = lavoro_menu;
         this.disponibilità = disponibilità;
     }
-
-
 
     @Override
     public String getNome() {

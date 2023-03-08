@@ -34,7 +34,6 @@ public class Costanti {
     public static final String LAVORO_PORZIONE = "lavoro_porzione";
     public static final String DISPONIBILITA = "disponibilita";
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
-    final private static String FRECCETTA = "→";//⟼
     public static final float IMPREVISTI_CUCINA = (float) (10.0/100);
     public static final float ALIMENTI_SCARTATI = (float) (5.0/100); //rappresenta scarti scaduti o deteriorati, a fine giornata
 
@@ -46,9 +45,7 @@ public class Costanti {
     //errori vari nei servizi xml
     public static final String ERRORE_INIZIALIZZAZIONE_READER = "Errore nell'inizializzazione del reader: ";
     public static final String ERRORE_LETTURA_FILE = "Errore nella lettura del file: %s, per ulteriori info: %s\n";
-    public static final String ERRORE_TIPOLOGIA = "Tipologia non esistente";
-    public static final String ERRORE_INIZIALIZZAZIONE_WRITER = "Errore nell'inizializzazione del writer: %s\n";
-    public static final String ERRORE_SCRITTURA_FILE = "Errore nella scrittura del file: %s\n";
+
     //altro
     public static final String ENCODING = "utf-8";
     public static final String VERSION = "1.0";
