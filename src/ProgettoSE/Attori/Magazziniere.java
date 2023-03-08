@@ -84,6 +84,7 @@ public class Magazziniere extends Persona {
         if(n_persone <= 0) throw new IllegalArgumentException("Il numero di persone deve essere maggiore di 0");
         if(magazzino.getExtras().isEmpty()) throw new IllegalArgumentException("Non ci sono extras nel magazzino");
         HashMap<Alimento, Float> consumo_extras = new HashMap<>();
+        //anche in questo caso devo fare il dopiio cast per il motivo spiegato sopra
         magazzino.getExtras().forEach(extra -> consumo_extras.put(extra,(float) (int) Math.ceil(n_persone * ((Extra) extra).getCons_procapite())));
         //postcondizione: il numero di extras calcolati è uguale al numero di extras nel magazzino
         assert consumo_extras.size() == magazzino.getExtras().size();
@@ -110,9 +111,11 @@ public class Magazziniere extends Persona {
                 value += value * Costanti.IMPREVISTI_CUCINA;
                 float qta_rimanente = magazzino.getAlimento(key.getNome()).getQta() - value;
                 if (qta_rimanente < 0)
+                    //se la quantità rimanente è minore di 0, aggiungo l'extra alla lista spesa in valore assoluto
                     this.lista_spesa.add(new Extra(key.getNome(), Math.abs(qta_rimanente), key.getMisura(), ((Extra) key).getCons_procapite()));
             }
         });
+        //esguo lo stesso ciclo per le bevande
         prenotazione_totale.getCons_bevande().forEach((key, value) -> {
             if (key instanceof Bevanda) {
                 value += value * Costanti.IMPREVISTI_CUCINA;
@@ -136,6 +139,7 @@ public class Magazziniere extends Persona {
         //precondizione: il piatto non è nullo e la quantità è maggiore di 0
         if(piatto == null) throw new IllegalArgumentException("Il piatto non può essere nullo");
         if(qta_richiesta_piatto < 0) throw new IllegalArgumentException("La quantità di piatti deve essere maggiore o uguale a 0");
+        //calcolo dei valori per facilitare la stesura del codice
         int n_porzioni_ricetta = piatto.getRicetta().getN_porzioni();   //ricetta x5
         int n_ricette = (int) Math.ceil(qta_richiesta_piatto / n_porzioni_ricetta);  //   14/5   = 3 ricette
         //ciclo sugli ingredienti del piatto
@@ -228,13 +232,16 @@ public class Magazziniere extends Persona {
         for (Prenotabile prenotabile : prenotazione_totale.getScelte().keySet()) {
             //controllo se l'oggetto è un piatto
             if (prenotabile instanceof Piatto) {
+                //se non è già presente lo aggiungo semplicemenbte
                 if (!consumi.containsKey((Piatto) prenotabile))
                     consumi.put((Piatto) prenotabile, prenotazione_totale.getScelte().get(prenotabile));
                 else
+                    //in caso fosee già presente aggiorno la quantità, sommandola a quella già presente
                     consumi.put((Piatto) prenotabile, consumi.get(prenotabile) + prenotazione_totale.getScelte().get(prenotabile));
             } else if (prenotabile instanceof MenuTematico) {
                 //ciclo sui piatti presenti nel menu
                 for (Piatto piatto : ((MenuTematico) prenotabile).getPiatti_menu()) {
+                    //esuguo la stessa operazione fatta sopra
                     if (!consumi.containsKey(piatto))
                         consumi.put(piatto, prenotazione_totale.getScelte().get(prenotabile));
                     else

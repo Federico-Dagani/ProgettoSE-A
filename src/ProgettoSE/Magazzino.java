@@ -11,10 +11,18 @@ public class Magazzino {
     private ArrayList<Alimento> ingredienti = new ArrayList<>();
 
     //METODI
-    //costruttore
+    //costruttore vuoto
     public Magazzino() {
     }
 
+    /**
+     * <h2>Costruttore che inizializza il magazzino con i dati letti dal file XML
+     * @param bevande lista di bevande
+     * @param extras
+     * @param ingredienti
+     * @throws IllegalArgumentException se uno dei parametri non è valido
+     * @return void
+     */
     public Magazzino(ArrayList<Alimento> bevande, ArrayList<Alimento> extras, ArrayList<Alimento> ingredienti) {
         this.bevande = bevande;
         this.extras = extras;

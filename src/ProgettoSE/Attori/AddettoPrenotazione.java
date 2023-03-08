@@ -16,15 +16,21 @@ import java.util.Map;
 public class AddettoPrenotazione extends Persona {
 
     //ATTRIBUTI
-    private ArrayList<Prenotazione> prenotazioni;
-    private ArrayList<Prenotabile> menu;
-
-    //METODI
-    //costruttore solo nome
     public AddettoPrenotazione(String nome) {
         super(nome);
     }
-    //costruttore completo
+    private ArrayList<Prenotazione> prenotazioni;
+    private ArrayList<Prenotabile> menu;
+
+    //MANCA INVARIANTE DI CLASSE
+
+    //METODI
+    /**
+     * <h2>Meotodo costruttore della classe AdettoPrenotazione</h2>
+     * @param nome il nome dell'addetto alle prenotazioni
+     * @param prenotazioni le prenotazioni effettuate
+     * @param menu il menu complessivo (composto da piatti e menu tematici)
+     */
     public AddettoPrenotazione(String nome, ArrayList<Prenotazione> prenotazioni, ArrayList<Prenotabile> menu) {
         super(nome);
         this.prenotazioni = prenotazioni;
