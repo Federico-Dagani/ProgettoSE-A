@@ -26,7 +26,7 @@ public class Main {
 
         benvenuto();
 
-        Gestore gestore = new Gestore("CAPO", null);
+        Gestore gestore = new Gestore(nominaGestore() , null);
 
         Tempo data_attuale = new Tempo(LocalDate.now());
 
@@ -83,6 +83,10 @@ public class Main {
         System.out.println("|\t"+Costanti.BENVENUTO+"\t|");
         System.out.println(Costanti.CORNICE_INF);
         System.out.println();
+    }
+
+    private static String nominaGestore(){
+        return InputDati.leggiStringaConSpazio("Benvenuto, inserisca il nome del gestore del ristorante: ");
     }
 
     private static void scegliFunzionalitaGestore(int scelta, Gestore gestore){

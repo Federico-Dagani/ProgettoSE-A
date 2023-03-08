@@ -100,6 +100,10 @@ public class LetturaFileXML {
                                 }
                                 break;
 
+                            case Costanti.MAGAZZINIERE:
+
+                                ristorante.getMagazziniere().setNome(xmlreader.getAttributeValue(0));
+
                             case Costanti.BEVANDA:
 
                                 Bevanda bevanda = (Bevanda) creaAlimento(xmlreader, Costanti.BEVANDA);
@@ -116,6 +120,11 @@ public class LetturaFileXML {
 
                                 Ingrediente ingrediente = (Ingrediente) creaAlimento(xmlreader, Costanti.INGREDIENTE);
                                 ingredienti.add(ingrediente);
+                                break;
+
+                            case Costanti.ADDETTO_PRENOTAZIONE:
+
+                                ristorante.getAddettoPrenotazione().setNome(xmlreader.getAttributeValue(0));
                                 break;
 
                             case Costanti.PIATTO:
