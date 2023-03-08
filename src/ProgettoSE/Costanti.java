@@ -12,9 +12,12 @@ public class Costanti {
     public static final String USCITA_MENU = "... uscita dal menù ";
     public static final String END = "PROGRAMMA TERMINATO.";
     public static final String ATTORI = "attori";
+    public static final String GESTORE_XML = "gestore";
     public static final String RISTORANTE = "ristorante";
     public static final String N_POSTI = "n_posti";
     public static final String LAVORO_PERSONE = "lavoro_persone";
+    public static final String ADDETTO_PRENOTAZIONE = "addetto_prenotazione";
+    public static final String MAGAZZINIERE = "magazziniere";
     public static final String MAGAZZINO = "magazzino";
     public static final String BEVANDA = "bevanda";
     public static final String NOME = "nome";
@@ -36,6 +39,8 @@ public class Costanti {
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
     public static final float IMPREVISTI_CUCINA = (float) (10.0/100);
     public static final float ALIMENTI_SCARTATI = (float) (5.0/100); //rappresenta scarti scaduti o deteriorati, a fine giornata
+
+
 
     //comunicazioni di inzio/fine lettura/scrittura file
     public static final String INIZIO_FILE = "\n%s file: %s ...\n";
