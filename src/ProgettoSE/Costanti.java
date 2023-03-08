@@ -7,7 +7,6 @@ public class Costanti {
     public static final String FILE_RISTORANTE = "src/ProgettoSE/Ristorante.xml" ;
 
     //TAG XML
-    public static final String TEMPO = "Tempo";
     public static final String FUNZIONALITA = "funzionalità ";
     public static final String USCITA_MENU = "... uscita dal menù ";
     public static final String END = "PROGRAMMA TERMINATO.";
@@ -61,9 +60,10 @@ public class Costanti {
     public static final  String CORNICE_INF = "└———————————————————————————————————————————————————————┘";
 
     //main
-    //attori
     public static final String UTENTE = "Cliente";
     public static final String GESTORE = "Gestore";
+    public static final String TEMPO = "Tempo";
+    public static final String INIZIALIZZAZIONE = "Inizializzazione";
 
 }
 

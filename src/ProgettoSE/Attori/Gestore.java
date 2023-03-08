@@ -32,6 +32,11 @@ public class Gestore extends Persona {
         LetturaFileXML letturaFileXML = new LetturaFileXML();
         ristorante = letturaFileXML.leggiRistorante(Costanti.FILE_RISTORANTE);
     }
+
+    public void modificaRistorante(){
+        //TODO
+    }
+
     /**
      * <h2>Metodo che comunica al magazziniere la lista della spesa e al cuoco la lista dei piatti da cucinare
      * @param data_attuale

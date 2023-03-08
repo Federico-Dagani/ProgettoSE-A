@@ -32,8 +32,10 @@ public class Main {
 
         inizializzazione(gestore);
 
-        MyMenu menu_attori = nuovoMenu(Costanti.ATTORI);
+        if(modificaInizializzazione(gestore)) inizializzazione(gestore);
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        MyMenu menu_attori = nuovoMenu(Costanti.ATTORI);
 
         int scelta_attore = menu_attori.scegliConUscita();
         while (scelta_attore != 0){
@@ -346,6 +348,14 @@ public class Main {
         gestore.inizializzaRistorante();
         System.out.println("Inizializzazione automatica del ristorante completata.");
         System.out.println();
+    }
+
+    private static boolean modificaInizializzazione(Gestore gestore){
+        System.out.println("Il gestore può modificare l'inizializzazione automatica del ristorante.");
+        if(InputDati.yesOrNo("Vuole modificare l'inizializzazione automatica del ristorante? (s/n)")){
+            gestore.modificaRistorante();
+            return true;}
+        else return false;
     }
 
     private static boolean stampaMenuDelGiorno(Gestore gestore, LocalDate data){
