@@ -1,18 +1,21 @@
 package ProgettoSE;
-
-
+//importa classi alimenti
 import ProgettoSE.Alimentari.Alimento;
 import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Extra;
+//importa classi attori
 import ProgettoSE.Attori.Cliente;
 import ProgettoSE.Attori.Gestore;
+//importa classe MenuTematico
 import ProgettoSE.Menu.MenuTematico;
+//importa classi utilità
 import ProgettoSE.mylib.MyMenu;
 import ProgettoSE.mylib.InputDati;
-
+//importa classi per gestione input da tastiera
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+//importa classi per utilizzo costrutti
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,6 +138,9 @@ public class Main {
                     break;
                 case 3:
                     System.out.println("Il ristorante non ha posti disponibili in questa data (" + stringa_data_prenotazione + ")");
+                    break;
+                case 4:
+                    System.out.println("La data inserita corrisponde ad un giorno festivo, sono ammessi solo giorni feriali.");
                     break;
             }
             stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
