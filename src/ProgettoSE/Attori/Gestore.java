@@ -22,8 +22,7 @@ public class Gestore extends Persona {
         this.ristorante = ristorante;
     }
     /**
-     * <h2>Metodo che inizializza il ristorante leggendo i dati dal file XML
-     * @throws
+     * <h2>Metodo che inizializza il ristorante leggendo i dati dal file XML</h2>
      * @return void
      *
      */
@@ -110,7 +109,7 @@ public class Gestore extends Persona {
 
     /**
      * <h2>Metodo che comunica al magazziniere la lista della spesa e al cuoco la lista dei piatti da cucinare
-     * @param data_attuale
+     * @param data_attuale data attuale
      * @throws IllegalArgumentException se la data non è valida
      * @return String messaggio
      */

@@ -13,9 +13,6 @@ import java.util.Map;
 
 public class Magazziniere extends Persona {
     //ATTRIBUTI
-    public Magazziniere(String nome) {
-        super(nome);
-    }
     private Magazzino magazzino;
     private ArrayList<Alimento> lista_spesa;
 
@@ -29,6 +26,9 @@ public class Magazziniere extends Persona {
     }
 
     //METODI
+    public Magazziniere(String nome) {
+        super(nome);
+    }
     /**
      * <h2>Metodo costruttore della classe Magazziniere
      * @param nome nome del magazziniere
@@ -56,7 +56,9 @@ public class Magazziniere extends Persona {
     }
 
     /**
-     * <h2>Metodo che calcola il consumo di bevande per un numero di persone
+     * <h2>Metodo che calcola il consumo di bevande per un numero di persone</h2>
+     * <b>Precondizione:</b> il numero delle persone sia positivo e ci siano bevande nel magazzino<br>
+     * <b>Postcondizione:</b> il numero di bevande calcolate sia uguale al numero di bevande nel magazzino
      * @param n_persone numero di persone presenti nella prenotazione
      * @throws IllegalArgumentException se il numero di persone è minore o uguale a 0 o non ci sono bevande nel magazzino
      * @return HashMap contenente le bevande e il loro consumo
@@ -74,7 +76,9 @@ public class Magazziniere extends Persona {
     }
 
     /**
-     * <h2>Metodo che calcola il consumo di extras per un certo numero di persone
+     * <h2>Metodo che calcola il consumo di extras per un certo numero di persone</h2>
+     * <b>Precondizione:</b> il numero delle persone sia positivo e ci siano extras nel magazzino<br>
+     * <b>Postcondizione:</b> il numero di extras calcolati sia uguale al numero di extras nel magazzino
      * @param n_persone numero di persone presenti nella prenotazione
      * @throws IllegalArgumentException se il numero di persone è minore o uguale a 0 o non ci sono extras nel magazzino
      * @return HashMap contenente gli extras e il loro consumo
@@ -92,9 +96,10 @@ public class Magazziniere extends Persona {
     }
 
     /**
-     * <h2>metodo che aggiunge alla lista spesa gli ingredienti necessari per preparare i piatti delle prenotazione totale della giornata
-     * @param prenotazione_totale prenotaione totale della giornata contenenete tutti i menu e i piatti ordinati dai commensali
-     *                            e le bevande e gli extras ordinati
+     * <h2>metodo che aggiunge alla lista spesa gli ingredienti necessari per preparare i piatti delle prenotazione totale della giornata</h2>
+     * <b>Precondizione:</b> la prenotazione non è nulla<br>
+     * <b>Postcondizione:</b> la lista della spesa non è nulla
+     * @param prenotazione_totale prenotaione totale della giornata contenenete tutti i menu e i piatti ordinati dai commensali e le bevande e gli extras ordinati
      * @throws IllegalArgumentException se la prenotazione è nulla
      * @return void
      */
@@ -129,7 +134,9 @@ public class Magazziniere extends Persona {
     }
 
     /**
-     * <h2>Metodo che calcola la quantità di ingredienti necessaria per preparare un certo numero di porzioni di un piatto
+     * <h2>Metodo che calcola la quantità di ingredienti necessaria per preparare un certo numero di porzioni di un piatto</h2>
+     * <b>Precondizione:</b> il piatto non è nullo e la quantità è maggiore di 0<br>
+     * <b>Postcondizione:</b> la lista della spesa non è nulla
      * @param piatto piatto di cui calcolare la quantità di ingredienti
      * @param qta_richiesta_piatto quantità di porzioni di quel piatto che si vogliono preparare
      * @throws IllegalArgumentException se il piatto è nullo o la quantità è minore o uguale a 0
@@ -157,7 +164,9 @@ public class Magazziniere extends Persona {
     }
 
     /**
-     * <h2>Metodo che aggiunge gli alimenti della lista spesa al magazzino
+     * <h2>Metodo che aggiunge gli alimenti della lista spesa al magazzino</h2>
+     * <b>Precondizione:</b> la lista spesa non è nulla<br>
+     * <b>Postcondizione:</b> la lista spesa è vuota
      * @throws IllegalArgumentException se la lista spesa è nulla
      * @return String messaggio di aggiornamento del magazzino
      */
@@ -184,6 +193,8 @@ public class Magazziniere extends Persona {
 
     /**
      * <h2>Metodo che porta in cucina gli alimenti necessari, gli extra e le bevande</h2>
+     * <b>Precondizione:</b> la prenotazione complessiva non è nulla e la lista spesa è vuota<br>
+     * <b>Postcondizione:</b> il magazzino è aggiornato <br>
      * La quantità di ingredienti segue le richieste effettive, non quelle delle ricette.
      * Inoltre si porta una % in più del dovuto (pari a Costanti.ALIMENTI_SCARTATI) sia di ingredienti, di extra e di bevande
      * @param prenotazione_complessiva prenotazione complessiva di cui calcolare gli alimenti, gli extra e le bevande da portare in cucina
@@ -221,6 +232,8 @@ public class Magazziniere extends Persona {
 
     /**
      * <h2>Metodo che genera la map contenente soli piatti della prenotazione complessiva e la quantità di ciascuno</h2>
+     * <b>Precondizione:</b> la prenotazione complessiva non è nulla<br>
+     * <b>Postcondizione:</b> l'insieme dei consumi non è nullo
      * @param prenotazione_totale prenotazione complessiva di cui calcolare i piatti e la quantità di ciascuno
      * @throws IllegalArgumentException se la prenotazione complessiva è nulla
      * @return HashMap<Piatto, Integer> consumi
@@ -249,7 +262,7 @@ public class Magazziniere extends Persona {
                 }
             }
         }
-        //postcondizione: la mappa non è nulla
+        //postcondizione: l'insieme dei consumi non è nullo
         assert consumi != null;
         return consumi;
     }
