@@ -14,10 +14,12 @@ public class MenuTematico extends Menu implements Prenotabile {
     private ArrayList<LocalDate> disponibilità;
 
     //METODI
-    public MenuTematico(ArrayList<Piatto> piatti_menu, float lavoro_menu, ArrayList<LocalDate> disponibilità) {
+    public MenuTematico(String nome, ArrayList<Piatto> piatti_menu, float lavoro_menu, ArrayList<LocalDate> disponibilità) {
+
         super(piatti_menu);
         this.lavoro_menu = lavoro_menu;
         this.disponibilità = disponibilità;
+        this.nome = nome;
     }
 
     @Override
