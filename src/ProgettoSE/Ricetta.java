@@ -1,23 +1,29 @@
 package ProgettoSE;
 
-
 import ProgettoSE.Alimentari.Alimento;
-import ProgettoSE.Alimentari.Ingrediente;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class    Ricetta {
+public class Ricetta {
+    //ATTRIBUTI
     private ArrayList<Alimento> ingredienti;
     private int n_porzioni;
     private float lavoro_porzione;
 
+    //METODI
+
+    /**
+     * <h2>Metodo costruttore della classe Ricetta</h2>
+     * @param ingredienti lista degli ingredienti
+     * @param n_porzioni numero di porzioni
+     * @param lavoro_porzione lavoro per porzione
+     */
     public Ricetta(ArrayList<Alimento> ingredienti, int n_porzioni, float lavoro_porzione) {
         this.ingredienti = ingredienti;
         this.n_porzioni = n_porzioni;
         this.lavoro_porzione = lavoro_porzione;
     }
 
+    //getters e setters
     public ArrayList<Alimento> getIngredienti() {
         return ingredienti;
     }

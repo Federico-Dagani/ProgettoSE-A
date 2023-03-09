@@ -16,20 +16,21 @@ import java.util.Map;
 public class AddettoPrenotazione extends Persona {
 
     //ATTRIBUTI
-    public AddettoPrenotazione(String nome) {
-        super(nome);
-    }
     private ArrayList<Prenotazione> prenotazioni;
     private ArrayList<Prenotabile> menu;
 
     //MANCA INVARIANTE DI CLASSE
 
+    //c'è da aggiungere il i tag @require e @ensure
     //METODI
+    public AddettoPrenotazione(String nome) {
+        super(nome);
+    }
     /**
      * <h2>Meotodo costruttore della classe AdettoPrenotazione</h2>
      * @param nome il nome dell'addetto alle prenotazioni
      * @param prenotazioni le prenotazioni effettuate
-     * @param menu il menu complessivo (composto da piatti e menu tematici)
+     * @param menu il menu complessivo (composto da piatti e menu tematici
      */
     public AddettoPrenotazione(String nome, ArrayList<Prenotazione> prenotazioni, ArrayList<Prenotabile> menu) {
         super(nome);
@@ -53,6 +54,8 @@ public class AddettoPrenotazione extends Persona {
 
     /**
      * <h2>Metodo che aggiunge un menu alla carta al menu complessivo</h2>
+     * <b>Precondizione: </b>il menu alla carta deve essere composto da piatti <br
+     * <b>Postcondizione: </b>il menu alla carta è stato effettivamente aggiunto al menu complessivo
      * @param menu_carta il menu alla carta (ovvero un insieme di piatti) da aggiungere
      * @throws IllegalArgumentException se il menu alla carta non è composto da piatti
      * @return void
@@ -70,6 +73,8 @@ public class AddettoPrenotazione extends Persona {
 
     /**
      * <h2>Metodo che aggiunge il menu tematico nel menu complessivo (composto da piatti e menu tematici)</h2>
+     * <b>Precondizione: </b>il menu tematico deve essere composto da piatti <br>
+     * <b>Postcondizione: </b>il menu tematico è stato effettivamente aggiunto al menu complessivo
      * @param menu_tematico un singolo menu tematico
      * @throws IllegalArgumentException se il menu tematico non è composto da piatti
      * @return void
@@ -83,7 +88,9 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * <h2>Metodo che rimuove le prenotazioni antecedenti alla data attuale
+     * <h2>Metodo che rimuove le prenotazioni antecedenti alla data attuale</h2>
+     * <b>Precondizione: </b>la data attuale è valida <br>
+     * <b>Postcondizione: </b>le prenotazioni antecedenti alla data attuale sono state eliminate
      * @param data_attuale la data attuale
      * @throws IllegalArgumentException se la data attuale non è valida
      * @return void
@@ -106,7 +113,9 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * <h2>Metodo che calcola il menu del giorno relativo ad una data inserita
+     * <h2>Metodo che calcola il menu del giorno relativo ad una data inserita</h2>
+     * <b>Precondizione: </b>la data attuale è valida <br>
+     * <b>Postcondizione: </b>il menu del giorno è stato calcolato
      * @param data_attuale la data attuale
      * @throws IllegalArgumentException se la data attuale non è valida
      * @return ArrayList<Prenotabile> il menu disponibile in data inserita
@@ -134,7 +143,9 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * <h2>Metodo che esegue diversi controlli sulla data
+     * <h2>Metodo che esegue diversi controlli sulla data</h2>
+     * <b>Precondizione: </b>il numero dei posti del ristorante è positivo <br>
+     * <b>Postcondizione: </b>la data inserita è corretta
      * @param data_attuale la data attuale
      * @param stringa_data_prenotazione data della prenotazione del cliente (di tipo String)
      * @throws IllegalArgumentException il numero dei posti è negativo
@@ -169,7 +180,9 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * <h2>Metodo che calcola il numero di posti occupati in una data
+     * <h2>Metodo che calcola il numero di posti occupati in una data</h2>
+     * <b>Precondizione: </b>la data della prenotazione è valida <br>
+     * <b>Postcondizione: </b>il numero di posti occupati è stato calcolato
      * @param data_prenotazione la data della prenotazione
      * @throws IllegalArgumentException se la data della prenotazione non è valida
      * @return int il numero di posti occupati in quella data
@@ -190,7 +203,9 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * <h2>Metodo che calcola il numero di posti rimanenti in una data
+     * <h2>Metodo che calcola il numero di posti rimanenti in una data</h2>
+     * <b>Precondizione: </b>la data della prenotazione è valida <br>
+     * <b>Postcondizione: </b>il numero di posti rimanenti è stato calcolato
      * @param data_prenotazione la data della prenotazione
      * @param lavoro_persona il lavoro per persona
      * @param n_posti il numero di posti del ristorante
@@ -212,7 +227,9 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * <h2>Metodo che controlla se il lavoro complessivo di una prenotazione può essere soddisfatto dal personale del ristorante
+     * <h2>Metodo che controlla se il lavoro complessivo di una prenotazione può essere soddisfatto dal personale del ristorante</h2>
+     * <b>Precondizione: </b>la data della prenotazione è valida <br>
+     * <b>Postcondizione: </b>il lavoro complessivo di una prenotazione può essere soddisfatto dal personale del ristorante
      * @param data_prenotazione la data della prenotazione
      * @param lavoro_persona il lavoro per persona
      * @param n_posti il numero di posti del ristorante
@@ -241,7 +258,9 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * <h2>Metodo che unisce le prenotazioni di un giorno in una sola prenotazione
+     * <h2>Metodo che unisce le prenotazioni di un giorno in una sola prenotazione</h2>
+     * <b>Precondizione: </b>la lista delle prenotazioni è nulla <br>
+     * <b>Postcondizione: </b>le prenotazioni sono state unite
      * @param prenotazioni_in_corso le prenotazioni di un giorno
      * @throws IllegalArgumentException se la lista delle prenotazioni è vuota
      * @return Prenotazione la prenotazione complessiva
@@ -295,7 +314,9 @@ public class AddettoPrenotazione extends Persona {
     }
 
     /**
-     * <h2>Metodo che filtra le prenotazioni in base alla data
+     * <h2>Metodo che filtra le prenotazioni in base alla data</h2>
+     * <b>Precondizione: </b>la data della prenotazione non è valida <br>
+     * <b>Postcondizione: </b>le prenotazioni sono state filtrate
      * @param data la data della prenotazione
      * @throws IllegalArgumentException se la data della prenotazione non è valida
      * @return ArrayList<Prenotazione> le prenotazioni filtrate

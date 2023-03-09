@@ -1,8 +1,6 @@
 package ProgettoSE;
 
 import ProgettoSE.Alimentari.Alimento;
-import ProgettoSE.Alimentari.Bevanda;
-import ProgettoSE.Alimentari.Extra;
 import ProgettoSE.Attori.Cliente;
 import ProgettoSE.Menu.MenuTematico;
 
@@ -10,18 +8,26 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Prenotazione {
+
+    //ATTRIBUTI
     private Cliente nominativo;
     private int n_coperti;
     private LocalDate data;
     private HashMap<Prenotabile, Integer> scelte;
-    //N.B. bisogna fare un controllo che la somma di tutti gli Integer sia >= n_coperti
-    //ci starebbe usare Map.Entry<> che crea solo una coppia e non un lista di coppie
     private HashMap<Alimento,Float> cons_bevande;  //calcolo del cons_procapite delle bevande * n_coperti
     private HashMap<Alimento,Float> cons_extra; //calcolo del cons_procapite degli extra * n_coperti
 
     //METODI
 
-    //costruttore
+    /**
+     * <h2>Metodo costruttore della classe Prenotazione</h2>
+     * @param nominativo nome del cliente che ha effettuato la prenotazione
+     * @param n_coperti numero di coperti della prenotazione
+     * @param data data della prenotazione
+     * @param scelte HashMap contenente i piatti e i menu prenotati con le relative quantità prenotate
+     * @param cons_bevande HashMap contenente le bevande prenotate con le relative quantità
+     * @param cons_extra HashMap contenente gli extra prenotati con le relative quantità
+     */
     public Prenotazione(Cliente nominativo, int n_coperti, LocalDate data, HashMap<Prenotabile, Integer> scelte, HashMap<Alimento, Float> cons_bevande, HashMap<Alimento, Float> cons_extra) {
         this.nominativo = nominativo;
         this.n_coperti = n_coperti;
@@ -31,7 +37,13 @@ public class Prenotazione {
         this.cons_extra = cons_extra;
     }
 
-    //metodo cotruttore fittizio perchè serve in AddettoPrenotazioni, nel metodo calcolaLavoro()
+    /**
+     * <h2>Metodo costruttore della classe Prenotazione</h2>
+     * meotodo costruttore fittizio perchè serve in AddettoPrenotazioni, nel metodo calcolaLavoro()
+     * @param scelte HashMap contenente i piatti e i menu prenotati con le relative quantità prenotate
+     * @param cons_bevande HashMap contenente le bevande prenotate con le relative quantità
+     * @param cons_extra HashMap contenente gli extra prenotati con le relative quantità
+     */
     public Prenotazione(HashMap<Prenotabile, Integer> scelte, HashMap<Alimento, Float> cons_bevande, HashMap<Alimento, Float> cons_extra){
         this.nominativo = null;
         this.n_coperti = 0;
@@ -42,7 +54,7 @@ public class Prenotazione {
 
     }
 
-    //get e set
+    //getter e setter
     public Cliente getNominativo() {
         return nominativo;
     }
@@ -91,7 +103,15 @@ public class Prenotazione {
         this.cons_extra = cons_extra;
     }
 
+    /**
+     * <h2>Metodo che calcola il lavoro totale della prenotazione</h2>
+     * <b>Precondizione:</b> la prenotazione deve avere almeno un prenotabile<br>
+     * <b>Postcondizione:</b> il lavoro totale della prenotazione è stato calcolato
+     * @return il lavoro totale della prenotazione
+     */
     public float getLavoro_prenotazione(){
+        //precondizione: la prenotazione deve avere almeno un prenotabile
+        if (scelte.isEmpty()) throw new IllegalArgumentException("La prenotazione non ha prenotabili");
         float lavoro_tot = 0;
         //devo avere i prenotabili per poter risalire ai loro lavori
         Set<Prenotabile> prenotabili_presenti = scelte.keySet();
@@ -121,6 +141,8 @@ public class Prenotazione {
                 }
             }
         }
+        //postcondizione: il lavoro totale della prenotazione è stato calcolato
+        assert lavoro_tot >= 0 : "Il lavoro totale della prenotazione non può essere negativo";
         return lavoro_tot;
     }
 

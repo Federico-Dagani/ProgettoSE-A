@@ -6,13 +6,20 @@ import ProgettoSE.Attori.Magazziniere;
 import java.util.ArrayList;
 
 public class Ristorante {
+    //ATTRIBUTI
     private int n_posti;
     private int lavoro_persona;
     private AddettoPrenotazione addettoPrenotazione;
     private Magazziniere magazziniere;
 
-    public Ristorante() { }
-
+    //METODI
+    /**
+     * <h2>Metodo costruttore della classe Ristorante</h2>
+     * @param n_posti numero di posti del ristorante
+     * @param lavoro_persona lavoro per una persona
+     * @param addettoPrenotazione addetto alla prenotazione
+     * @param magazziniere magazziniere
+     */
     public Ristorante(int n_posti, int lavoro_persona, AddettoPrenotazione addettoPrenotazione, Magazziniere magazziniere) {
         this.n_posti = n_posti;
         this.lavoro_persona = lavoro_persona;
@@ -20,6 +27,7 @@ public class Ristorante {
         this.magazziniere = magazziniere;
     }
 
+    //getter e setter
     public int getN_posti() {
         return n_posti;
     }
