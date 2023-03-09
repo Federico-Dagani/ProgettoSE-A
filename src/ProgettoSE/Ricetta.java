@@ -23,6 +23,12 @@ public class Ricetta {
         this.lavoro_porzione = lavoro_porzione;
     }
 
+    public Ricetta(){
+        this.ingredienti = new ArrayList<>();
+        this.n_porzioni = 0;
+        this.lavoro_porzione = 0;
+    }
+
     //getters e setters
     public ArrayList<Alimento> getIngredienti() {
         return ingredienti;

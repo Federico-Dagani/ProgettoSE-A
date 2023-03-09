@@ -4,8 +4,6 @@ import ProgettoSE.*;
 import ProgettoSE.Menu.MenuTematico;
 import ProgettoSE.ServiziFileXML.LetturaFileXML;
 
-import java.awt.image.LookupOp;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -51,7 +49,7 @@ public class Gestore extends Persona {
                     messaggio += "\nIl menu tematico " + menu_tematico.getNome() + " è stato scartato perchè il lavoro richiesto è maggiore del 4/3 del lavoro totale del ristorante";
                 }
                 //controllo
-                if (comprendeDisponibilita((MenuTematico) menu_tematico)){
+                if (!disponibilitaPiattiCorrette((MenuTematico) menu_tematico)){
                     menu_da_eliminare.add(menu_tematico);
                     messaggio += "\nIl menu tematico " + menu_tematico.getNome() + " è stato scartato perchè contiene piatti non disponibili nelle date del menu";
                 }
@@ -62,30 +60,32 @@ public class Gestore extends Persona {
     }
 
 
-    public boolean comprendeDisponibilita(MenuTematico menu_tematico) {
+    public boolean disponibilitaPiattiCorrette(MenuTematico menu_tematico) {
         for(Piatto piatto : menu_tematico.getPiatti_menu()){
-            int start = 0;
-            for(int j=0; j< piatto.getDisponibilità().toArray().length/2; j++){
-                int inizio = 0;
-                for(int i=0; i<piatto.getDisponibilità().toArray().length/2; i++){
-                   if(piatto.getDisponibilità().get(inizio).getDayOfYear() > menu_tematico.getDisponibilità().get(start).getDayOfYear() || piatto.getDisponibilità().get(inizio+1).getDayOfYear() < menu_tematico.getDisponibilità().get(start+1).getDayOfYear())
-                        return false;
-                    inizio += 2;
-                }
-            start += 2;
+            for(int i=0; i<menu_tematico.getDisponibilità().size(); i+=2){
+                if(!piattoDisponibileInData(piatto, menu_tematico.getDisponibilità().get(i), menu_tematico.getDisponibilità().get(i+1)))
+                    return false;
             }
         }
         return true;
     }
 
-    public boolean seDisponibilitaCorrette(ArrayList<LocalDate> disponibilita) {
-        int inizio = 0;
-        for (int i = 0; i < disponibilita.toArray().length/2; i ++) {
-           if (disponibilita.get(inizio).getDayOfYear() > disponibilita.get(inizio+1).getDayOfYear())
-               return false;
-           inizio += 2;
+    private boolean piattoDisponibileInData(Piatto piatto, LocalDate inizio, LocalDate fine){
+        for(int i=0; i<piatto.getDisponibilità().size(); i+=2){
+            //se trovo almeno una disponibilita del piatto che copre questo intervallo (ovvero una parte della disponibilità del menu tematico) aòòpra ritorno true
+            if(data1AnticipaData2(piatto.getDisponibilità().get(i), inizio) && data1AnticipaData2(fine, piatto.getDisponibilità().get(i+1)))
+                return true;
         }
-        return true;
+        return false;
+    }
+
+    private boolean data1AnticipaData2(LocalDate data1, LocalDate data2) {
+        if(data1.getMonthValue() < data2.getMonthValue())
+            return true;
+        else if(data1.getMonthValue() == data2.getMonthValue() && data1.getDayOfMonth() <= data2.getDayOfMonth())
+            return true;
+        else
+            return false;
     }
 
     public String controllaRicette() {
@@ -98,11 +98,12 @@ public class Gestore extends Persona {
                     piatti_da_eliminare.add(piatto);
                     messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè il lavoro richiesto è maggiore del lavoro totale del ristorante";
                 }
+                /*
                 if (!seDisponibilitaCorrette((piatto).getDisponibilità())) {
                     piatti_da_eliminare.add(piatto);
                     messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè la disponibilità non è valida";
                 }
-
+                */
             }
         }
         piatti_da_eliminare.forEach(piatto -> ristorante.getAddettoPrenotazione().getMenu().remove(piatto));

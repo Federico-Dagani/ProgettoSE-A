@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class Tempo {
 
     //ATTRIBUTI
-    private LocalDate data_corrente;
+    private static LocalDate data_corrente;
 
     //METODI
     /**
@@ -39,5 +39,4 @@ public class Tempo {
     public void scorriGiorno(){
         data_corrente = data_corrente.plusDays(1);
     }
-
 }
