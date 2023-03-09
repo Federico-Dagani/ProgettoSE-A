@@ -481,6 +481,18 @@ public class Main {
                 azioni_tempo[0] = "Incrementa di un giorno";
                 azioni_tempo[1] = "Scegli una data";
                 return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.TEMPO.toUpperCase(Locale.ROOT), azioni_tempo);
+
+            case Costanti.INIZIALIZZAZIONE:
+
+                String[] azioni_inizializzazione = new String[7];
+                azioni_inizializzazione[0] = "Modidica il numero di posti";
+                azioni_inizializzazione[1] = "Modifica il lavolo persone";
+                azioni_inizializzazione[2] = "Aggiungi ingrediente";
+                azioni_inizializzazione[3] = "Aggiungi extra";
+                azioni_inizializzazione[4] = "Aggiungi bevanda";
+                azioni_inizializzazione[5] = "Aggiungi menu";
+                azioni_inizializzazione[6] = "Aggiungi piatto";
+                return new MyMenu(Costanti.INIZIALIZZAZIONE.toUpperCase(Locale.ROOT), azioni_inizializzazione);
         }
         return null;
     }

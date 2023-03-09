@@ -4,7 +4,10 @@ import ProgettoSE.*;
 import ProgettoSE.Menu.MenuTematico;
 import ProgettoSE.ServiziFileXML.LetturaFileXML;
 
+import java.awt.image.LookupOp;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Gestore extends Persona {
     //ATTRIBUTI

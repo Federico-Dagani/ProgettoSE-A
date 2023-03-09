@@ -43,7 +43,7 @@ public class LetturaFileXML {
         Ristorante ristorante = new Ristorante(0, 0, addetto_prenotazione, magazziniere);
 
         Menu menu_carta = new Menu(new ArrayList<>());
-        MenuTematico menu_tematico = new MenuTematico(new ArrayList<>(), 0, new ArrayList<>());
+        MenuTematico menu_tematico = new MenuTematico("", new ArrayList<>(), 0, new ArrayList<>());
         Ricetta ricetta = new Ricetta(new ArrayList<>(), 0, 0);
         Piatto piatto = new Piatto(null, new ArrayList<>(), 0, ricetta);
 
@@ -194,7 +194,7 @@ public class LetturaFileXML {
 
                             case Costanti.MENU_TEMATICO:
 
-                                menu_tematico = new MenuTematico(new ArrayList<>(), 0, new ArrayList<>());
+                                menu_tematico = new MenuTematico("", new ArrayList<>(), 0, new ArrayList<>());
 
                                 for (int i = 0; i < xmlreader.getAttributeCount(); i++) {
 
