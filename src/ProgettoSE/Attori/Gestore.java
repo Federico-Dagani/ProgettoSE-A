@@ -73,19 +73,10 @@ public class Gestore extends Persona {
     private boolean piattoDisponibileInData(Piatto piatto, LocalDate inizio, LocalDate fine){
         for(int i=0; i<piatto.getDisponibilità().size(); i+=2){
             //se trovo almeno una disponibilita del piatto che copre questo intervallo (ovvero una parte della disponibilità del menu tematico) aòòpra ritorno true
-            if(data1AnticipaData2(piatto.getDisponibilità().get(i), inizio) && data1AnticipaData2(fine, piatto.getDisponibilità().get(i+1)))
+            if(Tempo.data1AnticipaData2(piatto.getDisponibilità().get(i), inizio) && Tempo.data1AnticipaData2(fine, piatto.getDisponibilità().get(i+1)))
                 return true;
         }
         return false;
-    }
-
-    private boolean data1AnticipaData2(LocalDate data1, LocalDate data2) {
-        if(data1.getMonthValue() < data2.getMonthValue())
-            return true;
-        else if(data1.getMonthValue() == data2.getMonthValue() && data1.getDayOfMonth() <= data2.getDayOfMonth())
-            return true;
-        else
-            return false;
     }
 
     public String controllaRicette() {
@@ -94,6 +85,7 @@ public class Gestore extends Persona {
         //ciclo le ricette del ristorante in modo da controllare che
         for (Prenotabile piatto : ristorante.getAddettoPrenotazione().getMenu()) {
             if (piatto instanceof Piatto) {
+                //perchè è cosi -----------------------------------------------------
                 if (((Piatto) piatto).getRicetta().getLavoro_porzione() >= ristorante.getLavoro_persona()) {
                     piatti_da_eliminare.add(piatto);
                     messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè il lavoro richiesto è maggiore del lavoro totale del ristorante";

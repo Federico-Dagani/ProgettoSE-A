@@ -90,7 +90,7 @@
 					<ingrediente nome="Panna" qta="3.2" misura="l"/>
 				</ricetta>
 			</piatto>
-			<menu_tematico nome="special" lavoro_menu="9.0">
+			<menu_tematico nome="special" lavoro_menu="3.0">
 				<disponibilita_menu inizio="2023-01-07" fine="2023-01-31"/>
 				<disponibilita_menu inizio="2023-02-25" fine="2023-03-23"/>
 				<portata nome="Kebab"/>
@@ -103,4 +103,3 @@
 			</menu_tematico>
 		</menu>
 </ristorante>
-      

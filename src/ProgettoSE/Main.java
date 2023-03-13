@@ -9,8 +9,9 @@ import ProgettoSE.Alimentari.Ingrediente;
 import ProgettoSE.Attori.Cliente;
 import ProgettoSE.Attori.Gestore;
 //importa classe MenuTematico
-import ProgettoSE.Menu.MenuTematico;
 //importa classi utilità
+import ProgettoSE.Utilità.Creazione;
+import ProgettoSE.Utilità.Visualizzazione;
 import ProgettoSE.mylib.MyMenu;
 import ProgettoSE.mylib.InputDati;
 //importa classi per gestione input da tastiera
@@ -18,14 +19,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 //importa classi per utilizzo costrutti
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
 public class Main {
+
     public static void main(String[] args) throws IOException, DateTimeParseException {
 
         benvenuto();
@@ -39,15 +39,15 @@ public class Main {
         inizializzazione(gestore);
 
         if (InputDati.yesOrNo("Vuoi modificare ulteriormente i dati di inizializzazione?"))
-            modificaDatiIniziali(gestore);
+            modificaDatiIniziali(gestore, br);
 
-        MyMenu menu_attori = nuovoMenu(Costanti.ATTORI);
+        MyMenu menu_attori = Creazione.creaMenu(Costanti.ATTORI);
         int scelta_attore = menu_attori.scegliConUscita();
         while (scelta_attore != 0) {
             switch (scelta_attore) {
 
                 case 1:
-                    MyMenu menu_gestore = nuovoMenu(Costanti.GESTORE);
+                    MyMenu menu_gestore = Creazione.creaMenu(Costanti.GESTORE);
 
                     int scelta_funz_gestore = menu_gestore.scegliConUscita();
                     while (scelta_funz_gestore != 0) {
@@ -64,7 +64,7 @@ public class Main {
                     break;
 
                 case 3:
-                    MyMenu menu_tempo = nuovoMenu(Costanti.TEMPO);
+                    MyMenu menu_tempo = Creazione.creaMenu(Costanti.TEMPO);
                     int scelta_funz_tempo = menu_tempo.scegliConUscita();
                     while (scelta_funz_tempo != 0) {
                         scegliFunzionalitaTemporali(scelta_funz_tempo, data_attuale, gestore);
@@ -96,8 +96,9 @@ public class Main {
         return InputDati.leggiStringaConSpazio("Benvenuto, inserisca il nome del gestore del ristorante: ");
     }
 
-    private static void modificaDatiIniziali(Gestore gestore) {
-        MyMenu menu_inizializza = nuovoMenu(Costanti.INIZIALIZZAZIONE);
+    private static void modificaDatiIniziali(Gestore gestore, BufferedReader br) throws IOException {
+
+        MyMenu menu_inizializza = Creazione.creaMenu(Costanti.INIZIALIZZAZIONE);
         int scelta_inizializza = menu_inizializza.scegliConUscita();
 
         while (scelta_inizializza != 0) {
@@ -105,46 +106,71 @@ public class Main {
             switch (scelta_inizializza) {
 
                 case 1: //modifica n_posti ristorante
-                    gestore.getRistorante().setN_posti(InputDati.leggiInteroConMinimo("Inserisci il nuovo numero di posti del ristorante: ", 1));
+                    gestore.getRistorante().setN_posti(InputDati.leggiInteroConMinimo("\nInserisci il nuovo numero di posti del ristorante: ", 1));
+                    System.out.println("\nPremere un tasto per continuare ... ");
+                    br.readLine();
                     break;
 
-                case 2: //modifica lavoro_persone ristorante
-                    gestore.getRistorante().setLavoro_persona(InputDati.leggiInteroConMinimo("Inserisci il nuovo numero di lavoro per persona : ", 1));
-                    System.out.println(gestore.controllaMenu());
-                    System.out.println(gestore.controllaRicette());
+                case 2: //modifica lavoro_persona
+                    gestore.getRistorante().setLavoro_persona(InputDati.leggiInteroConMinimo("\nInserisci il nuovo numero di lavoro per persona : ", 1));
+                    String messaggio = gestore.controllaMenu() + "\n" + gestore.controllaRicette();
+                    if(messaggio.equals("")){
+                        System.out.println("\nPremere un tasto per continuare ... ");
+                        br.readLine();
+                    }else{
+                        System.out.println(messaggio);
+                        System.out.println("\nPremere un tasto per continuare ... ");
+                        br.readLine();
+                    }
                     break;
 
                 case 3://aggiungi ingrediente in magazzino
-                    Alimento nuovo_ingrediente = creaAlimento(Costanti.INGREDIENTE);
+                    Alimento nuovo_ingrediente = Creazione.creaAlimento(Costanti.INGREDIENTE);
                     controllaPresenza(nuovo_ingrediente, gestore);
+                    System.out.println("\nPremere un tasto per continuare ... ");
+                    br.readLine();
                     break;
 
                 case 4://aggiungi extra in magazzino
-                    Alimento nuovo_extra = creaAlimento(Costanti.EXTRA);
+                    Alimento nuovo_extra = Creazione.creaAlimento(Costanti.EXTRA);
                     controllaPresenza(nuovo_extra, gestore);
+                    System.out.println("\nPremere un tasto per continuare ... ");
+                    br.readLine();
                     break;
 
                 case 5://aggiungi bevanda in magazzino
-                    Alimento nuova_bevanda = creaAlimento(Costanti.BEVANDA);
+                    Alimento nuova_bevanda = Creazione.creaAlimento(Costanti.BEVANDA);
                     controllaPresenza(nuova_bevanda, gestore);
+                    System.out.println("\nPremere un tasto per continuare ... ");
+                    br.readLine();
                     break;
 
                 case 6://aggiungi menu tematico
-                    creaMenuTematico(gestore);
-                    String messaggio = gestore.controllaMenu();
-                    if (messaggio.equals(""))
-                        System.out.println("Menu tematico creato");
-                    else
-                        System.out.println(messaggio);
+                    Creazione.creaMenuTematico(gestore);
+                    String mex = gestore.controllaMenu();
+                    if (mex.equals("")){
+                        System.out.println("\nMenu tematico creato");
+                        System.out.println("\nPremere un tasto per continuare ... ");
+                        br.readLine();
+                    } else{
+                        System.out.println(mex);
+                        System.out.println("\nPremere un tasto per continuare ... ");
+                        br.readLine();
+                    }
                     break;
 
                 case 7://aggiungi piatto
-                    creaPiatto(gestore);
+                    Creazione.creaPiatto(gestore);
                     messaggio = gestore.controllaRicette();
-                    if (messaggio.equals(""))
-                        System.out.println("Piatto creato");
-                    else
+                    if (messaggio.equals("")){
+                        System.out.println("\nPiatto creato");
+                        System.out.println("\nPremere un tasto per continuare ... ");
+                        br.readLine();
+                    } else{
                         System.out.println(messaggio);
+                        System.out.println("\nPremere un tasto per continuare ... ");
+                        br.readLine();
+                    }
                     break;
             }
             scelta_inizializza = menu_inizializza.scegliConUscita();
@@ -167,147 +193,59 @@ public class Main {
             System.out.println(alimento.getNome() + " già presente nel magazzino");
     }
 
-    private static Alimento creaAlimento(String tipo) {
-        System.out.println("Inserisci i dati dell'alimento di tipo: " + tipo);
-        String nome = InputDati.leggiStringaConSpazio("Inserisci il nome: ");
-        float quantita = (float) InputDati.leggiDoubleConMinimo("Inserisci la quantità: ", 0);
-        String unita_misura = InputDati.leggiStringaNonVuota("Inserisci l'unità di misura: ");
-        switch (tipo) {
-            case "ingrediente":
-                return new Ingrediente(nome, quantita, unita_misura);
-            case "extra":
-                float consumo_procapite = (float) InputDati.leggiDoubleConMinimo("Inserisci il consumo procapite: ", 0);
-                return new Extra(nome, quantita, unita_misura, consumo_procapite);
-            case "bevanda":
-                consumo_procapite = (float) InputDati.leggiDoubleConMinimo("Inserisci il consumo procapite: ", 0);
-                return new Bevanda(nome, quantita, unita_misura, consumo_procapite);
-            default:
-                return null;
-        }
-    }
-
-    private static Prenotabile creaPrenotabile(Gestore gestore, String tipologia) {
-        System.out.println("Inserisci i dati del " + tipologia);
-        String nome = InputDati.leggiStringaConSpazio("Inserisci il nome: ");
-        float lavoro = (float) InputDati.leggiDoubleConMinimo("Inserisci il lavoro: ", 0);
-        ArrayList<LocalDate> disponibilita = new ArrayList<>();
-        do {
-            boolean data_errata = false;
-            do {
-                try {
-                    disponibilita.add(LocalDate.parse(InputDati.leggiStringaNonVuota("Inserisci la data di inizio nel formato yyyy-mm-dd: ")));
-                    disponibilita.add(LocalDate.parse(InputDati.leggiStringaNonVuota("Inserisci la data di fine nel formato yyyy-mm-dd: ")));
-                    data_errata = false;
-                } catch (DateTimeParseException e) {
-                    System.out.println("Data in formato non valido");
-                    data_errata = true;
-                }
-            } while (data_errata);
-        } while (InputDati.yesOrNo("Vuoi aggiungere un'altra disponibilità?"));
-        if (tipologia.equals(Costanti.MENU_TEMATICO)) {
-            return new MenuTematico(nome, new ArrayList<>(), lavoro, disponibilita);
-        } else if (tipologia.equals(Costanti.PIATTO)) {
-            return new Piatto(nome, disponibilita, lavoro, new Ricetta());
-        }
-        return null;
-    }
-
-    private static void creaMenuTematico(Gestore gestore) {
-        MenuTematico menu_tematico = (MenuTematico) creaPrenotabile(gestore, Costanti.MENU_TEMATICO);
-        ArrayList<Piatto> piatti = new ArrayList<>();
-        do {
-            mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
-            String nome_piatto = InputDati.leggiStringaConSpazio("Inserisci il nome del piatto: ");
-            boolean trovato = false;
-            for (Prenotabile piatto : gestore.getRistorante().getAddettoPrenotazione().getMenu()) {
-                if (piatto instanceof Piatto && piatto.getNome().equalsIgnoreCase(nome_piatto)) {
-                    piatti.add((Piatto) piatto);
-                    trovato = true;
-                    break;
-                }
-            }
-            if (!trovato)
-                System.out.println("Piatto non trovato");
-        } while (piatti.size() < 1 || InputDati.yesOrNo("Vuoi aggiungere un altro piatto al menu?"));
-        menu_tematico.setPiatti_menu(piatti);
-        gestore.getRistorante().getAddettoPrenotazione().getMenu().add(menu_tematico);
-    }
-
-    //qua non ho capito se vuoi aggiungere ricette solo con ingredienti già esistenti o anche con nuovi ingredienti
-    private static void creaPiatto(Gestore gestore) {
-        Piatto piatto = (Piatto) creaPrenotabile(gestore, Costanti.PIATTO);
-        int n_porzioni = InputDati.leggiInteroConMinimo("Inserisci il numero di porzioni delle ricetta per cucinare il piatto: ", 1);
-        float lavoro_porzione = piatto.getLavoro_piatto();
-        //aggiunta degli ingredienti alla ricetta
-        ArrayList<Alimento> ingredienti_nuovo_piatto = new ArrayList<>();
-        do {
-            mostraAlimenti(gestore.getRistorante().getMagazziniere().getMagazzino().getIngredienti());
-            String nome_ingrediente = InputDati.leggiStringaConSpazio("Inserisci il nome dell'ingrediente: ");
-            //Ingrediente nuovo_ingrediente = new Ingrediente();
-            boolean trovato = false;
-            for (Alimento ingrediente : gestore.getRistorante().getMagazziniere().getMagazzino().getIngredienti()) {
-                if (ingrediente instanceof Ingrediente && ingrediente.getNome().equalsIgnoreCase(nome_ingrediente)) {
-                    /*
-                    nuovo_ingrediente.setNome(ingrediente.getNome());
-                    nuovo_ingrediente.setQta((float)InputDati.leggiDoubleConMinimo("Inserisci la quantità di " + nome_ingrediente + ": ", 0));
-                    nuovo_ingrediente.setMisura(InputDati.leggiStringaNonVuota("Inserisci l'unità di misura: "));
-                    */
-                    ingredienti_nuovo_piatto.add(ingrediente);
-                    trovato = true;
-                    break;
-                }
-            }
-            if (!trovato) System.out.println("Ingrediente non trovato");
-        } while (ingredienti_nuovo_piatto.size() < 1 || InputDati.yesOrNo("Vuoi aggiungere un altro ingrediente alla ricetta?"));
-        Ricetta ricetta = new Ricetta(ingredienti_nuovo_piatto, n_porzioni, lavoro_porzione);
-        piatto.setRicetta(ricetta);
-        gestore.getRistorante().getAddettoPrenotazione().getMenu().add(piatto);
-    }
-
     private static void scegliFunzionalitaGestore(int scelta, Gestore gestore) {
         switch (scelta) {
             case 1:
-                System.out.println("\nIl carico di lavoro per persona è: " + gestore.getRistorante().getLavoro_persona());
+                Visualizzazione.mostraCaricoLavoroPersona(gestore);
                 break;
             case 2:
-                System.out.println("\nIl numero dei posti disponibili nel ristorante è: " + gestore.getRistorante().getN_posti());
+                Visualizzazione.mostraPostiDisponibili(gestore);
                 break;
             case 3:
-                mostraAlimenti(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
+                Visualizzazione.mostraAlimenti(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
                 break;
             case 4:
-                mostraAlimenti(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
+                Visualizzazione.mostraAlimenti(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
                 break;
             case 5:
-                mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
+                Visualizzazione.mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
                 break;
             case 6:
-                mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
+                Visualizzazione.mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
                 break;
             case 7:
-                mostraMenuTematici(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+                Visualizzazione.mostraMenuTematici(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
             case 8:
-                mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+                Visualizzazione.mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
             case 9:
-                mostraRicette(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+                Visualizzazione.mostraRicette(gestore.getRistorante().getAddettoPrenotazione().getMenu());
                 break;
 
         }
     }
 
     private static void scegliFunzionalitaTemporali(int scelta, Tempo data_attuale, Gestore gestore) {
-        LocalDate data_precedente = data_attuale.getData_corrente();
         switch (scelta) {
             case 1:
                 data_attuale.scorriGiorno();
                 break;
             case 2:
-                data_attuale.setData_corrente(gestisciData(gestore, data_precedente));
+                String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+                boolean data_errata = false;
+                do{
+                    try {
+                        data_attuale.setData_corrente(LocalDate.parse(stringa_data_prenotazione));
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Data non valida");
+                        stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+                        data_errata = true;
+                    }
+                }while (data_errata);
                 break;
         }
-        System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente() + ".\nLa lista spesa è stata aggiornata.");
+        System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente() + ".\n\nLa lista spesa è stata aggiornata.");
         //dopo aer modificato il giorno, il gestore comunica al magazziniere di aggiornare la lista spesa e rifornire il magazzino, all'addeetto prenotazione di aggiornare le prenotazioni
         System.out.println(gestore.comunica(data_attuale.getData_corrente()));
     }
@@ -372,9 +310,9 @@ public class Main {
         HashMap<Prenotabile, Integer> scelte = new HashMap<>();
         Integer n_portate = 0;
         do {
-            menu_vuoto = stampaMenuDelGiorno(gestore, data_prenotazione);
+            menu_vuoto = Visualizzazione.stampaMenuDelGiorno(gestore, data_prenotazione);
             if (!menu_vuoto) {
-                stampaScelte(scelte);
+                Visualizzazione.stampaScelte(scelte);
                 if (n_portate < n_coperti)
                     System.out.printf("\nDeve scelgliere almeno altre %d portate per convalidare la prenotazione.", n_coperti - n_portate);
 
@@ -438,201 +376,11 @@ public class Main {
         }
     }
 
-    private static void mostraMenuTematici(ArrayList<Prenotabile> menu) {
-        System.out.println("\n\nI menu tematici del menù alla carta sono i seguenti: ");
-        for (Prenotabile prenotabile : menu) {
-            if (prenotabile instanceof MenuTematico) {
-                MenuTematico menuTematico = (MenuTematico) prenotabile;
-                System.out.println("\nNome " + menuTematico.getNome());
-                System.out.println("Periodi disponibilità: ");
-                int inizio = 0;
-                for (int i = 0; i < menuTematico.getDisponibilità().toArray().length / 2; i++) {
-                    System.out.println("Inizio: " + menuTematico.getDisponibilità().get(inizio) + "\tFine: " + menuTematico.getDisponibilità().get(inizio + 1));
-                    inizio += 2;
-                }
-            }
-        }
-    }
-
-    private static void mostraPiatti(ArrayList<Prenotabile> menu) {
-        System.out.println("\n\nI piatti del menù alla carta sono i seguenti: ");
-        for (Prenotabile prenotabile : menu) {
-            if (prenotabile instanceof Piatto) {
-                Piatto piatto = (Piatto) prenotabile;
-                System.out.println("\nNome " + piatto.getNome());
-                System.out.println("Periodi disponibilità: ");
-                int inizio = 0;
-                for (int i = 0; i < piatto.getDisponibilità().toArray().length / 2; i++) {
-                    System.out.println("Inizio: " + piatto.getDisponibilità().get(inizio) + "\tFine: " + piatto.getDisponibilità().get(inizio + 1));
-                    inizio += 2;
-                }
-            }
-        }
-    }
-
-    private static void mostraRicette(ArrayList<Prenotabile> menu) {
-        System.out.println("\n\nLe ricette del menù alla carta sono le seguenti: ");
-        for (Prenotabile prenotabile : menu) {
-            if (prenotabile instanceof Piatto) {
-                Piatto piatto = (Piatto) prenotabile;
-                System.out.println("\n" + piatto.getNome().toUpperCase());
-                System.out.println("Ricetta: ");
-                for (Alimento ingrediente : piatto.getRicetta().getIngredienti()) {
-                    System.out.println("  °\t" + ingrediente.getQta() + " " + ingrediente.getMisura() + " di " + ingrediente.getNome());
-                }
-            }
-        }
-    }
-
-    /**
-     * <h3>Metodo per la creazione dei vari menu</h3>
-     *
-     * @param funzione corrispondente alla tipologia del menu da creare
-     * @return menu in base alla funzione specificata come parametro
-     */
-    private static MyMenu nuovoMenu(String funzione) {
-
-        switch (funzione) {
-
-            case Costanti.ATTORI:
-
-                String[] utenti = new String[3];
-                utenti[0] = Costanti.GESTORE;
-                utenti[1] = Costanti.UTENTE;
-                utenti[2] = Costanti.TEMPO;
-                return new MyMenu(Costanti.ATTORI.toUpperCase(Locale.ROOT), utenti);
-
-            case Costanti.GESTORE:
-
-                String[] azioni_gestore = new String[9];
-                azioni_gestore[0] = "carico di lavoro per persona";
-                azioni_gestore[1] = "numero di posti a sedere disponibili";
-                azioni_gestore[2] = "insieme delle bevande";
-                azioni_gestore[3] = "insieme dei generi extra";
-                azioni_gestore[4] = "consumo pro-capite di bevande";
-                azioni_gestore[5] = "consumo pro-capite di generi extra";
-                azioni_gestore[6] = "menu tematici presenti nel menu";
-                azioni_gestore[7] = "piatti presenti nel menu";
-                azioni_gestore[8] = "il ricettario";
-                return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.GESTORE.toUpperCase(Locale.ROOT), azioni_gestore);
-
-            case Costanti.TEMPO:
-
-                String[] azioni_tempo = new String[2];
-                azioni_tempo[0] = "Incrementa di un giorno";
-                azioni_tempo[1] = "Scegli una data";
-                return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.TEMPO.toUpperCase(Locale.ROOT), azioni_tempo);
-
-            case Costanti.INIZIALIZZAZIONE:
-
-                String[] azioni_inizializzazione = new String[7];
-                azioni_inizializzazione[0] = "Modidica il numero di posti";
-                azioni_inizializzazione[1] = "Modifica il lavolo persone";
-                azioni_inizializzazione[2] = "Aggiungi ingrediente";
-                azioni_inizializzazione[3] = "Aggiungi extra";
-                azioni_inizializzazione[4] = "Aggiungi bevanda";
-                azioni_inizializzazione[5] = "Aggiungi menu";
-                azioni_inizializzazione[6] = "Aggiungi piatto";
-                return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + "di" + Costanti.INIZIALIZZAZIONE.toUpperCase(Locale.ROOT), azioni_inizializzazione);
-        }
-        return null;
-    }
-
     private static void inizializzazione(Gestore gestore) {
         System.out.printf("\nIl gestore sta inizializzando il ristorante ...");
         System.out.println(gestore.inizializzaRistorante());
         System.out.println("\nInizializzazione automatica del ristorante completata.\n");
     }
-
-    private static boolean stampaMenuDelGiorno(Gestore gestore, LocalDate data) {
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        if (gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data).isEmpty()) {
-            System.out.println("Non ci sono piatti disponibili per il giorno " + data);
-            return true;
-        } else {
-            System.out.println("\nIl menù disponibile per il giorno " + data + " offre queste specialità:");
-            System.out.println("(può scegliere sia i piatti all'interno del menù alla carta che i menù tematici presenti) \n");
-            for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data)) {
-                if (prenotabile instanceof Piatto) {
-                    Piatto piatto = (Piatto) prenotabile;
-                    System.out.printf("- " + piatto.getNome().toUpperCase());
-                    // System.out.printf(" con ingredienti: (");
-                    System.out.printf(": (");
-                    ArrayList<Alimento> ingredienti = piatto.getRicetta().getIngredienti();
-                    for (Alimento ingrediente : ingredienti) {
-                        if (ingrediente.equals(piatto.getRicetta().getIngredienti().get(ingredienti.toArray().length - 1)))
-                            System.out.printf(ingrediente.getNome() + ".)");
-                        else
-                            System.out.printf(ingrediente.getNome() + ", ");
-                    }
-                    System.out.printf("\n\n");
-
-                } else if (prenotabile instanceof MenuTematico) {
-                    MenuTematico menu_tematico = (MenuTematico) prenotabile;
-                    System.out.printf("- Menù " + menu_tematico.getNome().toUpperCase());
-                    System.out.printf(" con i seguenti piatti: ");
-                    ArrayList<Piatto> piatti = menu_tematico.getPiatti_menu();
-                    for (Piatto piatto : menu_tematico.getPiatti_menu()) {
-                        if (piatto.equals(piatti.get(piatti.toArray().length - 1)))
-                            System.out.printf("" + piatto.getNome() + ".");
-                        else
-                            System.out.printf("" + piatto.getNome() + ", ");
-                    }
-                    System.out.printf("\n\n");
-
-                }
-            }
-            return false;
-        }
-    }
-
-    private static void mostraAlimenti(ArrayList<Alimento> alimenti) {
-        if (alimenti.get(0) instanceof Bevanda) {
-            System.out.println("\nLista delle bevande presenti nel ristorante: ");
-        } else if (alimenti.get(0) instanceof Extra) {
-            System.out.println("\nLista degli extra presenti nel ristorante:");
-        } else if (alimenti.get(0) instanceof Ingrediente) {
-            System.out.println("\nLista degli ingredienti presenti nel ristorante:");
-        }
-        for (Alimento alimento : alimenti) {
-            System.out.printf("- " + alimento.getNome() + "\n");
-            //System.out.printf("quantità: " + alimento.getQta() + " " + alimento.getMisura() + "\n");
-        }
-    }
-
-    private static void mostraConsumoProcapite(ArrayList<Alimento> alimenti) {
-        if (alimenti.get(0) instanceof Bevanda) {
-            System.out.println("\nLista delle bevande con i relativi consumi procapite: ");
-        } else if (alimenti.get(0) instanceof Extra) {
-            System.out.println("\nLista degli extra con i relativi consumi procapite: ");
-        }
-        for (Alimento alimento : alimenti) {
-            if (alimento instanceof Bevanda) {
-                System.out.printf("- " + alimento.getNome() + ", ");
-                System.out.printf("consumo procapite: " + ((Bevanda) alimento).getCons_procapite() + "\n");
-            } else if (alimento instanceof Extra) {
-                System.out.printf("- " + alimento.getNome() + ", ");
-                System.out.printf("consumo procapite: " + ((Extra) alimento).getCons_procapite() + "\n");
-            }
-        }
-    }
-
-    private static void stampaScelte(HashMap<Prenotabile, Integer> scelte) {
-        if (scelte.isEmpty()) {
-            return;
-        }
-        System.out.println("Le scelte effettuate finora sono le seguenti: ");
-        for (Prenotabile prenotabile : scelte.keySet()) {
-            if (prenotabile instanceof Piatto) {
-                System.out.printf("- " + prenotabile.getNome() + ", ");
-                System.out.printf("quantità: " + scelte.get(prenotabile) + "\n");
-            } else if (prenotabile instanceof MenuTematico) {
-                System.out.printf("- Menù " + prenotabile.getNome() + ", ");
-                System.out.printf("quantità: " + scelte.get(prenotabile) + "\n");
-            }
-        }
-    }
-
 
     /**
      * metodo che controlla se un alimento è già presente nel magazzino (per evitare duplicati)

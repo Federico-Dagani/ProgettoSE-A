@@ -105,13 +105,10 @@ public class Prenotazione {
 
     /**
      * <h2>Metodo che calcola il lavoro totale della prenotazione</h2>
-     * <b>Precondizione:</b> la prenotazione deve avere almeno un prenotabile<br>
      * <b>Postcondizione:</b> il lavoro totale della prenotazione è stato calcolato
      * @return il lavoro totale della prenotazione
      */
     public float getLavoro_prenotazione(){
-        //precondizione: la prenotazione deve avere almeno un prenotabile
-        if (scelte.isEmpty()) throw new IllegalArgumentException("La prenotazione non ha prenotabili");
         float lavoro_tot = 0;
         //devo avere i prenotabili per poter risalire ai loro lavori
         Set<Prenotabile> prenotabili_presenti = scelte.keySet();

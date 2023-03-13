@@ -39,4 +39,13 @@ public class Tempo {
     public void scorriGiorno(){
         data_corrente = data_corrente.plusDays(1);
     }
+
+    public static boolean data1AnticipaData2(LocalDate data1, LocalDate data2) {
+        if(data1.getMonthValue() < data2.getMonthValue())
+            return true;
+        else if(data1.getMonthValue() == data2.getMonthValue() && data1.getDayOfMonth() <= data2.getDayOfMonth())
+            return true;
+        else
+            return false;
+    }
 }
