@@ -7,12 +7,8 @@
 			<bevanda nome="Cola" qta="13" misura="l" cons_procapite="0.5"/>
 			<bevanda nome="Chinotto" qta="6" misura="l" cons_procapite="0.1"/>
 			<bevanda nome="Acqua" qta="70" misura="l" cons_procapite="0.7"/>
-			<extra nome="Pane" qta="10" misura="kg" cons_procapite="0.3"/>
-			<extra nome="Grissini" qta="8" misura="kg" cons_procapite="0.2"/>
-			<extra nome="Olio" qta="40" misura="l" cons_procapite="0.05"/>
-			<extra nome="Aceto" qta="30" misura="l" cons_procapite="0.05"/>
-			<extra nome="Sale" qta="3" misura="kg" cons_procapite="0.03"/>
-			<extra nome="Pepe" qta="1" misura="kg" cons_procapite="0.02"/>
+			<extra nome="Pane" qta="100" misura="hg" cons_procapite="3.5"/>
+			<extra nome="Grissini" qta="80" misura="hg" cons_procapite="0.7"/>
 			<ingrediente nome="Farina" qta="30" misura="kg"/>
 			<ingrediente nome="Insalata" qta="10" misura="kg"/>
 			<ingrediente nome="Pomodoro" qta="13" misura="kg"/>

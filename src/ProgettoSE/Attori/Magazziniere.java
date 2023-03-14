@@ -88,7 +88,7 @@ public class Magazziniere extends Persona {
         if(n_persone <= 0) throw new IllegalArgumentException("Il numero di persone deve essere maggiore di 0");
         if(magazzino.getExtras().isEmpty()) throw new IllegalArgumentException("Non ci sono extras nel magazzino");
         HashMap<Alimento, Float> consumo_extras = new HashMap<>();
-        //anche in questo caso devo fare il dopiio cast per il motivo spiegato sopra
+        //anche in questo caso devo fare doppio cast perchè la consegna richiede che sia arrotondato all' intero superiore
         magazzino.getExtras().forEach(extra -> consumo_extras.put(extra,(float) (int) Math.ceil(n_persone * ((Extra) extra).getCons_procapite())));
         //postcondizione: il numero di extras calcolati è uguale al numero di extras nel magazzino
         assert consumo_extras.size() == magazzino.getExtras().size();

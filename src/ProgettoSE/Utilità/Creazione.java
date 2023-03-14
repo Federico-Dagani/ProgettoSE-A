@@ -101,15 +101,17 @@ public class Creazione {
                 if (ingrediente instanceof Ingrediente && ingrediente.getNome().equalsIgnoreCase(nome_ingrediente)) {
 
                     nuovo_ingrediente.setNome(ingrediente.getNome());
-                    nuovo_ingrediente.setQta((float)InputDati.leggiDoubleConMinimo("Inserisci la quantità di " + nome_ingrediente + ": ", 0));
-                    nuovo_ingrediente.setMisura(InputDati.leggiStringaNonVuota("Inserisci l'unità di misura: "));
+                    nuovo_ingrediente.setQta((float)InputDati.leggiDoubleConMinimo("Inserisci la quantità di " + nome_ingrediente + " in " + ingrediente.getMisura() + ": ", 0));
+                    nuovo_ingrediente.setMisura(ingrediente.getMisura());
 
-                    ingredienti_nuovo_piatto.add(nuovo_ingrediente);
+                    if(nuovo_ingrediente.getQta() != 0.0) ingredienti_nuovo_piatto.add(nuovo_ingrediente);
+                    else System.out.println("Ingrediente non aggiunto perchè la quantità è 0");
                     trovato = true;
                     break;
                 }
             }
             if (!trovato) System.out.println("Ingrediente non trovato");
+            InputDati.leggiStringa("\nPremi invio per continuare");
         } while (ingredienti_nuovo_piatto.size() < 1 || InputDati.yesOrNo("\nVuoi aggiungere un altro ingrediente alla ricetta?"));
         Ricetta ricetta = new Ricetta(ingredienti_nuovo_piatto, n_porzioni, lavoro_porzione);
         piatto.setRicetta(ricetta);

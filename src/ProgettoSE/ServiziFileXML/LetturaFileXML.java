@@ -103,6 +103,7 @@ public class LetturaFileXML {
                             case Costanti.MAGAZZINIERE:
 
                                 ristorante.getMagazziniere().setNome(xmlreader.getAttributeValue(0));
+                                break;
 
                             case Costanti.BEVANDA:
 

@@ -232,14 +232,20 @@ public class Main {
                 data_attuale.scorriGiorno();
                 break;
             case 2:
-                String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+                //String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
                 boolean data_errata = false;
                 do{
                     try {
+                        String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
                         data_attuale.setData_corrente(LocalDate.parse(stringa_data_prenotazione));
+                        data_errata = false;
+                        if(data_attuale.getData_corrente().isBefore(LocalDate.now())) {
+                            System.out.println("La data inserita è precedente alla data attuale (" + data_attuale + ")");
+                            data_errata = true;
+                        }
                     } catch (DateTimeParseException e) {
                         System.out.println("Data non valida");
-                        stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+                        //stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
                         data_errata = true;
                     }
                 }while (data_errata);
