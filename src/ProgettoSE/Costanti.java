@@ -40,11 +40,13 @@ public class Costanti {
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
     //attributi luoghi
     public static final String N_POSTI = "n_posti";
-    //messaggi
+    //messaggi x menu
     public static final String FUNZIONALITA = "funzionalità ";
     public static final String USCITA_MENU = "... uscita dal menù ";
     public static final String END = "PROGRAMMA TERMINATO.";
     public static final String INIZIALIZZAZIONE = "Inizializzazione";
+    //messaggi di errori
+    public static final String UGUALE_ATTUALE = "Il numero di %s inserito è uguale a quello attuale";
     //valori ristorante
     public static final float IMPREVISTI_CUCINA = (float) (10.0/100);
     public static final float ALIMENTI_SCARTATI = (float) (5.0/100); //rappresenta scarti scaduti o deteriorati, a fine giornata

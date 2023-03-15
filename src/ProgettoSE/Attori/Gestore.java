@@ -16,16 +16,18 @@ public class Gestore extends Persona {
         super(nome);
         this.ristorante = ristorante;
     }
+
     public Ristorante getRistorante() {
         return ristorante;
     }
+
     public void setRistorante(Ristorante ristorante) {
         this.ristorante = ristorante;
     }
     /**
      * <h2>Metodo che inizializza il ristorante leggendo i dati dal file XML</h2>
-     * @return void
      *
+     * @return void
      */
     public String inizializzaRistorante() {
         LetturaFileXML letturaFileXML = new LetturaFileXML();
@@ -61,19 +63,19 @@ public class Gestore extends Persona {
 
 
     public boolean disponibilitaPiattiCorrette(MenuTematico menu_tematico) {
-        for(Piatto piatto : menu_tematico.getPiatti_menu()){
-            for(int i=0; i<menu_tematico.getDisponibilità().size(); i+=2){
-                if(!piattoDisponibileInData(piatto, menu_tematico.getDisponibilità().get(i), menu_tematico.getDisponibilità().get(i+1)))
+        for (Piatto piatto : menu_tematico.getPiatti_menu()) {
+            for (int i = 0; i < menu_tematico.getDisponibilità().size(); i += 2) {
+                if (!piattoDisponibileInData(piatto, menu_tematico.getDisponibilità().get(i), menu_tematico.getDisponibilità().get(i + 1)))
                     return false;
             }
         }
         return true;
     }
 
-    private boolean piattoDisponibileInData(Piatto piatto, LocalDate inizio, LocalDate fine){
-        for(int i=0; i<piatto.getDisponibilità().size(); i+=2){
+    private boolean piattoDisponibileInData(Piatto piatto, LocalDate inizio, LocalDate fine) {
+        for (int i = 0; i < piatto.getDisponibilità().size(); i += 2) {
             //se trovo almeno una disponibilita del piatto che copre questo intervallo (ovvero una parte della disponibilità del menu tematico) aòòpra ritorno true
-            if(Tempo.data1AnticipaData2(piatto.getDisponibilità().get(i), inizio) && Tempo.data1AnticipaData2(fine, piatto.getDisponibilità().get(i+1)))
+            if (Tempo.data1AnticipaData2(piatto.getDisponibilità().get(i), inizio) && Tempo.data1AnticipaData2(fine, piatto.getDisponibilità().get(i + 1)))
                 return true;
         }
         return false;
@@ -105,13 +107,15 @@ public class Gestore extends Persona {
 
     /**
      * <h2>Metodo che comunica al magazziniere la lista della spesa e al cuoco la lista dei piatti da cucinare
+     *
      * @param data_attuale data attuale
-     * @throws IllegalArgumentException se la data non è valida
      * @return String messaggio
+     * @throws IllegalArgumentException se la data non è valida
      */
     public String comunica(LocalDate data_attuale) {
         //precondizione data_attuale non null
-        if(data_attuale == null) throw new IllegalArgumentException("Data non valida");
+        if (data_attuale == null) throw new IllegalArgumentException("Data non valida");
+        if (ristorante.getAddettoPrenotazione().filtraPrenotazioniPerData(data_attuale).isEmpty()) return "";
         Prenotazione prenotazione_del_giorno = ristorante.getAddettoPrenotazione().unisciPrenotazioni(ristorante.getAddettoPrenotazione().filtraPrenotazioniPerData(data_attuale));
         ristorante.getMagazziniere().creaListaSpesa(prenotazione_del_giorno);
         String messaggio = ristorante.getMagazziniere().aggiungiSpesaInMagazzino();

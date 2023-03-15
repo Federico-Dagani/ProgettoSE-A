@@ -158,4 +158,9 @@ public class Visualizzazione {
         }
     }
 
+    public static void ripulisciConsole() {
+        for (int i = 0; i < 30; i++)
+            System.out.println();
+    }
+
 }

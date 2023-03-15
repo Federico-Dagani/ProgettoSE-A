@@ -1,5 +1,8 @@
 package ProgettoSE.mylib;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -137,9 +140,9 @@ public class InputDati {
             if (valoreLetto >= minimo && valoreLetto <= massimo)
                 finito = true;
             else if (valoreLetto < minimo)
-                System.out.println(ERRORE_MINIMO + minimo);
+                System.out.println("\n" + ERRORE_MINIMO + minimo);
             else
-                System.out.println(ERRORE_MASSIMO + massimo);
+                System.out.println("\n" + ERRORE_MASSIMO + massimo);
         } while (!finito);
 
         return valoreLetto;
@@ -178,13 +181,23 @@ public class InputDati {
 
 
     public static boolean yesOrNo(String messaggio) {
-        String mioMessaggio = messaggio + "(" + RISPOSTA_SI + "/" + RISPOSTA_NO + ")";
+        String mioMessaggio = messaggio + "(" + RISPOSTA_SI + "/" + RISPOSTA_NO + ") ";
         char valoreLetto = leggiUpperChar(mioMessaggio, String.valueOf(RISPOSTA_SI) + String.valueOf(RISPOSTA_NO));
 
         if (valoreLetto == RISPOSTA_SI)
             return true;
         else
             return false;
+    }
+
+    public static void premerePerContinuare(){
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try{
+            System.out.println("\nPremere un tasto per continuare ... ");
+            br.readLine();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 }

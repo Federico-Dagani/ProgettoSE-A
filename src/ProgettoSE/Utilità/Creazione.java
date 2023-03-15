@@ -21,7 +21,7 @@ import java.util.Locale;
 public class Creazione {
 
     public static Alimento creaAlimento(String tipo) {
-        System.out.println("\nInserisci i dati dell'alimento di tipo: " + tipo);
+        System.out.printf("\nInserisci i dati dell'alimento di tipo: %s \n\n", tipo);
         String nome = InputDati.leggiStringaConSpazio("Inserisci il nome: ");
         float quantita = (float) InputDati.leggiDoubleConMinimo("Inserisci la quantità: ", 0);
         String unita_misura = InputDati.leggiStringaNonVuota("Inserisci l'unità di misura: ");
@@ -40,7 +40,7 @@ public class Creazione {
     }
 
     private static Prenotabile creaPrenotabile(Gestore gestore, String tipologia) {
-        System.out.println("\nInserisci i dati del " + tipologia);
+        System.out.printf("\nInserisci i dati del %s \n\n", tipologia);
         String nome = InputDati.leggiStringaConSpazio("Inserisci il nome: ");
         float lavoro = (float) InputDati.leggiDoubleConMinimo("Inserisci il lavoro: ", 0);
         ArrayList<LocalDate> disponibilita = new ArrayList<>();
@@ -70,7 +70,7 @@ public class Creazione {
         ArrayList<Piatto> piatti = new ArrayList<>();
         do {
             Visualizzazione.mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
-            String nome_piatto = InputDati.leggiStringaConSpazio("Inserisci il nome del piatto: ");
+            String nome_piatto = InputDati.leggiStringaConSpazio("\nInserisci il nome del piatto: ");
             boolean trovato = false;
             for (Prenotabile piatto : gestore.getRistorante().getAddettoPrenotazione().getMenu()) {
                 if (piatto instanceof Piatto && piatto.getNome().equalsIgnoreCase(nome_piatto)) {
@@ -160,16 +160,15 @@ public class Creazione {
             case Costanti.INIZIALIZZAZIONE:
 
                 String[] azioni_inizializzazione = new String[7];
-                azioni_inizializzazione[0] = "Modidica il numero di posti";
-                azioni_inizializzazione[1] = "Modifica il lavolo persone";
+                azioni_inizializzazione[0] = "Modifica il numero di posti";
+                azioni_inizializzazione[1] = "Modifica il lavoro persone";
                 azioni_inizializzazione[2] = "Aggiungi ingrediente";
                 azioni_inizializzazione[3] = "Aggiungi extra";
                 azioni_inizializzazione[4] = "Aggiungi bevanda";
                 azioni_inizializzazione[5] = "Aggiungi menu";
                 azioni_inizializzazione[6] = "Aggiungi piatto";
-                return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + "di" + Costanti.INIZIALIZZAZIONE.toUpperCase(Locale.ROOT), azioni_inizializzazione);
+                return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + "di " + Costanti.INIZIALIZZAZIONE.toUpperCase(Locale.ROOT), azioni_inizializzazione);
         }
         return null;
     }
-
 }
