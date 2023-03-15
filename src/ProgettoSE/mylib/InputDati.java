@@ -30,7 +30,7 @@ public class InputDati {
     }
 
     public static String leggiStringaConSpazio(String messaggio){
-        System.out.println(messaggio);
+        System.out.printf(messaggio);
         return lettore.next();
     }
 

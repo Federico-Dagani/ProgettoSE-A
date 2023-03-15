@@ -111,7 +111,7 @@ public class Creazione {
                 }
             }
             if (!trovato) System.out.println("Ingrediente non trovato");
-            InputDati.leggiStringa("\nPremi invio per continuare");
+            InputDati.premerePerContinuare();
         } while (ingredienti_nuovo_piatto.size() < 1 || InputDati.yesOrNo("\nVuoi aggiungere un altro ingrediente alla ricetta?"));
         Ricetta ricetta = new Ricetta(ingredienti_nuovo_piatto, n_porzioni, lavoro_porzione);
         piatto.setRicetta(ricetta);

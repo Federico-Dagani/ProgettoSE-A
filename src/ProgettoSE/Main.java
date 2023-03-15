@@ -72,8 +72,8 @@ public class Main {
                     Visualizzazione.ripulisciConsole();
                     while (scelta_funz_tempo != 0) {
                         scegliFunzionalitaTemporali(scelta_funz_tempo, data_attuale, gestore);
-                        System.out.println("\nPremere un tasto per continuare ... ");
-                        br.readLine();
+                        InputDati.premerePerContinuare();
+                        Visualizzazione.ripulisciConsole();
                         scelta_funz_tempo = menu_tempo.scegliConUscita();
                         Visualizzazione.ripulisciConsole();
                     }
@@ -133,30 +133,26 @@ public class Main {
                         InputDati.premerePerContinuare();
                     }else{
                         System.out.println(messaggio);
-                        System.out.println("\nPremere un tasto per continuare ... ");
-                        br.readLine();
+                        InputDati.premerePerContinuare();
                     }
                     break;
 
                 case 3://aggiungi ingrediente in magazzino
                     Alimento nuovo_ingrediente = Creazione.creaAlimento(Costanti.INGREDIENTE);
                     controllaPresenza(nuovo_ingrediente, gestore);
-                    System.out.println("\nPremere un tasto per continuare ... ");
-                    br.readLine();
+                    InputDati.premerePerContinuare();
                     break;
 
                 case 4://aggiungi extra in magazzino
                     Alimento nuovo_extra = Creazione.creaAlimento(Costanti.EXTRA);
                     controllaPresenza(nuovo_extra, gestore);
-                    System.out.println("\nPremere un tasto per continuare ... ");
-                    br.readLine();
+                    InputDati.premerePerContinuare();
                     break;
 
                 case 5://aggiungi bevanda in magazzino
                     Alimento nuova_bevanda = Creazione.creaAlimento(Costanti.BEVANDA);
                     controllaPresenza(nuova_bevanda, gestore);
-                    System.out.println("\nPremere un tasto per continuare ... ");
-                    br.readLine();
+                    InputDati.premerePerContinuare();
                     break;
 
                 case 6://aggiungi menu tematico
@@ -165,12 +161,10 @@ public class Main {
                     Visualizzazione.ripulisciConsole();
                     if (mex.equals("")){
                         System.out.println("\nMenu tematico creato");
-                        System.out.println("\nPremere un tasto per continuare ... ");
-                        br.readLine();
+                        InputDati.premerePerContinuare();
                     } else{
                         System.out.println(mex);
-                        System.out.println("\nPremere un tasto per continuare ... ");
-                        br.readLine();
+                        InputDati.premerePerContinuare();
                     }
                     break;
 
@@ -180,12 +174,10 @@ public class Main {
                     Visualizzazione.ripulisciConsole();
                     if (messaggio.equals("")){
                         System.out.println("\nPiatto creato");
-                        System.out.println("\nPremere un tasto per continuare ... ");
-                        br.readLine();
+                        InputDati.premerePerContinuare();
                     } else{
                         System.out.println(messaggio);
-                        System.out.println("\nPremere un tasto per continuare ... ");
-                        br.readLine();
+                        InputDati.premerePerContinuare();
                     }
                     break;
             }
@@ -250,11 +242,10 @@ public class Main {
                 data_attuale.scorriGiorno();
                 break;
             case 2:
-                //String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
-                boolean data_errata = false;
+                boolean data_errata;
                 do{
                     try {
-                        String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+                        String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd): ");
                         data_attuale.setData_corrente(LocalDate.parse(stringa_data_prenotazione));
                         data_errata = false;
                         if(data_attuale.getData_corrente().isBefore(LocalDate.now())) {
@@ -263,19 +254,20 @@ public class Main {
                         }
                     } catch (DateTimeParseException e) {
                         System.out.println("Data non valida");
-                        //stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
                         data_errata = true;
                     }
                 }while (data_errata);
                 break;
         }
         System.out.println("\nLa data attuale è stata incrementata, ora è: " + data_attuale.getData_corrente() + ".\n\nLa lista spesa è stata aggiornata.");
-        //dopo aer modificato il giorno, il gestore comunica al magazziniere di aggiornare la lista spesa e rifornire il magazzino, all'addeetto prenotazione di aggiornare le prenotazioni
-        System.out.println(gestore.comunica(data_attuale.getData_corrente()));
+        //dopo aver modificato il giorno, il gestore comunica al magazziniere di aggiornare la lista spesa e rifornire il magazzino, all'addeetto prenotazione di aggiornare le prenotazioni
+        String messaggio = gestore.comunica(data_attuale.getData_corrente());
+        if(!messaggio.equals(""))
+            System.out.println(messaggio);
     }
 
     private static LocalDate gestisciData(Gestore gestore, LocalDate data_attuale) {
-        String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+        String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd): ");
         int msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
         while (msg != 0) {
             switch (msg) {
@@ -292,7 +284,7 @@ public class Main {
                     System.out.println("La data inserita corrisponde ad un giorno festivo, sono ammessi solo giorni feriali.");
                     break;
             }
-            stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd) :");
+            stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd): ");
             msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
         }
         return LocalDate.parse(stringa_data_prenotazione);

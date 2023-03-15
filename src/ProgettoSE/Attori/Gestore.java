@@ -24,6 +24,10 @@ public class Gestore extends Persona {
     public void setRistorante(Ristorante ristorante) {
         this.ristorante = ristorante;
     }
+
+    /**
+     * <h2>Metodo che inizializza</h2>
+     */
     /**
      * <h2>Metodo che inizializza il ristorante leggendo i dati dal file XML</h2>
      *
@@ -50,8 +54,9 @@ public class Gestore extends Persona {
                     menu_da_eliminare.add(menu_tematico);
                     messaggio += "\nIl menu tematico " + menu_tematico.getNome() + " è stato scartato perchè il lavoro richiesto è maggiore del 4/3 del lavoro totale del ristorante";
                 }
-                //controllo
-                if (!disponibilitaPiattiCorrette((MenuTematico) menu_tematico)){
+
+                //controllo se il menu contiene piatti che non sono disponibili nel periodo di disponibilità del menu
+                if (!disponibilitaPiattiCorrette((MenuTematico) menu_tematico)) {
                     menu_da_eliminare.add(menu_tematico);
                     messaggio += "\nIl menu tematico " + menu_tematico.getNome() + " è stato scartato perchè contiene piatti non disponibili nelle date del menu";
                 }
@@ -87,17 +92,18 @@ public class Gestore extends Persona {
         //ciclo le ricette del ristorante in modo da controllare che
         for (Prenotabile piatto : ristorante.getAddettoPrenotazione().getMenu()) {
             if (piatto instanceof Piatto) {
-                //perchè è cosi -----------------------------------------------------
+                //controllo che il carico di lavoro del piatto sia una frazione del carico di lavoro per persona
                 if (((Piatto) piatto).getRicetta().getLavoro_porzione() >= ristorante.getLavoro_persona()) {
                     piatti_da_eliminare.add(piatto);
-                    messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè il lavoro richiesto è maggiore del lavoro totale del ristorante";
+                    messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè il lavoro del piatto è maggiore del lavoro per persona del ristorante";
                 }
-                /*
-                if (!seDisponibilitaCorrette((piatto).getDisponibilità())) {
-                    piatti_da_eliminare.add(piatto);
-                    messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè la disponibilità non è valida";
+                //controllo che le disponibilità del piatto siano coerenti: data di inizio precede data di fine disponibilità
+                for (int i = 0; i < piatto.getDisponibilità().size(); i += 2) {
+                    if (Tempo.data1AnticipaData2(piatto.getDisponibilità().get(i + 1), piatto.getDisponibilità().get(i))) {
+                        piatti_da_eliminare.add(piatto);
+                        messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè la disponibilità non è valida";
+                    }
                 }
-                */
             }
         }
         piatti_da_eliminare.forEach(piatto -> ristorante.getAddettoPrenotazione().getMenu().remove(piatto));
