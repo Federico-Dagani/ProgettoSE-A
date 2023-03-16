@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class Visualizzazione {
 
     public static boolean stampaMenuDelGiorno(Gestore gestore, LocalDate data) {
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        ripulisciConsole();
         if (gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data).isEmpty()) {
             System.out.println("Non ci sono piatti disponibili per il giorno " + data);
             return true;

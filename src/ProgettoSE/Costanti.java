@@ -22,7 +22,7 @@ public class Costanti {
     //produzione
     public static final String RICETTA = "ricetta";
     public static final String PIATTO = "piatto";
-    public static final String MENU_TEMATICO = "menu_tematico";
+    public static final String MENU_TEMATICO = "menu tematico";
     public static final String PORTATA = "portata";
     //attributi alimento
     public static final String NOME = "nome";
@@ -40,6 +40,18 @@ public class Costanti {
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
     //attributi luoghi
     public static final String N_POSTI = "n_posti";
+    //messaggi azione a buon fine
+    public static final String AGGIUNT_MAGAZZINO = "%s aggiunt%s al magazzino";
+    //massaggi di inserimento
+    public static final String INS_LAVORO_PERSONA = "Inserisci il nuovo numero di lavoro per persona: ";
+    public static final String INS_CONS_PROCAPITE = "Inserisci il consumo procapite: ";
+    public static final String INS_DATA_INIZIO = "Inserisci la data di inzio nel formato yyyy-mm-dd: ";
+    public static final String INS_DATA_FINE = "Inserisci la data di fine nel formato yyyy-mm-dd: ";
+    public static final String INS_DATA = "Inserisci una data valida (yyyy-mm-dd): ";
+    public static final String INS_NOME = "Inserisci il nome: ";
+    public static final String INS_QTA = "Inserisci la quantità: ";
+    public static final String INS_MISURA = "Inserisci l'unità di misura: ";
+    public static final String INS_LAVORO = "Inserisci il lavoro: ";
     //messaggi x menu
     public static final String FUNZIONALITA = "funzionalità ";
     public static final String USCITA_MENU = "... uscita dal menù ";
@@ -47,9 +59,19 @@ public class Costanti {
     public static final String INIZIALIZZAZIONE = "Inizializzazione";
     //messaggi di errori
     public static final String UGUALE_ATTUALE = "Il numero di %s inserito è uguale a quello attuale";
+    public static final String DATA_NON_VALIDA = "Data in formato non valido";
+    public static final String GESTORE_NON_NULLO = "Il gestore non può essere nullo.";
     //valori ristorante
     public static final float IMPREVISTI_CUCINA = (float) (10.0/100);
     public static final float ALIMENTI_SCARTATI = (float) (5.0/100); //rappresenta scarti scaduti o deteriorati, a fine giornata
+    public static final int MINIMO_INGRED_PER_RICETTA = 2 ;
+    public static final int MINIMO_PIATTI_PER_MENU = 2;
+
+    //maschile e femminile
+    public static final String M_SINGOLARE = "o";
+    public static final String F_SINGOLARE = "a";
+    public static final String M_PLURALE = "i";
+    public static final String F_PLURALE = "e";
     //comunicazioni di inzio/fine lettura/scrittura file
     public static final String INIZIO_FILE = "\n%s file: %s ...\n";
     public static final String FINE_FILE = "\nFine della %s del file :)\n";

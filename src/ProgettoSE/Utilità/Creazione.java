@@ -22,17 +22,17 @@ public class Creazione {
 
     public static Alimento creaAlimento(String tipo) {
         System.out.printf("\nInserisci i dati dell'alimento di tipo: %s \n\n", tipo);
-        String nome = InputDati.leggiStringaConSpazio("Inserisci il nome: ");
-        float quantita = (float) InputDati.leggiDoubleConMinimo("Inserisci la quantità: ", 0);
-        String unita_misura = InputDati.leggiStringaNonVuota("Inserisci l'unità di misura: ");
+        String nome = InputDati.leggiStringaConSpazio(Costanti.INS_NOME);
+        float quantita = (float) InputDati.leggiDoubleConMinimo(Costanti.INS_QTA, 0);
+        String unita_misura = InputDati.leggiStringaNonVuota(Costanti.INS_MISURA);
         switch (tipo) {
-            case "ingrediente":
+            case Costanti.INGREDIENTE:
                 return new Ingrediente(nome, quantita, unita_misura);
-            case "extra":
-                float consumo_procapite = (float) InputDati.leggiDoubleConMinimo("Inserisci il consumo procapite: ", 0);
+            case Costanti.EXTRA:
+                float consumo_procapite = (float) InputDati.leggiDoubleConMinimo(Costanti.INS_CONS_PROCAPITE, 0);
                 return new Extra(nome, quantita, unita_misura, consumo_procapite);
-            case "bevanda":
-                consumo_procapite = (float) InputDati.leggiDoubleConMinimo("Inserisci il consumo procapite: ", 0);
+            case Costanti.BEVANDA:
+                consumo_procapite = (float) InputDati.leggiDoubleConMinimo(Costanti.INS_CONS_PROCAPITE, 0);
                 return new Bevanda(nome, quantita, unita_misura, consumo_procapite);
             default:
                 return null;
@@ -41,18 +41,18 @@ public class Creazione {
 
     private static Prenotabile creaPrenotabile(Gestore gestore, String tipologia) {
         System.out.printf("\nInserisci i dati del %s \n\n", tipologia);
-        String nome = InputDati.leggiStringaConSpazio("Inserisci il nome: ");
-        float lavoro = (float) InputDati.leggiDoubleConMinimo("Inserisci il lavoro: ", 0);
+        String nome = InputDati.leggiStringaConSpazio(Costanti.INS_NOME);
+        float lavoro = (float) InputDati.leggiDoubleConMinimo(Costanti.INS_LAVORO, 0);
         ArrayList<LocalDate> disponibilita = new ArrayList<>();
         do {
             boolean data_errata = false;
             do {
                 try {
-                    disponibilita.add(LocalDate.parse(InputDati.leggiStringaNonVuota("Inserisci la data di inizio nel formato yyyy-mm-dd: ")));
-                    disponibilita.add(LocalDate.parse(InputDati.leggiStringaNonVuota("Inserisci la data di fine nel formato yyyy-mm-dd: ")));
+                    disponibilita.add(LocalDate.parse(InputDati.leggiStringaNonVuota(Costanti.INS_DATA_INIZIO)));
+                    disponibilita.add(LocalDate.parse(InputDati.leggiStringaNonVuota(Costanti.INS_DATA_FINE)));
                     data_errata = false;
                 } catch (DateTimeParseException e) {
-                    System.out.println("Data in formato non valido");
+                    System.out.println(Costanti.DATA_NON_VALIDA);
                     data_errata = true;
                 }
             } while (data_errata);
@@ -70,18 +70,20 @@ public class Creazione {
         ArrayList<Piatto> piatti = new ArrayList<>();
         do {
             Visualizzazione.mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
-            String nome_piatto = InputDati.leggiStringaConSpazio("\nInserisci il nome del piatto: ");
+            String nome_piatto = InputDati.leggiStringaConSpazio("\n" + Costanti.INS_NOME);
             boolean trovato = false;
             for (Prenotabile piatto : gestore.getRistorante().getAddettoPrenotazione().getMenu()) {
-                if (piatto instanceof Piatto && piatto.getNome().equalsIgnoreCase(nome_piatto)) {
+                if (piatto instanceof Piatto && piatto.getNome().equalsIgnoreCase(nome_piatto) && !piatti.contains(piatto)) {
                     piatti.add((Piatto) piatto);
                     trovato = true;
                     break;
                 }
             }
-            if (!trovato)
-                System.out.println("Piatto non trovato");
-        } while (piatti.size() < 1 || InputDati.yesOrNo("Vuoi aggiungere un altro piatto al menu?"));
+            Visualizzazione.ripulisciConsole();
+            if (!trovato) System.out.println("Piatto non trovato o già inserito nel menu");
+            else System.out.println("Piatto aggiunto al menu");
+            InputDati.premerePerContinuare();
+        } while (piatti.size() < Costanti.MINIMO_PIATTI_PER_MENU || InputDati.yesOrNo("Vuoi aggiungere un altro piatto al menu?"));
         menu_tematico.setPiatti_menu(piatti);
         gestore.getRistorante().getAddettoPrenotazione().getMenu().add(menu_tematico);
     }
@@ -98,21 +100,24 @@ public class Creazione {
             Ingrediente nuovo_ingrediente = new Ingrediente();
             boolean trovato = false;
             for (Alimento ingrediente : gestore.getRistorante().getMagazziniere().getMagazzino().getIngredienti()) {
-                if (ingrediente instanceof Ingrediente && ingrediente.getNome().equalsIgnoreCase(nome_ingrediente)) {
-
+                boolean gia_presente = ingredienti_nuovo_piatto.stream().anyMatch(ingrediente1 -> ingrediente1.getNome().equalsIgnoreCase(nome_ingrediente));
+                if (ingrediente instanceof Ingrediente && ingrediente.getNome().equalsIgnoreCase(nome_ingrediente) && !gia_presente) {
                     nuovo_ingrediente.setNome(ingrediente.getNome());
                     nuovo_ingrediente.setQta((float)InputDati.leggiDoubleConMinimo("Inserisci la quantità di " + nome_ingrediente + " in " + ingrediente.getMisura() + ": ", 0));
                     nuovo_ingrediente.setMisura(ingrediente.getMisura());
 
                     if(nuovo_ingrediente.getQta() != 0.0) ingredienti_nuovo_piatto.add(nuovo_ingrediente);
-                    else System.out.println("Ingrediente non aggiunto perchè la quantità è 0");
                     trovato = true;
                     break;
                 }
             }
-            if (!trovato) System.out.println("Ingrediente non trovato");
+            Visualizzazione.ripulisciConsole();
+
+            if (!trovato) System.out.println("Ingrediente non trovato o già inserito nella ricetta");
+            else if(nuovo_ingrediente.getQta() == 0.0) System.out.println("Quantità non valida");
+            else System.out.println("Ingrediente aggiunto alla ricetta");
             InputDati.premerePerContinuare();
-        } while (ingredienti_nuovo_piatto.size() < 1 || InputDati.yesOrNo("\nVuoi aggiungere un altro ingrediente alla ricetta?"));
+        } while (ingredienti_nuovo_piatto.size() < Costanti.MINIMO_INGRED_PER_RICETTA || InputDati.yesOrNo("\nVuoi aggiungere un altro ingrediente alla ricetta?"));
         Ricetta ricetta = new Ricetta(ingredienti_nuovo_piatto, n_porzioni, lavoro_porzione);
         piatto.setRicetta(ricetta);
         gestore.getRistorante().getAddettoPrenotazione().getMenu().add(piatto);

@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 //importa classi per utilizzo costrutti
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -122,8 +123,7 @@ public class Main {
                     break;
 
                 case 2: //modifica lavoro_persona
-                    int lavoro_persona = InputDati.leggiInteroConMinimo("\nInserisci il nuovo numero di lavoro per persona: ", 1);
-                    gestore.getRistorante().setLavoro_persona(lavoro_persona);
+                    int lavoro_persona = InputDati.leggiInteroConMinimo("\n" + Costanti.INS_LAVORO_PERSONA, 1);
                     if(lavoro_persona == gestore.getRistorante().getLavoro_persona())
                         System.out.printf("\n" + Costanti.UGUALE_ATTUALE + "\n", "numero di lavoro per persona");
                     else
@@ -139,18 +139,21 @@ public class Main {
 
                 case 3://aggiungi ingrediente in magazzino
                     Alimento nuovo_ingrediente = Creazione.creaAlimento(Costanti.INGREDIENTE);
+                    Visualizzazione.ripulisciConsole();
                     controllaPresenza(nuovo_ingrediente, gestore);
                     InputDati.premerePerContinuare();
                     break;
 
                 case 4://aggiungi extra in magazzino
                     Alimento nuovo_extra = Creazione.creaAlimento(Costanti.EXTRA);
+                    Visualizzazione.ripulisciConsole();
                     controllaPresenza(nuovo_extra, gestore);
                     InputDati.premerePerContinuare();
                     break;
 
                 case 5://aggiungi bevanda in magazzino
                     Alimento nuova_bevanda = Creazione.creaAlimento(Costanti.BEVANDA);
+                    Visualizzazione.ripulisciConsole();
                     controllaPresenza(nuova_bevanda, gestore);
                     InputDati.premerePerContinuare();
                     break;
@@ -191,19 +194,32 @@ public class Main {
         if (controllaDuplicato(alimento, gestore.getRistorante().getMagazziniere().getMagazzino())) {
             if (alimento instanceof Ingrediente) {
                 gestore.getRistorante().getMagazziniere().getMagazzino().getIngredienti().add(alimento);
-                System.out.println("\nIngrediente aggiunto al magazzino");
+                System.out.printf("\n" + Costanti.AGGIUNT_MAGAZZINO +"\n", Costanti.INGREDIENTE, Costanti.M_SINGOLARE);
             } else if (alimento instanceof Extra) {
                 gestore.getRistorante().getMagazziniere().getMagazzino().getExtras().add(alimento);
-                System.out.println("\nExtra aggiunto al magazzino");
+                System.out.printf("\n" + Costanti.AGGIUNT_MAGAZZINO +"\n", Costanti.EXTRA, Costanti.M_SINGOLARE);
             } else if (alimento instanceof Bevanda) {
                 gestore.getRistorante().getMagazziniere().getMagazzino().getBevande().add(alimento);
-                System.out.println("\nBevanda aggiunta al magazzino");
+                System.out.printf("\n" + Costanti.AGGIUNT_MAGAZZINO +"\n", Costanti.BEVANDA, Costanti.F_SINGOLARE);
             }
         } else
             System.out.println(alimento.getNome() + " già presente nel magazzino");
     }
 
+    /**
+     * <h2>Metodo che gestisce le varie funzionalità (di visualizzazione) disponibili al gestore</h2><br>
+     * <b>Precondizione: </b>il gestore deve essere istanziato
+     * @param scelta scelta del gestore
+     * @param gestore gestore che ha effettuato l'accesso
+     * @return void
+     * @throws IllegalArgumentException se il gestore è null
+     */
     private static void scegliFunzionalitaGestore(int scelta, Gestore gestore) {
+        //precondizione: gestore != null
+        if(gestore == null) throw new IllegalArgumentException(Costanti.GESTORE_NON_NULLO);
+        ArrayList<Alimento> bevande = gestore.getRistorante().getMagazziniere().getMagazzino().getBevande();
+        ArrayList<Alimento> extras = gestore.getRistorante().getMagazziniere().getMagazzino().getExtras();
+        ArrayList<Prenotabile> menu = gestore.getRistorante().getAddettoPrenotazione().getMenu();
         switch (scelta) {
             case 1:
                 Visualizzazione.mostraCaricoLavoroPersona(gestore);
@@ -212,27 +228,26 @@ public class Main {
                 Visualizzazione.mostraPostiDisponibili(gestore);
                 break;
             case 3:
-                Visualizzazione.mostraAlimenti(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
+                Visualizzazione.mostraAlimenti(bevande);
                 break;
             case 4:
-                Visualizzazione.mostraAlimenti(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
+                Visualizzazione.mostraAlimenti(extras);
                 break;
             case 5:
-                Visualizzazione.mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getBevande());
+                Visualizzazione.mostraConsumoProcapite(bevande);
                 break;
             case 6:
-                Visualizzazione.mostraConsumoProcapite(gestore.getRistorante().getMagazziniere().getMagazzino().getExtras());
+                Visualizzazione.mostraConsumoProcapite(extras);
                 break;
             case 7:
-                Visualizzazione.mostraMenuTematici(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+                Visualizzazione.mostraMenuTematici(menu);
                 break;
             case 8:
-                Visualizzazione.mostraPiatti(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+                Visualizzazione.mostraPiatti(menu);
                 break;
             case 9:
-                Visualizzazione.mostraRicette(gestore.getRistorante().getAddettoPrenotazione().getMenu());
+                Visualizzazione.mostraRicette(menu);
                 break;
-
         }
     }
 
@@ -249,7 +264,7 @@ public class Main {
                         data_attuale.setData_corrente(LocalDate.parse(stringa_data_prenotazione));
                         data_errata = false;
                         if(data_attuale.getData_corrente().isBefore(LocalDate.now())) {
-                            System.out.println("La data inserita è precedente alla data attuale (" + data_attuale + ")");
+                            System.out.println("La data inserita è precedente alla data attuale (" + data_attuale.getData_corrente() + ")");
                             data_errata = true;
                         }
                     } catch (DateTimeParseException e) {
@@ -272,7 +287,7 @@ public class Main {
         while (msg != 0) {
             switch (msg) {
                 case 1:
-                    System.out.println("Formato data non valido.");
+                    System.out.println(Costanti.DATA_NON_VALIDA);
                     break;
                 case 2:
                     System.out.println("La data inserita deve essere sucessiva alla data attuale (" + data_attuale + ")");
@@ -284,14 +299,13 @@ public class Main {
                     System.out.println("La data inserita corrisponde ad un giorno festivo, sono ammessi solo giorni feriali.");
                     break;
             }
-            stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd): ");
+            stringa_data_prenotazione = InputDati.leggiStringa(Costanti.INS_DATA);
             msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
         }
         return LocalDate.parse(stringa_data_prenotazione);
     }
 
-    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) {
 
         System.out.println("Inserimento dati NUOVA PRENOTAZIONE\n");
 
@@ -305,53 +319,54 @@ public class Main {
         //DATA
         LocalDate data_prenotazione = gestisciData(gestore, data_attuale);
 
-        //POSTI
-        int p_stima_lav_rimanenti = gestore.getRistorante().getAddettoPrenotazione().stimaPostiRimanenti(data_prenotazione, gestore.getRistorante().getLavoro_persona(), gestore.getRistorante().getN_posti());
-        int p_effettivi_rimanenti = gestore.getRistorante().getN_posti() - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
-        if (p_stima_lav_rimanenti > 0) {
-            System.out.printf("\nI posti liberi nel ristorante sono %d.\n", p_effettivi_rimanenti);
-            System.out.printf("\nAbbiamo stimato di poter cucinare %d portate (solitamente 2 portate a testa).\n", p_stima_lav_rimanenti * 2);
+        //variabili di supporto
+        int lavoro_persona = gestore.getRistorante().getLavoro_persona();
+        int n_posti = gestore.getRistorante().getN_posti();
+        int posti_liberi_stimati = gestore.getRistorante().getAddettoPrenotazione().stimaPostiRimanenti(data_prenotazione, lavoro_persona, n_posti);
+        int posti_liberi_effettivi = n_posti - gestore.getRistorante().getAddettoPrenotazione().calcolaPostiOccupati(data_prenotazione);
+
+        //comunico l'esito della stima dei posti
+        if (posti_liberi_stimati > 0) {
+            System.out.printf("\nI posti liberi nel ristorante sono %d.\n", posti_liberi_effettivi);
+            System.out.printf("\nAbbiamo stimato di poter cucinare %d portate (solitamente 2 portate a testa).\n", posti_liberi_stimati * 2);
         } else {
             System.out.printf("\nCi scusiamo ma la stima del carico di lavoro non ci permette di accettare altre prenotazioni in questa data\n");
             return;
         }
-        int n_coperti = InputDati.leggiInteroConMinimoMassimo("\nNumero persone: ", 1, Math.min(p_effettivi_rimanenti, p_stima_lav_rimanenti * 2));
-        //variabili di supporto
-        int lavoro_persona = gestore.getRistorante().getLavoro_persona();
-        int n_posti = gestore.getRistorante().getN_posti();
+
+        int n_coperti = InputDati.leggiInteroConMinimoMassimo("\nNumero persone: ", 1, Math.min(posti_liberi_effettivi, posti_liberi_stimati * 2));
 
         //CALCOLO CONSUMO BEVANDE E GENERI EXTRA
         HashMap<Alimento, Float> cons_bevande = gestore.getRistorante().getMagazziniere().calcolaConsumoBevande(n_coperti);
         HashMap<Alimento, Float> cons_extra = gestore.getRistorante().getMagazziniere().calcolaConsumoExtras(n_coperti);
 
-        //SCELTE
+        //Gestisco le scelte dei commensali
         HashMap<Prenotabile, Integer> scelte = new HashMap<>();
         Integer n_portate = 0;
         do {
             menu_vuoto = Visualizzazione.stampaMenuDelGiorno(gestore, data_prenotazione);
+            //gestisco l'eventualità di non avere piatti/menu disponibili in un determinato giorno
             if (!menu_vuoto) {
                 Visualizzazione.stampaScelte(scelte);
+
                 if (n_portate < n_coperti)
                     System.out.printf("\nDeve scelgliere almeno altre %d portate per convalidare la prenotazione.\n", n_coperti - n_portate);
 
-
-                boolean validita = false;
+                boolean validità = false;
                 Prenotabile portata = null;
                 Integer quantità;
 
-
                 do {
-                    String scelta = InputDati.leggiStringa("\n\nInserisca il nome della portata da ordinare: ");
+                    String scelta = InputDati.leggiStringa("\nInserisca il nome della portata da ordinare: ");
 
                     for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
                         if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
                             portata = prenotabile;
-                            validita = true;
+                            validità = true;
                         }
                     }
-                    if (!validita)
-                        System.out.println("Portata non presente nel menu del giorno.");
-                } while (!validita);
+                    if (!validità) System.out.println("Portata non presente nel menu del giorno.");
+                } while (!validità);
                 quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": ", 0);
 
                 //devo leggere il value precedente e sommarlo alla nuova quantità aggiunta, dopodichè rimetto la value nuova nella Map
@@ -378,16 +393,14 @@ public class Main {
                     System.out.println("Portata non aggiunta all'ordine.");
                 }
 
-                System.out.println("\n" + "Premere un tasto per continuare ... ");
-                br.readLine();
-
+                InputDati.premerePerContinuare();
                 Visualizzazione.ripulisciConsole();
 
                 n_portate = 0;
                 for (Integer value : scelte.values())
                     n_portate += value;
             }
-            //cortocircuito
+            //cortocircuito: se il menu
         } while (!menu_vuoto && (n_portate < n_coperti || InputDati.yesOrNo("Ogni commensale ha ordinato almeno una portata ciascuno, vuole ordinare altre portate?")));
 
         Visualizzazione.ripulisciConsole();
@@ -396,24 +409,35 @@ public class Main {
             //Costruzione Prenotazione
             Prenotazione prenotazione = new Prenotazione(cliente, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
             gestore.getRistorante().getAddettoPrenotazione().getPrenotazioni().add(prenotazione);
-            System.out.printf("\nPrenotazione Registrata.\n");
-        }
+            System.out.printf("Prenotazione Registrata.\n");
+        }else System.out.println("Il menu è attualmente vuoto, le chiediamo di cambiare data della prenotazione");
     }
 
+    /**
+     * <h2>Metodo che inizializza il ristorante automaticamente</h2><br>
+     * <b>Precondizione:</b> il gestore non deve essere nullo.<br>
+     * @param gestore gestore del ristorante
+     * @throws IllegalArgumentException se il gestore è nullo
+     */
     private static void inizializzazione(Gestore gestore) {
+        //precondizione: il gestore non deve essere nullo
+        if (gestore == null) throw new IllegalArgumentException(Costanti.GESTORE_NON_NULLO);
         System.out.printf("\nIl gestore sta inizializzando il ristorante ...");
         System.out.println(gestore.inizializzaRistorante());
         System.out.println("\nInizializzazione automatica del ristorante completata.\n");
     }
 
     /**
-     * metodo che controlla se un alimento è già presente nel magazzino (per evitare duplicati)
-     *
+     * <h2>Metodo che controlla se un alimento è già presente nel magazzino (per evitare duplicati)</h2><br>
+     * <b>Precondizione:</b> l'alimento nuovo e il magazzino non devono essere nulli.<br>
      * @param alimento_nuovo alimento da controllare
-     * @param magazzino      magazzino in cui cercare
+     * @param magazzino magazzino in cui cercare
      * @return true se l'alimento non è presente nel magazzino, false altrimenti
+     * @throws IllegalArgumentException se l'alimento nuovo o il magazzino sono nulli
      */
     private static boolean controllaDuplicato(Alimento alimento_nuovo, Magazzino magazzino) {
+        //precondizione: alimento_nuovo != null && magazzino != null
+        if (alimento_nuovo == null || magazzino == null) throw new IllegalArgumentException("Alimento o magazzino nulli.");
         for (Alimento alimento_magazzino : magazzino.getBevande()) {
             if (alimento_magazzino.getNome().equalsIgnoreCase(alimento_nuovo.getNome())) {
                 return false;

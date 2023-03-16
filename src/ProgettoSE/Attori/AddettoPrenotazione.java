@@ -21,7 +21,6 @@ public class AddettoPrenotazione extends Persona {
 
     //MANCA INVARIANTE DI CLASSE
 
-    //c'è da aggiungere il i tag @require e @ensure
     //METODI
     public AddettoPrenotazione(String nome) {
         super(nome);
