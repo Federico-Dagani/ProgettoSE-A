@@ -22,7 +22,7 @@ public class Costanti {
     //produzione
     public static final String RICETTA = "ricetta";
     public static final String PIATTO = "piatto";
-    public static final String MENU_TEMATICO = "menu tematico";
+    public static final String MENU_TEMATICO = "menu_tematico";
     public static final String PORTATA = "portata";
     //attributi alimento
     public static final String NOME = "nome";
@@ -40,8 +40,6 @@ public class Costanti {
     public static final String DISPONIBILITA_MENU = "disponibilita_menu";
     //attributi luoghi
     public static final String N_POSTI = "n_posti";
-    //messaggi azione a buon fine
-    public static final String AGGIUNT_MAGAZZINO = "%s aggiunt%s al magazzino";
     //massaggi di inserimento
     public static final String INS_LAVORO_PERSONA = "Inserisci il nuovo numero di lavoro per persona: ";
     public static final String INS_CONS_PROCAPITE = "Inserisci il consumo procapite: ";
@@ -67,11 +65,6 @@ public class Costanti {
     public static final int MINIMO_INGRED_PER_RICETTA = 2 ;
     public static final int MINIMO_PIATTI_PER_MENU = 2;
 
-    //maschile e femminile
-    public static final String M_SINGOLARE = "o";
-    public static final String F_SINGOLARE = "a";
-    public static final String M_PLURALE = "i";
-    public static final String F_PLURALE = "e";
     //comunicazioni di inzio/fine lettura/scrittura file
     public static final String INIZIO_FILE = "\n%s file: %s ...\n";
     public static final String FINE_FILE = "\nFine della %s del file :)\n";

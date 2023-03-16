@@ -2,10 +2,7 @@ package ProgettoSE;
 //importa classi alimenti
 
 import ProgettoSE.Alimentari.Alimento;
-import ProgettoSE.Alimentari.Bevanda;
-import ProgettoSE.Alimentari.Extra;
 //importa classi attori
-import ProgettoSE.Alimentari.Ingrediente;
 import ProgettoSE.Attori.Cliente;
 import ProgettoSE.Attori.Gestore;
 //importa classe MenuTematico
@@ -15,9 +12,7 @@ import ProgettoSE.Utilità.Visualizzazione;
 import ProgettoSE.mylib.MyMenu;
 import ProgettoSE.mylib.InputDati;
 //importa classi per gestione input da tastiera
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 //importa classi per utilizzo costrutti
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -92,6 +87,10 @@ public class Main {
 
     }
 
+    /**
+     * <h2>Metodo per migliorare l'interazinoe con il programma</h2>
+     * Comunica in output un messaggio i benvenuto con all'interno le info essenziali
+      */
     private static void benvenuto() {
         System.out.println(Costanti.CORNICE_SUP);
         System.out.println("|\t" + Costanti.BENVENUTO + "\t|");
@@ -99,15 +98,30 @@ public class Main {
         System.out.println();
     }
 
+    /**
+     * <h2>Metodo per l'inserimento del nome del gestore</h2>
+     * @return nome del gestore
+     */
     private static String nominaGestore() {
         return InputDati.leggiStringaConSpazio("Benvenuto, inserisca il nome del gestore del ristorante: ");
     }
 
-    private static void modificaDatiIniziali(Gestore gestore) throws IOException {
+    /**
+     * <h2>Metodo che permette di aggiungere o modificare i dati del ristorante prima di accettare prenotazioni</h2>
+     * <b>Precondizione: </b>Il gestore non può essere null<br>
+     * @param gestore gestore del ristorante
+     * @throws IllegalArgumentException se il gestore è null
+     */
+    private static void modificaDatiIniziali(Gestore gestore){
+        //precondizione
+        if(gestore == null) throw new IllegalArgumentException("Il gestore non può essere null");
 
         MyMenu menu_inizializza = Creazione.creaMenu(Costanti.INIZIALIZZAZIONE);
+
         int scelta_inizializza = menu_inizializza.scegliConUscita();
         Visualizzazione.ripulisciConsole();
+
+        Magazzino magazzino = gestore.getRistorante().getMagazziniere().getMagazzino();
 
         while (scelta_inizializza != 0) {
 
@@ -115,6 +129,7 @@ public class Main {
 
                 case 1: //modifica n_posti ristorante
                     int n_posti = InputDati.leggiInteroConMinimo("\nInserisci il nuovo numero di posti del ristorante: ", 1);
+                    //comuninco che il numero di posti è uguale a quello attuale
                     if(n_posti == gestore.getRistorante().getN_posti())
                         System.out.printf("\n" + Costanti.UGUALE_ATTUALE + "\n", "numero di posti");
                     else
@@ -124,37 +139,37 @@ public class Main {
 
                 case 2: //modifica lavoro_persona
                     int lavoro_persona = InputDati.leggiInteroConMinimo("\n" + Costanti.INS_LAVORO_PERSONA, 1);
+                    //comuninco che il numero di lavoro per persona è uguale a quello attuale
                     if(lavoro_persona == gestore.getRistorante().getLavoro_persona())
                         System.out.printf("\n" + Costanti.UGUALE_ATTUALE + "\n", "numero di lavoro per persona");
                     else
                         gestore.getRistorante().setLavoro_persona(lavoro_persona);
-                    String messaggio = gestore.controllaMenu() + "\n" + gestore.controllaRicette();
-                    if(messaggio.equals("\n")){
-                        InputDati.premerePerContinuare();
-                    }else{
-                        System.out.println(messaggio);
-                        InputDati.premerePerContinuare();
-                    }
+
+                    String messaggio = gestore.controllaMenu() + gestore.controllaRicette();
+                    //se il messaggio è vuoto vuol dire che non ci sono errori sia nei menu che nelle ricette
+                    System.out.println(messaggio);
+                    InputDati.premerePerContinuare();
+
                     break;
 
                 case 3://aggiungi ingrediente in magazzino
                     Alimento nuovo_ingrediente = Creazione.creaAlimento(Costanti.INGREDIENTE);
                     Visualizzazione.ripulisciConsole();
-                    controllaPresenza(nuovo_ingrediente, gestore);
+                    System.out.println(magazzino.inserisciAlimento(nuovo_ingrediente));
                     InputDati.premerePerContinuare();
                     break;
 
                 case 4://aggiungi extra in magazzino
                     Alimento nuovo_extra = Creazione.creaAlimento(Costanti.EXTRA);
                     Visualizzazione.ripulisciConsole();
-                    controllaPresenza(nuovo_extra, gestore);
+                    System.out.println(magazzino.inserisciAlimento(nuovo_extra));
                     InputDati.premerePerContinuare();
                     break;
 
                 case 5://aggiungi bevanda in magazzino
                     Alimento nuova_bevanda = Creazione.creaAlimento(Costanti.BEVANDA);
                     Visualizzazione.ripulisciConsole();
-                    controllaPresenza(nuova_bevanda, gestore);
+                    System.out.println(magazzino.inserisciAlimento(nuova_bevanda));
                     InputDati.premerePerContinuare();
                     break;
 
@@ -190,24 +205,8 @@ public class Main {
         }
     }
 
-    private static void controllaPresenza(Alimento alimento, Gestore gestore) {
-        if (controllaDuplicato(alimento, gestore.getRistorante().getMagazziniere().getMagazzino())) {
-            if (alimento instanceof Ingrediente) {
-                gestore.getRistorante().getMagazziniere().getMagazzino().getIngredienti().add(alimento);
-                System.out.printf("\n" + Costanti.AGGIUNT_MAGAZZINO +"\n", Costanti.INGREDIENTE, Costanti.M_SINGOLARE);
-            } else if (alimento instanceof Extra) {
-                gestore.getRistorante().getMagazziniere().getMagazzino().getExtras().add(alimento);
-                System.out.printf("\n" + Costanti.AGGIUNT_MAGAZZINO +"\n", Costanti.EXTRA, Costanti.M_SINGOLARE);
-            } else if (alimento instanceof Bevanda) {
-                gestore.getRistorante().getMagazziniere().getMagazzino().getBevande().add(alimento);
-                System.out.printf("\n" + Costanti.AGGIUNT_MAGAZZINO +"\n", Costanti.BEVANDA, Costanti.F_SINGOLARE);
-            }
-        } else
-            System.out.println(alimento.getNome() + " già presente nel magazzino");
-    }
-
     /**
-     * <h2>Metodo che gestisce le varie funzionalità (di visualizzazione) disponibili al gestore</h2><br>
+     * <h2>Metodo che gestisce le varie funzionalità (di visualizzazione) disponibili al gestore</h2>
      * <b>Precondizione: </b>il gestore deve essere istanziato
      * @param scelta scelta del gestore
      * @param gestore gestore che ha effettuato l'accesso
@@ -217,9 +216,11 @@ public class Main {
     private static void scegliFunzionalitaGestore(int scelta, Gestore gestore) {
         //precondizione: gestore != null
         if(gestore == null) throw new IllegalArgumentException(Costanti.GESTORE_NON_NULLO);
+
         ArrayList<Alimento> bevande = gestore.getRistorante().getMagazziniere().getMagazzino().getBevande();
         ArrayList<Alimento> extras = gestore.getRistorante().getMagazziniere().getMagazzino().getExtras();
         ArrayList<Prenotabile> menu = gestore.getRistorante().getAddettoPrenotazione().getMenu();
+
         switch (scelta) {
             case 1:
                 Visualizzazione.mostraCaricoLavoroPersona(gestore);
@@ -251,7 +252,17 @@ public class Main {
         }
     }
 
+    /**
+     * <h2>Metodo che gestisce le varie funzionalità temporali disponibili</h2>
+     * Queste funzionalità sono puramente di debug perchè non sono presenti nel sistema reale<br>
+     * <b>Precondizione: </b>il gestore deve essere istanziato
+     * @param scelta scelta del gestore
+     * @param data_attuale data attuale del sistema
+     * @param gestore gestore che ha effettuato l'accesso
+     */
     private static void scegliFunzionalitaTemporali(int scelta, Tempo data_attuale, Gestore gestore) {
+        //precondizione: gestore != null
+        if(gestore == null) throw new IllegalArgumentException(Costanti.GESTORE_NON_NULLO);
         switch (scelta) {
             case 1:
                 data_attuale.scorriGiorno();
@@ -450,32 +461,4 @@ public class Main {
         System.out.println("\nInizializzazione automatica del ristorante completata.\n");
     }
 
-    /**
-     * <h2>Metodo che controlla se un alimento è già presente nel magazzino (per evitare duplicati)</h2><br>
-     * <b>Precondizione:</b> l'alimento nuovo e il magazzino non devono essere nulli.<br>
-     * @param alimento_nuovo alimento da controllare
-     * @param magazzino magazzino in cui cercare
-     * @return true se l'alimento non è presente nel magazzino, false altrimenti
-     * @throws IllegalArgumentException se l'alimento nuovo o il magazzino sono nulli
-     */
-    private static boolean controllaDuplicato(Alimento alimento_nuovo, Magazzino magazzino) {
-        //precondizione: alimento_nuovo != null && magazzino != null
-        if (alimento_nuovo == null || magazzino == null) throw new IllegalArgumentException("Alimento o magazzino nulli.");
-        for (Alimento alimento_magazzino : magazzino.getBevande()) {
-            if (alimento_magazzino.getNome().equalsIgnoreCase(alimento_nuovo.getNome())) {
-                return false;
-            }
-        }
-        for (Alimento alimento_magazzino : magazzino.getExtras()) {
-            if (alimento_magazzino.getNome().equalsIgnoreCase(alimento_nuovo.getNome())) {
-                return false;
-            }
-        }
-        for (Alimento alimento_magazzino : magazzino.getIngredienti()) {
-            if (alimento_magazzino.getNome().equalsIgnoreCase(alimento_nuovo.getNome())) {
-                return false;
-            }
-        }
-        return true;
-    }
 }

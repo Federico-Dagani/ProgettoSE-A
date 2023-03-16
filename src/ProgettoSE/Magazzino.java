@@ -72,14 +72,14 @@ public class Magazzino {
     }
 
     /**
-     * <h2>Metodo che restituisce un alimento dato il suo nome</h2>
+     * <h2>Metodo che aggiorna la quantità di un alimento</h2>
      * <b>Precondizione:</b> l'alimento non è null<br>
-     * <b>Postcondizione:</b> l'alimento è stato aggiunto al magazzino
-     * @param alimento alimento da aggiungere al magazzino
+     * <b>Postcondizione:</b> la qta è stata aggiornata
+     * @param alimento alimento con la quantità da aggiornare in magazzino
      * @throws IllegalArgumentException se l'alimento è null
      * @return void
      */
-    public void setAlimento(Alimento alimento) {
+    public void setQtaAlimento(Alimento alimento) {
         //precondizione: l'alimento non è null
         if (alimento == null) throw new IllegalArgumentException("Alimento non valido");
         String nome_alimento = alimento.getNome();
@@ -128,4 +128,57 @@ public class Magazzino {
         assert getAlimento(nome).getQta() < qta_precedente;
     }
 
+    /**
+     * <h2>Metodo che inserisce un alimento nel magazzino, dopo aver controllato che non sia già presente</h2>
+     * <b>Precondizione:</b> l'alimento non è null<br>
+     * @param alimento alimento da inserire
+     * @return Stringa con il messaggio di inserimento se l'inserimento è andato a buon fine, altrimenti il messaggio di duplicazione
+     * @throws IllegalArgumentException se l'alimento è null
+     */
+    public String inserisciAlimento(Alimento alimento) {
+        //precondizione: l'alimento non è null
+        if(alimento == null) throw new IllegalArgumentException("Alimento non valido");
+        String messagio_duplicazione = controllaSeDuplicato(alimento);
+        //se controllaSeDuplicato restituisce null allora l'alimento non è duplicato, quindi lo inserisco in magazzino
+        if(alimento instanceof Ingrediente && messagio_duplicazione == null){
+            ingredienti.add(alimento);
+            return "L'ingrediente è stato aggiunto al magazzino";
+        }else if(alimento instanceof Bevanda && messagio_duplicazione == null){
+            bevande.add(alimento);
+            return "La bevanda è stata aggiunta al magazzino";
+        }else if(alimento instanceof Extra && messagio_duplicazione == null){
+            extras.add(alimento);
+            return "L'extra è stato aggiunto al magazzino";
+        }
+        return messagio_duplicazione;
+    }
+
+    /**
+     * <h2>Metodo che controlla se un alimento è già presente nel magazzino (per evitare duplicati)</h2><br>
+     * <b>Precondizione:</b> l'alimento nuovo non deve essere nullo.<br>
+     * @param alimento alimento da controllare
+     * @return messaggio di errore se l'alimento è già presente nel magazzino, null altrimenti
+     * @throws IllegalArgumentException se l'alimento è nullo
+     */
+    public String controllaSeDuplicato(Alimento alimento){
+        //precondizione: l'alimento non è nullo
+        if(alimento == null) throw new IllegalArgumentException("Alimento non valido");
+        if(alimento instanceof Ingrediente){
+            for(Alimento ingrediente : ingredienti){
+                if(ingrediente.getNome().equalsIgnoreCase(alimento.getNome()))
+                    return "L'ingrediente è già presente nel magazzino";
+            }
+        }else if(alimento instanceof Bevanda){
+            for (Alimento bevanda : bevande) {
+                if(bevanda.getNome().equalsIgnoreCase(alimento.getNome()))
+                    return "La bevanda è già presente nel magazzino";
+            }
+        }else if(alimento instanceof Extra){
+            for (Alimento extra : extras) {
+                if(extra.getNome().equalsIgnoreCase(alimento.getNome()))
+                    return "L'extra è già presente nel magazzino";
+            }
+        }
+        return null;
+    }
 }

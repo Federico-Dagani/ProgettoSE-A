@@ -181,7 +181,7 @@ public class Magazziniere extends Persona {
             float qta_in_magazzino = magazzino.getAlimento(alimento.getNome()).getQta();
             float nuova_qta = qta_in_magazzino + alimento.getQta();
             alimento.setQta(nuova_qta);
-            magazzino.setAlimento(alimento);
+            magazzino.setQtaAlimento(alimento);
         }
         //svuoto la lista della spesa una volta aggiornato il magazzino
         this.lista_spesa.clear();
