@@ -259,17 +259,18 @@ public class Main {
             case 2:
                 boolean data_errata;
                 do{
-                    try {
-                        String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd): ");
-                        data_attuale.setData_corrente(LocalDate.parse(stringa_data_prenotazione));
-                        data_errata = false;
-                        if(data_attuale.getData_corrente().isBefore(LocalDate.now())) {
-                            System.out.println("La data inserita è precedente alla data attuale (" + data_attuale.getData_corrente() + ")");
-                            data_errata = true;
-                        }
-                    } catch (DateTimeParseException e) {
-                        System.out.println("Data non valida");
+                    String stringa_data_prenotazione = InputDati.leggiStringa(Costanti.INS_DATA);
+                    LocalDate data_prenotazione = Tempo.parsaData(stringa_data_prenotazione);
+
+                    if(data_prenotazione == null){
+                        System.out.println(Costanti.DATA_NON_VALIDA);
                         data_errata = true;
+                    }else if(data_prenotazione.isBefore(data_attuale.getData_corrente())){
+                        System.out.println("La data inserita è precedente alla data attuale (" + data_attuale.getData_corrente() + ")");
+                        data_errata = true;
+                    }else{
+                        data_attuale.setData_corrente(data_prenotazione);
+                        data_errata = false;
                     }
                 }while (data_errata);
                 break;
@@ -281,9 +282,21 @@ public class Main {
             System.out.println(messaggio);
     }
 
+    /**
+     * <h2>Metodo che compie diversi controlli sulla data inserita</h2>
+     * <b>Precondizione: </b>il gestore deve essere istanziato
+     * @param gestore gestore che ha effettuato l'accesso
+     * @param data_attuale data attuale
+     * @return
+     */
     private static LocalDate gestisciData(Gestore gestore, LocalDate data_attuale) {
-        String stringa_data_prenotazione = InputDati.leggiStringa("Inserisci una data valida (yyyy-mm-dd): ");
+        //precondizione: gestore != null
+        if(gestore == null) throw new IllegalArgumentException(Costanti.GESTORE_NON_NULLO);
+
+        String stringa_data_prenotazione = InputDati.leggiStringa(Costanti.INS_DATA);
+
         int msg = gestore.getRistorante().getAddettoPrenotazione().controlloDataPrenotazione(data_attuale, stringa_data_prenotazione, gestore.getRistorante().getN_posti());
+
         while (msg != 0) {
             switch (msg) {
                 case 1:
@@ -305,7 +318,17 @@ public class Main {
         return LocalDate.parse(stringa_data_prenotazione);
     }
 
+    /**
+     * <h2>Metodo che gestisce l'inserimento di una nuova prenotazione</h2>
+     * <b>Precondizione:</b> gestore != null && data_attuale != null
+     * @param gestore gestore che ha effettuato l'accesso
+     * @param data_attuale data attuale
+     * @throws IllegalArgumentException se i parametri non sono validi
+     */
     private static void inserisciPrenotazione(Gestore gestore, LocalDate data_attuale) {
+
+        //precondizione: gestore != null && data_attuale != null
+        if(gestore == null || data_attuale == null) throw new IllegalArgumentException("Parametri non validi");
 
         System.out.println("Inserimento dati NUOVA PRENOTAZIONE\n");
 
@@ -342,23 +365,22 @@ public class Main {
 
         //Gestisco le scelte dei commensali
         HashMap<Prenotabile, Integer> scelte = new HashMap<>();
-        Integer n_portate = 0;
+        int n_portate = 0;
         do {
             menu_vuoto = Visualizzazione.stampaMenuDelGiorno(gestore, data_prenotazione);
             //gestisco l'eventualità di non avere piatti/menu disponibili in un determinato giorno
             if (!menu_vuoto) {
+                //mostro un riepilogo delle scelyìte già effettuate
                 Visualizzazione.stampaScelte(scelte);
 
-                if (n_portate < n_coperti)
-                    System.out.printf("\nDeve scelgliere almeno altre %d portate per convalidare la prenotazione.\n", n_coperti - n_portate);
+                if (n_portate < n_coperti) System.out.printf("\nDeve scelgliere almeno altre %d portate per convalidare la prenotazione.\n", n_coperti - n_portate);
 
                 boolean validità = false;
                 Prenotabile portata = null;
-                Integer quantità;
 
                 do {
                     String scelta = InputDati.leggiStringa("\nInserisca il nome della portata da ordinare: ");
-
+                    //controllo che la portata scelta sia presente nel menu del giorno
                     for (Prenotabile prenotabile : gestore.getRistorante().getAddettoPrenotazione().calcolaMenuDelGiorno(data_prenotazione)) {
                         if (prenotabile.getNome().equalsIgnoreCase(scelta)) {
                             portata = prenotabile;
@@ -367,7 +389,8 @@ public class Main {
                     }
                     if (!validità) System.out.println("Portata non presente nel menu del giorno.");
                 } while (!validità);
-                quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": ", 0);
+
+                int quantità = InputDati.leggiInteroConMinimo("Inserisca le porzioni desiderate di " + portata.getNome().toLowerCase(Locale.ROOT) + ": ", 0);
 
                 //devo leggere il value precedente e sommarlo alla nuova quantità aggiunta, dopodichè rimetto la value nuova nella Map
                 Integer quantita_precedente = scelte.get(portata);
@@ -377,21 +400,21 @@ public class Main {
                     scelte.put(portata, quantità + quantita_precedente);
 
                 Prenotazione prenotazione = new Prenotazione(null, n_coperti, data_prenotazione, scelte, cons_bevande, cons_extra);
+
                 boolean lavoro_validato = gestore.getRistorante().getAddettoPrenotazione().validaCaricoLavoro(data_prenotazione, lavoro_persona, n_posti, prenotazione);
 
                 Visualizzazione.ripulisciConsole();
 
-                if (lavoro_validato && quantità > 0) {
+                if (lavoro_validato && quantità > 0)
                     System.out.println("Portata aggiunta all'ordine.");
-                } else if (!lavoro_validato) {
+                else if (!lavoro_validato) {
+
                     System.out.println("Il carico di lavoro non ci permette di accettare un così alto numero di portate. Rimosso dalla lista: " + portata.getNome() + " x" + quantità);
-                    //tolgo la portata inserita che mi fa sballare il carico di lavoro totale e reinserisco
+                    //tolgo la portata inserita che fa eccedere il carico di lavoro totale e reinserisco
                     scelte.remove(portata);
-                    if (quantita_precedente != 0)
-                        scelte.put(portata, quantita_precedente);
-                } else if (quantità == 0) {
-                    System.out.println("Portata non aggiunta all'ordine.");
-                }
+                    if (quantita_precedente != 0) scelte.put(portata, quantita_precedente);
+
+                } else if (quantità == 0) System.out.println("Portata non aggiunta all'ordine.");
 
                 InputDati.premerePerContinuare();
                 Visualizzazione.ripulisciConsole();
@@ -400,7 +423,7 @@ public class Main {
                 for (Integer value : scelte.values())
                     n_portate += value;
             }
-            //cortocircuito: se il menu
+            //cortocircuito: se il menu è vuoto non chiedo se vuole ordinare altre portate e non controllo nemmeno se il numero di portate è sufficiente
         } while (!menu_vuoto && (n_portate < n_coperti || InputDati.yesOrNo("Ogni commensale ha ordinato almeno una portata ciascuno, vuole ordinare altre portate?")));
 
         Visualizzazione.ripulisciConsole();

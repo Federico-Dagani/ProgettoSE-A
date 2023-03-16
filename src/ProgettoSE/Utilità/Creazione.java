@@ -1,16 +1,12 @@
 package ProgettoSE.Utilità;
 
+import ProgettoSE.*;
 import ProgettoSE.Alimentari.Alimento;
 import ProgettoSE.Alimentari.Bevanda;
 import ProgettoSE.Alimentari.Extra;
 import ProgettoSE.Alimentari.Ingrediente;
 
-import ProgettoSE.Costanti;
-
 import ProgettoSE.Menu.MenuTematico;
-import ProgettoSE.Piatto;
-import ProgettoSE.Prenotabile;
-import ProgettoSE.Ricetta;
 
 import ProgettoSE.Attori.Gestore;
 
@@ -73,14 +69,17 @@ public class Creazione {
         do {
             boolean data_errata; //variabile per permettere di reinserire immediamente delle nuvo disponibilità in caso quelle inserite siano scorrette
             do {
-                try {
-                    disponibilita.add(LocalDate.parse(InputDati.leggiStringaNonVuota(Costanti.INS_DATA_INIZIO)));
-                    disponibilita.add(LocalDate.parse(InputDati.leggiStringaNonVuota(Costanti.INS_DATA_FINE)));
-                    data_errata = false;
-                } catch (DateTimeParseException e) {
+                String data_inizio_da_parsare = InputDati.leggiStringaNonVuota(Costanti.INS_DATA_INIZIO);
+                String data_fine_da_parsare = InputDati.leggiStringaNonVuota(Costanti.INS_DATA_FINE);
+
+                LocalDate data_inizio_parsata = Tempo.parsaData(data_inizio_da_parsare);
+                LocalDate data_fine_parsata = Tempo.parsaData(data_fine_da_parsare);
+
+                if(data_inizio_parsata == null || data_fine_parsata == null){
                     System.out.println(Costanti.DATA_NON_VALIDA);
                     data_errata = true;
-                }
+                } else data_errata = false;
+
             } while (data_errata);
         } while (InputDati.yesOrNo("\nVuoi aggiungere un'altra disponibilità?"));
         //in base alla tipologia creo oggetti diversi

@@ -5,6 +5,7 @@ import ProgettoSE.Menu.*;
 import ProgettoSE.Piatto;
 import ProgettoSE.Prenotabile;
 import ProgettoSE.Prenotazione;
+import ProgettoSE.Tempo;
 //import gestione tempo
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -161,17 +162,14 @@ public class AddettoPrenotazione extends Persona {
         //precondizioni: il numero dei posti del ristorante è maggiore di 0
         if (posti_ristorante <= 0) throw new IllegalArgumentException("Il numero dei posti del ristorante non è valido");
 
-        LocalDate data_prenotazione = null;
-        try {
-            data_prenotazione = LocalDate.parse(stringa_data_prenotazione);
-        } catch (DateTimeParseException e) {
+        LocalDate data_prenotazione = Tempo.parsaData(stringa_data_prenotazione);
+        if(data_prenotazione == null)
             return 1;
-        }
         if (data_prenotazione.isBefore(data_attuale) || data_prenotazione.isEqual(data_attuale))
             return 2;
-        else if (posti_ristorante - calcolaPostiOccupati(data_prenotazione) == 0)
+        if (posti_ristorante - calcolaPostiOccupati(data_prenotazione) == 0)
             return 3;
-        else if(data_prenotazione.getDayOfWeek().getValue() == 7 || data_prenotazione.getDayOfWeek().getValue() == 6)
+        if(data_prenotazione.getDayOfWeek().getValue() == 7 || data_prenotazione.getDayOfWeek().getValue() == 6)
             return 4;
         //postcondizione: la data inserita è corretta
         assert data_prenotazione.isAfter(data_attuale);
