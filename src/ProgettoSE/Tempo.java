@@ -40,7 +40,17 @@ public class Tempo {
         data_corrente = data_corrente.plusDays(1);
     }
 
+    /**
+     * <h2>Metodo che permette di avanzare di un mese la data corrente</h2><br>
+     * <b>Precondizione:</b> data1 e data2 non sono null
+     * @param data1 data che dovrà precedere la data2
+     * @param data2 data che dovrà seguire la data1
+     * @return void
+     */
     public static boolean data1AnticipaData2(LocalDate data1, LocalDate data2) {
+        //precondizione: data1 e data2 non sono null
+        if(data1 != null && data2 != null) throw new IllegalArgumentException("data1 e data2 non possono essere null");
+
         if(data1.getMonthValue() < data2.getMonthValue())
             return true;
         else if(data1.getMonthValue() == data2.getMonthValue() && data1.getDayOfMonth() <= data2.getDayOfMonth())
