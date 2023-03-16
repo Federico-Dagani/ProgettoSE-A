@@ -133,8 +133,8 @@ public class Gestore extends Persona {
     }
     /**
      * <h2>Metodo che controlla se le ricette dei piatti sono valide per il ristorante (e in caso gli elimina) secondo 2 vincoli</h2>
-     * <ul><li>il lavoro di un piatto deve essere < del lavoro per persona</li>
-     * <li>il menu tematico deve contenere piatti disponibili nel periodo di disponibilità del menu</li></ul>
+     * <ol><li>il lavoro di un piatto deve essere < del lavoro per persona</li>
+     * <li>il menu tematico deve contenere piatti disponibili nel periodo di disponibilità del menu</li></ol>
      * <b>Precondizione:</b> il ristorante non è null<br>
      * <b>Postcondizione:</b> la lunghezza menu da eliminare <= lunghezza menu iniziale<br>
      * @return stringa che contiene i messaggi di errore (se ci sono) dei piatti rifiutati
