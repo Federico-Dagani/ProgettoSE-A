@@ -215,16 +215,16 @@ public class Creazione {
             case Costanti.GESTORE:
 
                 String[] azioni_gestore = new String[9];
-                azioni_gestore[0] = "carico di lavoro per persona";
-                azioni_gestore[1] = "numero di posti a sedere disponibili";
-                azioni_gestore[2] = "insieme delle bevande";
-                azioni_gestore[3] = "insieme dei generi extra";
-                azioni_gestore[4] = "consumo pro-capite di bevande";
-                azioni_gestore[5] = "consumo pro-capite di generi extra";
-                azioni_gestore[6] = "menu tematici presenti nel menu";
-                azioni_gestore[7] = "piatti presenti nel menu";
-                azioni_gestore[8] = "il ricettario";
-                return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.GESTORE.toUpperCase(Locale.ROOT), azioni_gestore);
+                azioni_gestore[0] = "Visualizza carico di lavoro per persona";
+                azioni_gestore[1] = "Visualizza numero di posti a sedere disponibili";
+                azioni_gestore[2] = "Visualizza insieme delle bevande";
+                azioni_gestore[3] = "Visualizza insieme dei generi extra";
+                azioni_gestore[4] = "Visualizza consumo pro-capite di bevande";
+                azioni_gestore[5] = "Visualizza consumo pro-capite di generi extra";
+                azioni_gestore[6] = "Visualizza menu tematici presenti nel menu";
+                azioni_gestore[7] = "Visualizza piatti presenti nel menu";
+                azioni_gestore[8] = "Visualizza il ricettario";
+                return new MyMenu("     " + Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.GESTORE.toUpperCase(Locale.ROOT) + "     ", azioni_gestore);
 
             case Costanti.TEMPO:
 
