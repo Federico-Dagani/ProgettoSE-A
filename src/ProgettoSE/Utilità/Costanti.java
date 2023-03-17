@@ -1,4 +1,4 @@
-package ProgettoSE;
+package ProgettoSE.Utilità;
 
 public class Costanti {
 

@@ -14,7 +14,6 @@ import ProgettoSE.mylib.InputDati;
 import ProgettoSE.mylib.MyMenu;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -78,7 +77,11 @@ public class Creazione {
                 if(data_inizio_parsata == null || data_fine_parsata == null){
                     System.out.println(Costanti.DATA_NON_VALIDA);
                     data_errata = true;
-                } else data_errata = false;
+                } else {
+                    disponibilita.add(data_inizio_parsata);
+                    disponibilita.add(data_fine_parsata);
+                    data_errata = false;
+                };
 
             } while (data_errata);
         } while (InputDati.yesOrNo("\nVuoi aggiungere un'altra disponibilità?"));
@@ -192,13 +195,13 @@ public class Creazione {
     }
 
     /**
-     * <h2>Metodo che crea un menu</h2><br>
+     * <h2>Metodo che crea un menu per la visualizzazione delle funzionalità disponibili</h2><br>
      * <b>Precondizione:</b> la funzione non è null<br>
      * @param funzione funzionalità che dovrà aver il menu
      * @return il menu creato
      * @throws IllegalArgumentException se la funzione è null
      */
-    public static MyMenu creaMenu(String funzione) {
+    public static MyMenu creaMenuTestuale(String funzione) {
         //precondizione: la funzione non è null
         if(funzione == null) throw new IllegalArgumentException("La funzione non può essere null");
 
@@ -215,14 +218,14 @@ public class Creazione {
             case Costanti.GESTORE:
 
                 String[] azioni_gestore = new String[9];
-                azioni_gestore[0] = "Visualizza carico di lavoro per persona";
-                azioni_gestore[1] = "Visualizza numero di posti a sedere disponibili";
-                azioni_gestore[2] = "Visualizza insieme delle bevande";
-                azioni_gestore[3] = "Visualizza insieme dei generi extra";
-                azioni_gestore[4] = "Visualizza consumo pro-capite di bevande";
-                azioni_gestore[5] = "Visualizza consumo pro-capite di generi extra";
-                azioni_gestore[6] = "Visualizza menu tematici presenti nel menu";
-                azioni_gestore[7] = "Visualizza piatti presenti nel menu";
+                azioni_gestore[0] = "Visualizza il carico di lavoro per persona";
+                azioni_gestore[1] = "Visualizza il numero di posti a sedere disponibili";
+                azioni_gestore[2] = "Visualizza l'insieme delle bevande";
+                azioni_gestore[3] = "Visualizza l'insieme dei generi extra";
+                azioni_gestore[4] = "Visualizza il consumo pro-capite di bevande";
+                azioni_gestore[5] = "Visualizza il consumo pro-capite di generi extra";
+                azioni_gestore[6] = "Visualizza i menu tematici presenti nel menu";
+                azioni_gestore[7] = "Visualizza i piatti presenti nel menu";
                 azioni_gestore[8] = "Visualizza il ricettario";
                 return new MyMenu("     " + Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + Costanti.GESTORE.toUpperCase(Locale.ROOT) + "     ", azioni_gestore);
 
@@ -236,13 +239,13 @@ public class Creazione {
             case Costanti.INIZIALIZZAZIONE:
 
                 String[] azioni_inizializzazione = new String[7];
-                azioni_inizializzazione[0] = "Modifica il numero di posti";
-                azioni_inizializzazione[1] = "Modifica il lavoro persone";
-                azioni_inizializzazione[2] = "Aggiungi ingrediente";
-                azioni_inizializzazione[3] = "Aggiungi extra";
-                azioni_inizializzazione[4] = "Aggiungi bevanda";
-                azioni_inizializzazione[5] = "Aggiungi menu";
-                azioni_inizializzazione[6] = "Aggiungi piatto";
+                azioni_inizializzazione[0] = "Modifica il numero di posti del ristorante";
+                azioni_inizializzazione[1] = "Modifica il lavoro in carico ad ogni persona";
+                azioni_inizializzazione[2] = "Aggiungi un ingrediente";
+                azioni_inizializzazione[3] = "Aggiungi un'extra";
+                azioni_inizializzazione[4] = "Aggiungi una bevanda";
+                azioni_inizializzazione[5] = "Aggiungi un menu";
+                azioni_inizializzazione[6] = "Aggiungi un piatto";
                 return new MyMenu(Costanti.FUNZIONALITA.toUpperCase(Locale.ROOT) + "di " + Costanti.INIZIALIZZAZIONE.toUpperCase(Locale.ROOT), azioni_inizializzazione);
         }
         return null;

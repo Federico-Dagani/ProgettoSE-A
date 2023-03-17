@@ -1,9 +1,13 @@
 package ProgettoSE.Attori;
 
-public class Persona {
+abstract public class Persona {
     //ATTRIBUTI
     private String nome;
     //METODI
+    /**
+     * <h2>Costruttore della classe Persona</h2>
+     * @param nome nome della persona
+     */
     public Persona(String nome) {
         this.nome = nome;
     }

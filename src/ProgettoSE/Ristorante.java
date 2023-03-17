@@ -48,15 +48,7 @@ public class Ristorante {
         return addettoPrenotazione;
     }
 
-    public void setAddettoPrenotazione(AddettoPrenotazione addettoPrenotazione) {
-        this.addettoPrenotazione = addettoPrenotazione;
-    }
-
     public Magazziniere getMagazziniere() {
         return magazziniere;
-    }
-
-    public void setMagazziniere(Magazziniere magazziniere) {
-        this.magazziniere = magazziniere;
     }
 }

@@ -4,6 +4,7 @@ import ProgettoSE.*;
 import ProgettoSE.Alimentari.*;
 import ProgettoSE.Attori.*;
 import ProgettoSE.Menu.*;
+import ProgettoSE.Utilità.Costanti;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -46,7 +47,7 @@ public class LetturaFileXML {
         Magazziniere magazziniere = new Magazziniere(null, magazzino, lista_spesa);
         Ristorante ristorante = new Ristorante(0, 0, addetto_prenotazione, magazziniere);
 
-        Menu menu_carta = new Menu(new ArrayList<>());
+        MenuCarta menu_carta = new MenuCarta(new ArrayList<>());
         MenuTematico menu_tematico = new MenuTematico("", new ArrayList<>(), 0, new ArrayList<>());
         Ricetta ricetta = new Ricetta(new ArrayList<>(), 0, 0);
         Piatto piatto = new Piatto(null, new ArrayList<>(), 0, ricetta);

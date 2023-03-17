@@ -55,52 +55,24 @@ public class Prenotazione {
     }
 
     //getter e setter
-    public Cliente getNominativo() {
-        return nominativo;
-    }
-
-    public void setNominativo(Cliente nominativo) {
-        this.nominativo = nominativo;
-    }
-
     public int getN_coperti() {
         return n_coperti;
-    }
-
-    public void setN_coperti(int n_coperti) {
-        this.n_coperti = n_coperti;
     }
 
     public LocalDate getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
     public HashMap<Prenotabile, Integer> getScelte() {
         return scelte;
-    }
-
-    public void setScelte(HashMap<Prenotabile, Integer> scelte) {
-        this.scelte = scelte;
     }
 
     public HashMap<Alimento, Float> getCons_bevande() {
         return cons_bevande;
     }
 
-    public void setCons_bevande(HashMap<Alimento, Float> cons_bevande) {
-        this.cons_bevande = cons_bevande;
-    }
-
     public HashMap<Alimento, Float> getCons_extra() {
         return cons_extra;
-    }
-
-    public void setCons_extra(HashMap<Alimento, Float> cons_extra) {
-        this.cons_extra = cons_extra;
     }
 
     /**

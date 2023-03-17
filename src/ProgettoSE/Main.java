@@ -7,6 +7,7 @@ import ProgettoSE.Attori.Cliente;
 import ProgettoSE.Attori.Gestore;
 //importa classe MenuTematico
 //importa classi utilità
+import ProgettoSE.Utilità.Costanti;
 import ProgettoSE.Utilità.Creazione;
 import ProgettoSE.Utilità.Visualizzazione;
 import ProgettoSE.mylib.MyMenu;
@@ -38,14 +39,14 @@ public class Main {
         }
         Visualizzazione.ripulisciConsole();
 
-        MyMenu menu_attori = Creazione.creaMenu(Costanti.ATTORI);
+        MyMenu menu_attori = Creazione.creaMenuTestuale(Costanti.ATTORI);
         int scelta_attore = menu_attori.scegliConUscita();
         Visualizzazione.ripulisciConsole();
         while (scelta_attore != 0) {
             switch (scelta_attore) {
 
                 case 1:
-                    MyMenu menu_gestore = Creazione.creaMenu(Costanti.GESTORE);
+                    MyMenu menu_gestore = Creazione.creaMenuTestuale(Costanti.GESTORE);
                     int scelta_funz_gestore = menu_gestore.scegliConUscita();
                     Visualizzazione.ripulisciConsole();
                     while (scelta_funz_gestore != 0) {
@@ -63,7 +64,7 @@ public class Main {
                     break;
 
                 case 3:
-                    MyMenu menu_tempo = Creazione.creaMenu(Costanti.TEMPO);
+                    MyMenu menu_tempo = Creazione.creaMenuTestuale(Costanti.TEMPO);
                     int scelta_funz_tempo = menu_tempo.scegliConUscita();
                     Visualizzazione.ripulisciConsole();
                     while (scelta_funz_tempo != 0) {
@@ -116,7 +117,7 @@ public class Main {
         //precondizione
         if(gestore == null) throw new IllegalArgumentException("Il gestore non può essere null");
 
-        MyMenu menu_inizializza = Creazione.creaMenu(Costanti.INIZIALIZZAZIONE);
+        MyMenu menu_inizializza = Creazione.creaMenuTestuale(Costanti.INIZIALIZZAZIONE);
 
         int scelta_inizializza = menu_inizializza.scegliConUscita();
         Visualizzazione.ripulisciConsole();
@@ -145,7 +146,7 @@ public class Main {
                     else
                         gestore.getRistorante().setLavoro_persona(lavoro_persona);
 
-                    String messaggio = gestore.controllaMenu() + gestore.controllaRicette();
+                    String messaggio = gestore.getRistorante().getAddettoPrenotazione().controllaMenu(gestore.getRistorante().getLavoro_persona()) + gestore.getRistorante().getAddettoPrenotazione().controllaRicette(gestore.getRistorante().getLavoro_persona());
                     //se il messaggio è vuoto vuol dire che non ci sono errori sia nei menu che nelle ricette
                     System.out.println(messaggio);
                     InputDati.premerePerContinuare();
@@ -175,7 +176,7 @@ public class Main {
 
                 case 6://aggiungi menu tematico
                     Creazione.creaMenuTematico(gestore);
-                    String mex = gestore.controllaMenu();
+                    String mex = gestore.getRistorante().getAddettoPrenotazione().controllaMenu(gestore.getRistorante().getLavoro_persona());
                     Visualizzazione.ripulisciConsole();
                     if (mex.equals("")){
                         System.out.println("\nMenu tematico creato");
@@ -188,7 +189,7 @@ public class Main {
 
                 case 7://aggiungi piatto
                     Creazione.creaPiatto(gestore);
-                    messaggio = gestore.controllaRicette();
+                    messaggio = gestore.getRistorante().getAddettoPrenotazione().controllaRicette(gestore.getRistorante().getLavoro_persona());
                     Visualizzazione.ripulisciConsole();
                     if (messaggio.equals("")){
                         System.out.println("\nPiatto creato");

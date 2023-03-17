@@ -23,6 +23,9 @@ public class Ricetta {
         this.lavoro_porzione = lavoro_porzione;
     }
 
+    /**
+     * <h2>Metodo costruttore di default della classe Ricetta</h2>
+     */
     public Ricetta(){
         this.ingredienti = new ArrayList<>();
         this.n_porzioni = 0;

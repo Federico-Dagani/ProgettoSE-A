@@ -8,7 +8,6 @@ import ProgettoSE.Prenotazione;
 import ProgettoSE.Tempo;
 //import gestione tempo
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 //import strutture dati
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +22,6 @@ public class AddettoPrenotazione extends Persona {
     //MANCA INVARIANTE DI CLASSE
 
     //METODI
-    public AddettoPrenotazione(String nome) {
-        super(nome);
-    }
     /**
      * <h2>Meotodo costruttore della classe AdettoPrenotazione</h2>
      * @param nome il nome dell'addetto alle prenotazioni
@@ -45,9 +41,6 @@ public class AddettoPrenotazione extends Persona {
         return menu;
     }
     //setters
-    public void setPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
-        this.prenotazioni = prenotazioni;
-    }
     public void setMenu(ArrayList<Prenotabile> menu) {
         this.menu = menu;
     }
@@ -60,7 +53,7 @@ public class AddettoPrenotazione extends Persona {
      * @throws IllegalArgumentException se il menu alla carta non è composto da piatti
      * @return void
      */
-    public void aggiungiMenu_carta(Menu menu_carta) {
+    public void aggiungiMenu_carta(MenuCarta menu_carta) {
         //precondizione: il menu alla carta è composto da piatti
         if (menu_carta.getPiatti_menu().isEmpty()) throw new IllegalArgumentException("Il menu alla carta non è composto da piatti");
         //scorro i piatti e li aggiungo
@@ -329,5 +322,118 @@ public class AddettoPrenotazione extends Persona {
         //postcondizione: le prenotazioni sono state filtrate
         assert prenotazioni_filtrate.size() >= 0;
         return prenotazioni_filtrate;
+    }
+
+    /**
+     * <h2>Metodo che controlla se le ricette dei piatti sono valide per il ristorante (e in caso gli elimina) secondo 2 vincoli</h2>
+     * <ol><li>il lavoro di un piatto deve essere < del lavoro per persona</li>
+     * <li>il menu tematico deve contenere piatti disponibili nel periodo di disponibilità del menu</li></ol>
+     * <b>Postcondizione:</b> la lunghezza menu da eliminare <= lunghezza menu iniziale<br>
+     * @param lavoro_persona il lavoro per persona
+     * @return stringa che contiene i messaggi di errore (se ci sono) dei piatti rifiutati
+     */
+    public String controllaRicette(int lavoro_persona) {
+        String messaggio = "";
+        ArrayList<Prenotabile> piatti_da_eliminare = new ArrayList<>();
+        int lunghezza_menu_iniziale = menu.size();
+        //ciclo le ricette del ristorante in modo da controllare che
+        for (Prenotabile piatto : menu) {
+            if (piatto instanceof Piatto) {
+                //controllo che il carico di lavoro del piatto sia una frazione del carico di lavoro per persona
+                if (((Piatto) piatto).getRicetta().getLavoro_porzione() >= lavoro_persona) {
+                    piatti_da_eliminare.add(piatto);
+                    messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè il lavoro del piatto è maggiore del lavoro per persona del ristorante" ;
+                }
+                //controllo che le disponibilità del piatto siano coerenti: data di inizio precede data di fine disponibilità
+                for (int i = 0; i < piatto.getDisponibilità().size(); i += 2) {
+                    if (Tempo.data1AnticipaData2(piatto.getDisponibilità().get(i + 1), piatto.getDisponibilità().get(i))) {
+                        piatti_da_eliminare.add(piatto);
+                        messaggio += "\nIl piatto " + piatto.getNome() + " è stato scartato perchè la disponibilità non è valida";
+                    }
+                }
+            }
+        }
+        piatti_da_eliminare.forEach(piatto -> menu.remove(piatto));
+        //postcondizione: la lunghezza piatti_da_eliminare <= lunghezza menu iniziale
+        assert piatti_da_eliminare.size() <= lunghezza_menu_iniziale;
+        return messaggio;
+    }
+
+    /**
+     * <h2>Metodo che controlla se i menu tematici del ristorante sono invalidi (e in tal caso li elimina) secondo 2 vincoli:</h2>
+     * <ul><li>il lavoro di un menu tematico deve essere < 4/3 del lavoro totale del ristorante</li>
+     * <li>il menu tematico deve contenere piatti disponibili nel periodo di disponibilità del menu</li></ul>
+     * <b>Precondizione:</b> lavoro_persona >= 0 <br>
+     * <b>Postcondizione:</b> la lunghezza menu_tematici da eliminare <= lunghezza menu_tematici iniziale
+     * @param lavoro_persona il lavoro per persona del ristorante
+     * @return stringa che contiene i messaggi di errore (se ci sono) dei menu tematici rifiutati
+     */
+    public String controllaMenu(int lavoro_persona) {
+        //precondizione: lavoro_persona >= 0
+        if (lavoro_persona < 0) throw new IllegalArgumentException("Il lavoro per persona non può essere negativo");
+        String messaggio = "";
+        ArrayList<Prenotabile> menu_da_eliminare = new ArrayList<>();
+        int lunghezza_menu_tematici_iniziale = menu.size();
+        //ciclo i menu_tematici del ristorante in modo da controllare che il lavoro sia < 4/3 del lavoro totale del ristorante (se non lo è lo elimino)
+        for (Prenotabile menu_tematico : menu) {
+            if (menu_tematico instanceof MenuTematico) {
+                //controllo se il lavoro è < 4/3 del lavoro totale del ristorante (se non lo è lo elimino)
+                if (((MenuTematico) menu_tematico).getLavoro_menu() > lavoro_persona * 4 / 3) {
+                    menu_da_eliminare.add(menu_tematico);
+                    messaggio += "\nIl menu tematico " + menu_tematico.getNome() + " è stato scartato perchè il lavoro richiesto è maggiore del 4/3 del lavoro totale del ristorante";
+                }
+
+                //controllo se il menu contiene piatti che non sono disponibili nel periodo di disponibilità del menu
+                if (!disponibilitaPiattiCorrette((MenuTematico) menu_tematico)) {
+                    menu_da_eliminare.add(menu_tematico);
+                    messaggio += "\nIl menu tematico " + menu_tematico.getNome() + " è stato scartato perchè contiene piatti non disponibili nelle date del menu";
+                }
+            }
+        }
+        //elimino i menu tematici invalidi selezionati e memorizzati in menu_da_eliminare per non avere problemi di concorrenza
+        menu_da_eliminare.forEach(menu_tematico -> menu.remove(menu_tematico));
+        //postcondizione: la lunghezza menu_tematici da eliminare <= lunghezza menu_tematici iniziale
+        assert menu_da_eliminare.size() <= lunghezza_menu_tematici_iniziale;
+        return messaggio;
+    }
+
+    /**
+     * <h2>Metodo di supporto che controlla se le disponibilità dei piatti di un menu sono valide per quel menu</h2>
+     * <b>Precondizione:</b> il menu non è null<br>
+     * @param menu_tematico menu tematico da controllare
+     * @return true se le disponibilità dei piatti sono valide, false altrimenti
+     */
+    private boolean disponibilitaPiattiCorrette(MenuTematico menu_tematico) {
+        //precondizione: il menu non è null
+        assert menu_tematico != null;
+        for (Piatto piatto : menu_tematico.getPiatti_menu()) {
+            for (int i = 0; i < menu_tematico.getDisponibilità().size(); i += 2) {
+                if (!piattoDisponibileInData(piatto, menu_tematico.getDisponibilità().get(i), menu_tematico.getDisponibilità().get(i + 1)))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * <h2>Metodo di supporto che controlla se le disponibilità del piatto comprendono tutto l'intervallo delle date inizio fine</h2>
+     * <b>Precondizioni:</b><br<li>il piatto non è null<li>le date non sono null<br></ul>
+     * @param piatto piatto da controllare
+     * @param inizio data inizio intervallo
+     * @param fine data fine intervallo
+     * @return true se il piatto è disponibile in tutto l'intervallo, false altrimenti
+     * @throws IllegalArgumentException se il piatto è null o le date sono null
+     */
+    private boolean piattoDisponibileInData(Piatto piatto, LocalDate inizio, LocalDate fine) {
+        //precondizione: il piatto non è null
+        if (piatto == null) throw new IllegalArgumentException("Il piatto non può essere null");
+        //precondizione: le date non sono null
+        if (inizio == null || fine == null) throw new IllegalArgumentException("Le date non possono essere null");
+        for (int i = 0; i < piatto.getDisponibilità().size(); i += 2) {
+            //se trovo almeno una disponibilita del piatto che copre questo intervallo (ovvero una parte della disponibilità del menu tematico) aòòpra ritorno true
+            if (Tempo.data1AnticipaData2(piatto.getDisponibilità().get(i), inizio) && Tempo.data1AnticipaData2(fine, piatto.getDisponibilità().get(i + 1)))
+                return true;
+        }
+        return false;
     }
 }
