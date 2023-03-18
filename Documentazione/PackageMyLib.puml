@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/class-diagram
+package "mylib" #DDDDDD {
+
+class MyMenu{
+-{static} CORNICE_ANGOLO_SX_SUP : String
+-{static} CORNICE_ANGOLO_DX_SUP : String
+-{static} CORNICE_ANGOLO_SX_INF : String
+-{static} CORNICE_ANGOLO_DX_INF : String
+-{static} CORNICE_CONTORNO_ORIZZ : String
+-{static} CORNICE_CONTORNO_VERT : String
+-{static} FRECCETTA : String
+-{static} VOCE_USCITA : String
+-{static} RICHIESTA_INSERIMENTO : String
+-titolo : String
+-voci : String[]
+-lunghezza_cornice_orizz : int
++MyMenu(titolo : String, voci : String[])
++scegliConUscita() : int
++scegliSenzaUscita() : int
++stampaMenuConUscita()
++stampaMenuSenzaUscita()
+-generaCorniceSenzaAngolo() : String
+-generaRigaCentrale() : String
+-generaVoce(voce : String) : String
+}
+}
+@enduml

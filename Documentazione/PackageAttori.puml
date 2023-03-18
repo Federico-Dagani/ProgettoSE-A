@@ -1,0 +1,67 @@
+@startuml
+skinparam classAttributeIconSize 15
+package "Attori" #DDDDDD {
+Persona <|-left- Gestore
+Persona <|-right- Cliente
+Persona <|-- AddettoPrenotazione
+Persona <|-- Magazziniere
+}
+abstract class Persona  {
+-nome : String
++Persona(String nome)
++getNome() : String
++setNome(String nome)
+}
+
+class Cliente{
++Cliente(String nome)
+}
+
+class Gestore {
+-ristorante : Ristorante
+-risOk() : boolean
++Gestore(nome : String, ristorante : Ristorante)
++getRistorante() : Ristorante
++inizializzaRistorante() : String
++comunica (data_attuale : LocalDate) : String
+}
+
+class Magazziniere  {
+-magazzino : Magazzino
+-lista_spesa : ArrayList<Alimento>
+-magOk() : boolean
++Magazziniere(nome : String, magazzino : Magazzino, lista_spesa : ArrayList<Alimento>)
++getMagazzino() : Magazzino
++calcolaConsumoBevande(n_persone : int) : HashMap<Alimento, Float>
++calcolaConsumoExtras(n_persone : int) : HashMap<Alimento, Float>
++creaListaSpesa(prenotazione_totale : Prenotazione)
+-valutaQtaIngredientiPiatto(piatto : Piatto, qta_richiesta_piatto : int)
++aggiungiSpesaInMagazzino()
++portaInCucina(prenotazione_complessiva : Prenotazione)
++calcolaPiattiPrenotazione(prenotazione_totale : Prenotazione) : HashMap<Piatto, Integer>
+}
+
+class AddettoPrenotazione {
+-prenotazioni : ArrayList<Prenotazione>
+-menu : ArrayList<Prenotabile>
++AddettoPrenotazione(nome : String, prenotazioni : ArrayList<Prenotazione>, menu : ArrayList<Prenotabile>)
++getPrenotazioni() : ArrayList<Prenotazione>
++getMenu() : ArrayList<Prenotabile>
++setMenu(ArrayList<Prenotabile> menu)
++aggiungiMenu_carta(menu_carta : Menu)
++aggiungiMenu_tematico(menu_tematico : MenuTematico)
++rimuoviPrenotazioniVecchie(data_attuale : LocalDate)
++calcolaMenuDelGiorno(data_attuale : LocalDate) :ArrayList<Prenotabile>
++controlloDataPrenotazione(data_attuale : LocalDate, stringa_data_prenotazione : String, posti_ristorante : int) : int
++calcolaPostiOccupati(data_prenotazione : LocalDate) : int
++stimaPostiRimanenti(data_prenotazione : LocalDate, lavoro_persona : int, n_posti : int) : int
++validaCaricoLavoro(data_prenotazione : LocalDate, lavoro_persona : int, n_posti : int, possibile_prenotazione : Prenotazione) : boolean
++unisciPrenotazioni(prenotazioni_in_corso : ArrayList<Prenotazione>) : Prenotazione
++filtraPrenotazioniPerData(data : LocalDate) : ArrayList<Prenotazione>
++controllaMenu(lavoro_persona : int) : String
++controllaRicette(lavoro_persona : int): String
+-piattoDisponibileInData(piatto : Piatto, inizio : LocalDate, fine : LocalDate) : boolean
+-disponibilitaPiattiCorrette(menu_tematico : MenuTematico) : boolean
+}
+
+@enduml

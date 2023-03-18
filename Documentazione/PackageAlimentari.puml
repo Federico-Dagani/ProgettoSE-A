@@ -1,0 +1,40 @@
+@startuml
+package "Alimentari" #DDDDDD{
+Alimento <|-- Bevanda
+Alimento <|-- Extra
+Alimento <|-- Ingrediente
+}
+abstract class Alimento {
+-nome : String
+-qta : float
+-misura : String
+..Costruttori..
++Alimento(nome : String, qta : float, misura : String)
++Alimento()
+..Getters&Setters..
++getNome() : String
++getQta() : float
++getMisura() : String
++setNome(nome : String)
++setQta(qta : float)
++setMisura(misura : String)
+}
+
+class Bevanda  {
+-{static}CONS_PROCAPITE
++Bevanda(nome : String, qta : float, misura : String, cons_procapite : float)
++getConsProcapite() : float
+}
+
+class Extra {
+-{static}CONS_PROCAPITE
++Extra(nome : String, qta : float, misura : String, cons_procapite : float)
++getConsProcapite() : float
+}
+
+class Ingrediente {
++Ingrediente(nome : String, qta : float, misura : String)
++Ingrediente()
+
+}
+@enduml

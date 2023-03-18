@@ -1,0 +1,118 @@
+@startuml
+package "Utilità" #DDDDDD {
+skinparam classAttributeIconSize 15
+ class Visualizzazione{
+ +{static}stampaMenuDelGiorno(gestore : Gestore, data : LocalDate) : boolean
+ +{static}stampaScelte(scelte : HashMap<Prenotabile, Integer>)
+ +{static}mostraConsumoProcapite(alimenti : ArrayList<Alimento>)
+ +{static}mostraAlimenti(alimenti : ArrayList<Alimento>)
+ +{static}mostraCaricoLavoroPersona(gestore : Gestore)
+ +{static}mostraPostiDisponibili(gestore : Gestore)
+ +{static}mostraMenuTematici(menu : ArrayList<Prenotabile>)
+ +{static}mostraPiatti(menu : ArrayList<Prenotabile>)
+ +{static}mostraRicette(menu : ArrayList<Prenotabile>)
+ +{static}ripulisciConsole()
+ }
+class Creazione{
+ -{static}creaPrenotabile(nome : String) : Prenotabile
+ +{static}creaAlimento(tipo : String) : Alimento
+ +{static}creaMenuTematico(gestore : Gestore)
+ +{static}creaPiatto(gestore : Gestore)
+ +{static}creaMenuTestuale(funzione : String) : MyMenu
+ }
+
+class InputDati{
+-{static} ERRORE_FORMATO : String
+-{static} ERRORE_MINIMO : String
+-{static} ERRORE_STRINGA_VUOTA : String
+-{static} ERRORE_MASSIMO : String
+-{static} ERRORE_MINIMO_MASSIMO : String
+-{static} MESSAGGIO_AMMISSIBILI : String
+-{static} RISPOSTA_SI : char
+-{static} RISPOSTA_NO : char
++{static} creaScanner() : Scanner
++{static} leggiStringa(messaggio : String) : String
++{static} leggiStringaConSpazio(messaggio : String) : String
++{static} leggiStringaNonVuota(messaggio : String) : String
++{static} leggiChar(messaggio : String) : char
++{static} leggiUpperChar(messaggio : String, ammissibili : String) : char
++{static} leggiIntero(messaggio : String) : int
++{static} leggiInteroConMinimoMassimo(messaggio : String, min : int, max : int) : int
++{static} leggiInteroConMinimo(messaggio : String, minimo : int) : int
++{static} leggiIntero(messaggio : String, minimo : int, massimo : int) : int
++{static} leggiDouble(messaggio : String) : double
++{static} leggiDoubleConMinimo(messaggio : String, minimo : double) : double
++{static} yesOrNo(messaggio : String) : boolean
++{static} premerePerContinuare() : void
+}
+
+class Costanti{
+..Path..
++{static}FILE_RISTORANTE : String
+..Valori ristorante..
++{static}IMPREVISTI_CUCINA : float
++{static}ALIMENTI_SCARTATI : float
++{static}MINIMO_INGRED_PER_RICETTA : int
++{static}MINIMO_PIATTI_PER_MENU : int
+..Stringhe..
++{static}TEMPO: String
++{static}ATTORI : String
++{static}UTENTE : String
++{static}GESTORE: String
++{static}ADDETTO_PRENOTAZIONE: String
++{static}MAGAZZINIERE: String
++{static}RISTORANTE: String
++{static}MAGAZZINO: String
++{static}INGREDIENTE: String
++{static}EXTRA: String
++{static}BEVANDA: String
++{static}RICETTA: String
++{static}PIATTO: String
++{static}MENU_TEMATICO: String
++{static}PORTATA: String
++{static}NOME: String
++{static}QTA: String
++{static}MISURA: String
++{static}LAVORO_PERSONE: String
++{static}CONS_PROCAPITE: String
++{static}INIZIO: String
++{static}FINE: String
++{static}LAVORO_MENU: String
++{static}N_PORZIONI: String
++{static}LAVORO_PORZIONE: String
++{static}DISPONIBILITA: String
++{static}DISPONIBILITA_MENU: String
++{static}N_POSTI: String
++{static}AGGIUNT_MAGAZZINO: String
++{static}INS_LAVORO_PERSONA: String
++{static}INS_CONS_PROCAPITE: String
++{static}INS_DATA_INIZIO: String
++{static}INS_DATA_FINE: String
++{static}INS_DATA: String
++{static}INS_NOME: String
++{static}INS_QTA: String
++{static}INS_MISURA: String
++{static}INS_LAVORO : String
++{static}FUNZIONALITA: String
++{static}USCITA_MENU: String
++{static}END: String
++{static}INIZIALIZZAZIONE : String
++{static}UGUALE_ATTUALE : String
++{static}DATA_NON_VALIDA : String
++{static}GESTORE_NON_NULLO : String
++{static}M_SINGOLARE : String
++{static}F_SINGOLARE : String
++{static}M_PLURALE : String
++{static}F_PLURALE : String
++{static}INIZIO_FILE : String
++{static}FINE_FILE : String
++{static}LETTURA : String
++{static}SCRITTURA : String
++{static}ERRORE_INIZIALIZZAZIONE_READER : String
++{static}ERRORE_LETTURA_FILE : String
++{static}CORNICE_SUP : String
++{static}BENVENUTO : String
++{static}CORNICE_INF : String
+}
+
+@enduml
