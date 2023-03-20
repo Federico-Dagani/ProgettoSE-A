@@ -1,0 +1,248 @@
+@startuml
+
+package "Alimentari" #DDDDDD{
+Alimento <|-- Bevanda
+Alimento <|-- Extra
+Alimento <|-- Ingrediente
+}
+
+package "Attori" #DDDDDD {
+Persona <|-left- Gestore
+Persona <|-right- Cliente
+Persona <|-- AddettoPrenotazione
+Persona <|-- Magazziniere
+}
+
+abstract class Alimento {
+-nome : String
+-qta : float
+-misura : String
+..Costruttori..
++Alimento(nome : String, qta : float, misura : String)
++Alimento()
+..Getters&Setters..
++getNome() : String
++getQta() : float
++getMisura() : String
++setNome(nome : String)
++setQta(qta : float)
++setMisura(misura : String)
+}
+
+class Bevanda  {
+-{static}CONS_PROCAPITE
++Bevanda(nome : String, qta : float, misura : String, cons_procapite : float)
++getConsProcapite() : float
+}
+
+class Extra {
+-{static}CONS_PROCAPITE
++Extra(nome : String, qta : float, misura : String, cons_procapite : float)
++getConsProcapite() : float
+}
+
+class Ingrediente {
++Ingrediente(nome : String, qta : float, misura : String)
++Ingrediente()
+}
+
+
+class LetturaFileXML {
++leggiRistorante(filename : String) : Ristorante
+-creaAlimento(xmlreader : XMLStreamReader, tipologia : String) : Alimento
+-creaDisponibilita(xmlreader : XMLStreamReader) : ArrayList<LocalDate>
+}
+
+class Main{
++{static} main(args : String[])
+-{static} benvenuto()
+-{static} nominaGestore() : String
+-{static} modificaDatiIniziali(gestore : Gestore)
+-{static}scegliFunzionalitaGestore(scelta : int, gestore : Gestore)
+-{static}scegliFunzionalitaTemporali(scelta : int, data_attuale : Tempo, gestore : Gestore)
+-{static}gestisciData(gestore : Gestore, data_attuale : LocalDate) : LocalDate
+-{static}inserisciPrenotazione(gestore : Gestore, data_attuale : LocalDate)
+-{static}inizializzazione(gestore : Gestore)
+}
+
+abstract class Menu{
+-piatti_menu : ArrayList<Piatto>
++getPiatti_menu() : ArrayList<Piatto>
++setPiatti_menu(piatti_menu : ArrayList<Piatto>)
++aggiungiPiatto(piatto : Piatto)
++getPiatto(nome_piatto : String) : Piatto
+}
+
+class MenuCarta extends Menu{
++MenuCarta(piatti_menu : ArrayList<Piatto>)
+}
+
+class MenuTematico extends Menu{
+-nome : String
+-lavoro_menu : float
+-disponibilità : ArrayList<LocalDate>
++MenuTematico(nome : String, lavoro_menu : float, disponibilità : ArrayList<LocalDate>, piatti_menu : ArrayList<Piatto>)
++getNome() : String
++setNome(nome : String)
++getLavoro_menu() : float
++setLavoro_menu(lavoro_menu : float)
++getDisponibilità() : ArrayList<LocalDate>
++aggiungiDisponibilita(periodo : ArrayList<LocalDate>)
+}
+
+class Magazzino{
+-bevande : ArrayList<Alimento>
+-extras : ArrayList<Alimento>
+-ingredienti : ArrayList<Alimento>
++Magazzino(bevande : ArrayList<Alimento>, extras : ArrayList<Alimento>, ingredienti : ArrayList<Alimento>)
++getBevande() : ArrayList<Alimento>
++setBevande(bevande : ArrayList<Alimento>)
++getExtras() : ArrayList<Alimento>
++setExtras(extras : ArrayList<Alimento>)
++getIngredienti() : ArrayList<Alimento>
++setIngredienti(ingredienti : ArrayList<Alimento>)
++getAlimento(nome_alimento : String) : Alimento
++setQtaAlimento(alimento : Alimento)
++prelevaAlimento(nome : String, qta : float)
++inseisciAlimento(alimento : Alimento) : String
++controllaSeDuplicato(alimento : Alimento) : String
+
+}
+
+interface Prenotabile{
+getNome() : String
+getDisponibilita() : ArrayList<LocalDate>
+}
+
+class Piatto implements Prenotabile{
+-nome : String
+-disponibilità : ArrayList<LocalDate>
+-lavoro_piatto : float
+-ricetta : Ricetta
++Piatto(nome : String, disponibilità : ArrayList<LocalDate>, lavoro_piatto : float, ricetta : Ricetta)
++getNome() : String
++setNome(nome : String)
++getDisponibilità() : ArrayList<LocalDate>
++setDisponibilità(disponibilità : ArrayList<LocalDate>)
++getLavoro_piatto() : float
++setLavoro_piatto(lavoro_piatto : float)
++getRicetta() : Ricetta
++setRicetta(ricetta : Ricetta)
++aggiungiDisponibilita(disponibilita : LocalDate)
+}
+
+class Prenotazione {
+-nominativo : Cliente
+-n_coperti : int
+-data : LocalDate
+-scelte : HashMap<Prenotabile, Integer>
+-cons_bevande : HashMap<Alimento, Float>
+-cons_extra : HashMap<Alimento, Float>
++Prenotazione(nominativo : Cliente, n_coperti : int, data : LocalDate, scelte : HashMap<Prenotabile, Integer>, cons_bevande : HashMap<Alimento, Float>, cons_extra : HashMap<Alimento, Float>)
++Prenotazione(scelte : HashMap<Prenotabile, Integer>, cons_bevande : HashMap<Alimento, Float>, cons_extra : HashMap<Alimento, Float>)
++getN_coperti() : int
++getData() : LocalDate
++setData(data : LocalDate)
++getScelte() : HashMap<Prenotabile, Integer>
++getCons_bevande() : HashMap<Alimento, Float>
++getCons_extra() : HashMap<Alimento, Float>
++getLavoro_prenotazione() : float
+}
+
+class Ricetta{
+-ingredienti : HashMap<Alimento, Float>
+-n_porzioni : int
+-lavoro_porzione : float
++Ricetta(ingredienti : HashMap<Alimento, Float>, n_porzioni : int, lavoro_porzione : float)
++Ricetta()
++getIngredienti() : HashMap<Alimento, Float>
++setIngredienti(ingredienti : HashMap<Alimento, Float>)
++getN_porzioni() : int
++setN_porzioni(n_porzioni : int)
++getLavoro_porzione() : float
++setLavoro_porzione(lavoro_porzione : float)
+}
+
+class Ristorante{
+-n_posti : int
+-lavoro_persona : int
+-addettoPrenotazione : AddettoPrenotazione
+-magazziniere : Magazziniere
++Ristorante(n_posti : int, lavoro_persona : int, addettoPrenotazione : AddettoPrenotazione, magazziniere : Magazziniere)
++getN_posti() : int
++setN_posti(n_posti : int)
++getLavoro_persona() : int
++setLavoro_persona(lavoro_persona : int)
++getAddettoPrenotazione() : AddettoPrenotazione
++getMagazziniere() : Magazziniere
+}
+
+class Tempo{
+-{static} data_corrente : LocalDate
++Tempo(data_corrente : LocalDate)
++getData_corrente() : LocalDate
++setData_corrente(data_corrente : LocalDate)
++scorriGiorno()
++{static}data1AnticipaData2(data1 : LocalDate, data2 : LocalDate) : boolean
++{static}parsaData(data : String) : LocalDate
+}
+
+abstract class Persona  {
+-nome : String
++Persona(String nome)
++getNome() : String
++setNome(String nome)
+}
+
+class Cliente{
++Cliente(String nome)
+}
+
+class Gestore {
+-ristorante : Ristorante
+-risOk() : boolean
++Gestore(nome : String, ristorante : Ristorante)
++getRistorante() : Ristorante
++inizializzaRistorante() : String
++comunica (data_attuale : LocalDate) : String
+}
+
+class Magazziniere  {
+-magazzino : Magazzino
+-lista_spesa : ArrayList<Alimento>
+-magOk() : boolean
++Magazziniere(nome : String, magazzino : Magazzino, lista_spesa : ArrayList<Alimento>)
++getMagazzino() : Magazzino
++calcolaConsumoBevande(n_persone : int) : HashMap<Alimento, Float>
++calcolaConsumoExtras(n_persone : int) : HashMap<Alimento, Float>
++creaListaSpesa(prenotazione_totale : Prenotazione)
+-valutaQtaIngredientiPiatto(piatto : Piatto, qta_richiesta_piatto : int)
++aggiungiSpesaInMagazzino()
++portaInCucina(prenotazione_complessiva : Prenotazione)
++calcolaPiattiPrenotazione(prenotazione_totale : Prenotazione) : HashMap<Piatto, Integer>
+}
+
+class AddettoPrenotazione {
+-prenotazioni : ArrayList<Prenotazione>
+-menu : ArrayList<Prenotabile>
++AddettoPrenotazione(nome : String, prenotazioni : ArrayList<Prenotazione>, menu : ArrayList<Prenotabile>)
++getPrenotazioni() : ArrayList<Prenotazione>
++getMenu() : ArrayList<Prenotabile>
++setMenu(ArrayList<Prenotabile> menu)
++aggiungiMenu_carta(menu_carta : Menu)
++aggiungiMenu_tematico(menu_tematico : MenuTematico)
++rimuoviPrenotazioniVecchie(data_attuale : LocalDate)
++calcolaMenuDelGiorno(data_attuale : LocalDate) :ArrayList<Prenotabile>
++controlloDataPrenotazione(data_attuale : LocalDate, stringa_data_prenotazione : String, posti_ristorante : int) : int
++calcolaPostiOccupati(data_prenotazione : LocalDate) : int
++stimaPostiRimanenti(data_prenotazione : LocalDate, lavoro_persona : int, n_posti : int) : int
++validaCaricoLavoro(data_prenotazione : LocalDate, lavoro_persona : int, n_posti : int, possibile_prenotazione : Prenotazione) : boolean
++unisciPrenotazioni(prenotazioni_in_corso : ArrayList<Prenotazione>) : Prenotazione
++filtraPrenotazioniPerData(data : LocalDate) : ArrayList<Prenotazione>
++controllaMenu(lavoro_persona : int) : String
++controllaRicette(lavoro_persona : int): String
+-piattoDisponibileInData(piatto : Piatto, inizio : LocalDate, fine : LocalDate) : boolean
+-disponibilitaPiattiCorrette(menu_tematico : MenuTematico) : boolean
+}
+
+@enduml

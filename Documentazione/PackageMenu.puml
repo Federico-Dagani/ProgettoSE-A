@@ -1,9 +1,31 @@
 @startuml
 'https://plantuml.com/class-diagram
 
+package "Menu" #DDDDDD {
+
 abstract class Menu{
--prenotabili : ArrayList<Prenotabile>
+-piatti_menu : ArrayList<Piatto>
++getPiatti_menu() : ArrayList<Piatto>
++setPiatti_menu(piatti_menu : ArrayList<Piatto>)
++aggiungiPiatto(piatto : Piatto)
++getPiatto(nome_piatto : String) : Piatto
 }
 
+class MenuCarta extends Menu{
++MenuCarta(piatti_menu : ArrayList<Piatto>)
+}
+
+class MenuTematico extends Menu{
+-nome : String
+-lavoro_menu : float
+-disponibilità : ArrayList<LocalDate>
++MenuTematico(nome : String, lavoro_menu : float, disponibilità : ArrayList<LocalDate>, piatti_menu : ArrayList<Piatto>)
++getNome() : String
++setNome(nome : String)
++getLavoro_menu() : float
++setLavoro_menu(lavoro_menu : float)
++getDisponibilità() : ArrayList<LocalDate>
++aggiungiDisponibilita(periodo : ArrayList<LocalDate>)
+}
 
 @enduml
