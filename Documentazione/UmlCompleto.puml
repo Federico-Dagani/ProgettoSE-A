@@ -1,17 +1,16 @@
 @startuml
 skinparam groupInheritance 3
-'si potrebbe mettere Cliente in "AddettoPrenotazione"
-
 'PACKAGE
 class Main
 package "Model" #DDDDDD{
 package "Alimentari"{}
 package "Attori" {}
 package "Produzione" {}
-class Tempo
+}
+package "View" #DDDDDD{
+class Visualizzazione
 }
 package "Controller" #DDDDDD{
-class Visualizzazione
 class Creazione
 }
 package "Utility" #DDDDDD{
@@ -30,18 +29,19 @@ package "Attori" #EEEEEE{
 package "Gestore"{}
 package "AddettoPrenotazione"{}
 package "Magazziniere"{}
+class Tempo
 class Persona
 class Cliente
 }
-package "Gestore" <<node>>{
+package "Gestore"{
 class Gestore
 class Ristorante
 }
-package "AddettoPrenotazione" <<node>>{
+package "AddettoPrenotazione"{
 class AddettoPrenotazione
 class Prenotazione
 }
-package "Magazziniere" <<node>>{
+package "Magazziniere"{
 class Magazziniere
 class Magazzino
 }
@@ -62,6 +62,7 @@ class MenuTematico
 Gestore <-down Ristorante
 Ristorante "1" <-- "1" AddettoPrenotazione
 Ristorante "1" <-- "1" Magazziniere
+Ristorante "1" <-- "1" Tempo
 AddettoPrenotazione "1" <--* "0..N" Prenotazione
 AddettoPrenotazione "1" <-- "1..N" Menu
 Prenotazione "1" <-- "1" Cliente
@@ -79,6 +80,7 @@ Magazzino "1" <-- "1..N" Alimento
 "Attori" --[hidden]right-> Main
 "Utility" --[hidden]down-> "Controller"
 "Utility" --[hidden]down-> Main
+"Utility" --[hidden]down-> "View"
 "Controller" --[hidden]down> Main
 Cliente --[hidden]down-> "AddettoPrenotazione"
 "Produzione" --[hidden]up-> "Alimentari"
