@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+left to right direction
+
+Utente <-- Gestore
+Utente <-- Cliente
+
+Gestore  --> (Identificazione Utente)
+Gestore --> (Visualizzazione ristorante)
+Gestore --> (Inizializzazione ristorante)
+
+Cliente --> (Aggiungi prenotazione)
+Cliente -->(Identificazione Utente)
+
+AddettoPrenotazione --> (Controllo Prenotazioni)
+AddettoPrenotazione --> (Calcolo disponibilità menu)
+AddettoPrenotazione --> (Eliminazione prenotazioni)
+
+Magazziniere --> (Controllo rimanenze in magazzino)
+Magazziniere --> (Lista della spesa)
+Magazziniere --> (Rifornimento magazzino)
+
+(Visualizzazione ristorante) ..> (Identificazione Utente) : <<include>>
+(Inizializzazione ristorante) ..> (Identificazione Utente) : <<include>>
+(Aggiungi prenotazione) ..> (Controllo Prenotazioni) : <<include>>
+(Aggiungi prenotazione) ..> (Visualizzazione menù) : <<include>>
+(Aggiungi prenotazione) ..> (Identificazione Utente) : <<include>>
+(Calcolo disponibilità menu) ..> (Visualizzazione menù) : <<include>>
+(Aggiungi prenotazione) ..> (Controllo rimanenze in magazzino) : <<include>>
+(Rifornimento magazzino) ..> (Lista della spesa) : <<include>>
+
+
+'note right of Gestore : Gestore del ristorante.
+
+@enduml

@@ -1,18 +1,91 @@
 @startuml
-
-package "Alimentari" #DDDDDD{
-Alimento <|-- Bevanda
-Alimento <|-- Extra
-Alimento <|-- Ingrediente
+skinparam groupInheritance 3
+'PACKAGE
+class Main
+package "Model" #DDDDDD{
+package "Alimentari"{}
+package "Attori" {}
+package "Produzione" {}
+}
+package "View" #DDDDDD{
+class Visualizzazione
+}
+package "Controller" #DDDDDD{
+class Creazione
+}
+package "Utility" #DDDDDD{
+class InputDati
+class MyMenu
+class LetturaFileXML
+class Costanti
+}
+package "Alimentari" #EEEEEE{
+class Alimento
+class Bevanda
+class Extra
+class Ingrediente
+}
+package "Attori" #EEEEEE{
+package "Gestore"{}
+package "AddettoPrenotazione"{}
+package "Magazziniere"{}
+class Tempo
+class Persona
+class Cliente
+}
+package "Gestore"{
+class Gestore
+class Ristorante
+}
+package "AddettoPrenotazione"{
+class AddettoPrenotazione
+class Prenotazione
+}
+package "Magazziniere"{
+class Magazziniere
+class Magazzino
 }
 
-package "Attori" #DDDDDD {
-Persona <|-left- Gestore
-Persona <|-right- Cliente
-Persona <|-- AddettoPrenotazione
-Persona <|-- Magazziniere
+package "Produzione" #EEEEEE {
+package "Menu"{}
+interface Prenotabile
+class Piatto
+class Ricetta
+}
+package "Menu" #DDDDDD {
+class Menu
+class MenuCarta
+class MenuTematico
 }
 
+'ASSOCIAZIONI
+Gestore <-down Ristorante
+Ristorante "1" <-- "1" AddettoPrenotazione
+Ristorante "1" <-- "1" Magazziniere
+Ristorante "1" <-- "1" Tempo
+AddettoPrenotazione "1" <--* "0..N" Prenotazione
+AddettoPrenotazione "1" <-- "1..N" Menu
+Prenotazione "1" <-- "1" Cliente
+Prenotazione "1" <-- "1..N" Prenotabile
+Prenotazione "1" <-- "1..N" Alimento
+Menu "1" <-- "1..N" Piatto
+Piatto "1" <-- "1" Ricetta
+Ricetta "1" <-- "1..N" Alimento
+Magazziniere "1" <-- "1" Magazzino
+Magazzino "1" <-- "1..N" Alimento
+
+'IMPAGINAZIONE
+"Model" --[hidden]right-> "Utility"
+"Model" --[hidden]right-> "Controller"
+"Attori" --[hidden]right-> Main
+"Utility" --[hidden]down-> "Controller"
+"Utility" --[hidden]down-> Main
+"Utility" --[hidden]down-> "View"
+"Controller" --[hidden]down> Main
+Cliente --[hidden]down-> "AddettoPrenotazione"
+"Produzione" --[hidden]up-> "Alimentari"
+
+'CLASSI
 abstract class Alimento {
 -nome : String
 -qta : float
@@ -29,19 +102,19 @@ abstract class Alimento {
 +setMisura(misura : String)
 }
 
-class Bevanda  {
+class Bevanda extends Alimento {
 -{static}CONS_PROCAPITE
 +Bevanda(nome : String, qta : float, misura : String, cons_procapite : float)
 +getConsProcapite() : float
 }
 
-class Extra {
+class Extra extends Alimento{
 -{static}CONS_PROCAPITE
 +Extra(nome : String, qta : float, misura : String, cons_procapite : float)
 +getConsProcapite() : float
 }
 
-class Ingrediente {
+class Ingrediente extends Alimento{
 +Ingrediente(nome : String, qta : float, misura : String)
 +Ingrediente()
 }
@@ -77,7 +150,7 @@ class MenuCarta extends Menu{
 +MenuCarta(piatti_menu : ArrayList<Piatto>)
 }
 
-class MenuTematico extends Menu{
+class MenuTematico extends Menu implements Prenotabile{
 -nome : String
 -lavoro_menu : float
 -disponibilità : ArrayList<LocalDate>
@@ -109,7 +182,7 @@ class Magazzino{
 
 }
 
-interface Prenotabile{
+interface Prenotabile #aliceblue ##[dotted]blue{
 getNome() : String
 getDisponibilita() : ArrayList<LocalDate>
 }
@@ -194,11 +267,11 @@ abstract class Persona  {
 +setNome(String nome)
 }
 
-class Cliente{
+class Cliente extends Persona{
 +Cliente(String nome)
 }
 
-class Gestore {
+class Gestore extends Persona {
 -ristorante : Ristorante
 -risOk() : boolean
 +Gestore(nome : String, ristorante : Ristorante)
@@ -207,7 +280,7 @@ class Gestore {
 +comunica (data_attuale : LocalDate) : String
 }
 
-class Magazziniere  {
+class Magazziniere extends Persona {
 -magazzino : Magazzino
 -lista_spesa : ArrayList<Alimento>
 -magOk() : boolean
@@ -222,7 +295,7 @@ class Magazziniere  {
 +calcolaPiattiPrenotazione(prenotazione_totale : Prenotazione) : HashMap<Piatto, Integer>
 }
 
-class AddettoPrenotazione {
+class AddettoPrenotazione extends Persona{
 -prenotazioni : ArrayList<Prenotazione>
 -menu : ArrayList<Prenotabile>
 +AddettoPrenotazione(nome : String, prenotazioni : ArrayList<Prenotazione>, menu : ArrayList<Prenotabile>)
@@ -245,4 +318,139 @@ class AddettoPrenotazione {
 -disponibilitaPiattiCorrette(menu_tematico : MenuTematico) : boolean
 }
 
+class MyMenu{
+-{static} CORNICE_ANGOLO_SX_SUP : String
+-{static} CORNICE_ANGOLO_DX_SUP : String
+-{static} CORNICE_ANGOLO_SX_INF : String
+-{static} CORNICE_ANGOLO_DX_INF : String
+-{static} CORNICE_CONTORNO_ORIZZ : String
+-{static} CORNICE_CONTORNO_VERT : String
+-{static} FRECCETTA : String
+-{static} VOCE_USCITA : String
+-{static} RICHIESTA_INSERIMENTO : String
+-titolo : String
+-voci : String[]
+-lunghezza_cornice_orizz : int
++MyMenu(titolo : String, voci : String[])
++scegliConUscita() : int
++scegliSenzaUscita() : int
++stampaMenuConUscita()
++stampaMenuSenzaUscita()
+-generaCorniceSenzaAngolo() : String
+-generaRigaCentrale() : String
+-generaVoce(voce : String) : String
+}
+class Visualizzazione{
+ +{static}stampaMenuDelGiorno(gestore : Gestore, data : LocalDate) : boolean
+ +{static}stampaScelte(scelte : HashMap<Prenotabile, Integer>)
+ +{static}mostraConsumoProcapite(alimenti : ArrayList<Alimento>)
+ +{static}mostraAlimenti(alimenti : ArrayList<Alimento>)
+ +{static}mostraCaricoLavoroPersona(gestore : Gestore)
+ +{static}mostraPostiDisponibili(gestore : Gestore)
+ +{static}mostraMenuTematici(menu : ArrayList<Prenotabile>)
+ +{static}mostraPiatti(menu : ArrayList<Prenotabile>)
+ +{static}mostraRicette(menu : ArrayList<Prenotabile>)
+ +{static}ripulisciConsole()
+ }
+class Creazione{
+ -{static}creaPrenotabile(nome : String) : Prenotabile
+ +{static}creaAlimento(tipo : String) : Alimento
+ +{static}creaMenuTematico(gestore : Gestore)
+ +{static}creaPiatto(gestore : Gestore)
+ +{static}creaMenuTestuale(funzione : String) : MyMenu
+ }
+
+class InputDati{
+-{static} ERRORE_FORMATO : String
+-{static} ERRORE_MINIMO : String
+-{static} ERRORE_STRINGA_VUOTA : String
+-{static} ERRORE_MASSIMO : String
+-{static} ERRORE_MINIMO_MASSIMO : String
+-{static} MESSAGGIO_AMMISSIBILI : String
+-{static} RISPOSTA_SI : char
+-{static} RISPOSTA_NO : char
++{static} creaScanner() : Scanner
++{static} leggiStringa(messaggio : String) : String
++{static} leggiStringaConSpazio(messaggio : String) : String
++{static} leggiStringaNonVuota(messaggio : String) : String
++{static} leggiChar(messaggio : String) : char
++{static} leggiUpperChar(messaggio : String, ammissibili : String) : char
++{static} leggiIntero(messaggio : String) : int
++{static} leggiInteroConMinimoMassimo(messaggio : String, min : int, max : int) : int
++{static} leggiInteroConMinimo(messaggio : String, minimo : int) : int
++{static} leggiIntero(messaggio : String, minimo : int, massimo : int) : int
++{static} leggiDouble(messaggio : String) : double
++{static} leggiDoubleConMinimo(messaggio : String, minimo : double) : double
++{static} yesOrNo(messaggio : String) : boolean
++{static} premerePerContinuare() : void
+}
+
+class Costanti{
+..Path..
++{static}FILE_RISTORANTE : String
+..Valori ristorante..
++{static}IMPREVISTI_CUCINA : float
++{static}ALIMENTI_SCARTATI : float
++{static}MINIMO_INGRED_PER_RICETTA : int
++{static}MINIMO_PIATTI_PER_MENU : int
+..Stringhe..
++{static}TEMPO: String
++{static}ATTORI : String
++{static}UTENTE : String
++{static}GESTORE: String
++{static}ADDETTO_PRENOTAZIONE: String
++{static}MAGAZZINIERE: String
++{static}RISTORANTE: String
++{static}MAGAZZINO: String
++{static}INGREDIENTE: String
++{static}EXTRA: String
++{static}BEVANDA: String
++{static}RICETTA: String
++{static}PIATTO: String
++{static}MENU_TEMATICO: String
++{static}PORTATA: String
++{static}NOME: String
++{static}QTA: String
++{static}MISURA: String
++{static}LAVORO_PERSONE: String
++{static}CONS_PROCAPITE: String
++{static}INIZIO: String
++{static}FINE: String
++{static}LAVORO_MENU: String
++{static}N_PORZIONI: String
++{static}LAVORO_PORZIONE: String
++{static}DISPONIBILITA: String
++{static}DISPONIBILITA_MENU: String
++{static}N_POSTI: String
++{static}AGGIUNT_MAGAZZINO: String
++{static}INS_LAVORO_PERSONA: String
++{static}INS_CONS_PROCAPITE: String
++{static}INS_DATA_INIZIO: String
++{static}INS_DATA_FINE: String
++{static}INS_DATA: String
++{static}INS_NOME: String
++{static}INS_QTA: String
++{static}INS_MISURA: String
++{static}INS_LAVORO : String
++{static}FUNZIONALITA: String
++{static}USCITA_MENU: String
++{static}END: String
++{static}INIZIALIZZAZIONE : String
++{static}UGUALE_ATTUALE : String
++{static}DATA_NON_VALIDA : String
++{static}GESTORE_NON_NULLO : String
++{static}M_SINGOLARE : String
++{static}F_SINGOLARE : String
++{static}M_PLURALE : String
++{static}F_PLURALE : String
++{static}INIZIO_FILE : String
++{static}FINE_FILE : String
++{static}LETTURA : String
++{static}SCRITTURA : String
++{static}ERRORE_INIZIALIZZAZIONE_READER : String
++{static}ERRORE_LETTURA_FILE : String
++{static}CORNICE_SUP : String
++{static}BENVENUTO : String
++{static}CORNICE_INF : String
+}
 @enduml
