@@ -1,17 +1,21 @@
 package ProgettoSE;
 //importa classi alimenti
 
-import ProgettoSE.Alimentari.Alimento;
+import ProgettoSE.Model.Alimentari.Alimento;
 //importa classi attori
-import ProgettoSE.Attori.Cliente;
-import ProgettoSE.Attori.Gestore;
+import ProgettoSE.Model.Attori.AddettoPrenotazione.Prenotazione;
+import ProgettoSE.Model.Attori.Cliente;
+import ProgettoSE.Model.Attori.Gestore.Gestore;
 //importa classe MenuTematico
 //importa classi utilità
-import ProgettoSE.Utilità.Costanti;
-import ProgettoSE.Utilità.Creazione;
-import ProgettoSE.Utilità.Visualizzazione;
-import ProgettoSE.mylib.MyMenu;
-import ProgettoSE.mylib.InputDati;
+import ProgettoSE.Model.Attori.Magazziniere.Magazzino;
+import ProgettoSE.Model.Produzione.Prenotabile;
+import ProgettoSE.Model.Attori.Tempo;
+import ProgettoSE.Utility.Costanti;
+import ProgettoSE.Controller.Creazione;
+import ProgettoSE.View.Visualizzazione;
+import ProgettoSE.Utility.MyMenu;
+import ProgettoSE.Utility.InputDati;
 //importa classi per gestione input da tastiera
 import java.io.IOException;
 //importa classi per utilizzo costrutti
