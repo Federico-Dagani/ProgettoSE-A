@@ -1,5 +1,7 @@
 @startuml
-skinparam groupInheritance 3
+skinparam groupInheritance 2
+hide fields
+hide methods
 'PACKAGE
 class Main
 package "Model" #DDDDDD{
@@ -19,13 +21,13 @@ class MyMenu
 class LetturaFileXML
 class Costanti
 }
-package "Alimentari" #EEEEEE{
+package "Alimentari"  #9DE3F6{
 class Alimento
 class Bevanda
 class Extra
 class Ingrediente
 }
-package "Attori" #EEEEEE{
+package "Attori" #ADC4D7{
 package "Gestore"{}
 package "AddettoPrenotazione"{}
 package "Magazziniere"{}
@@ -33,26 +35,26 @@ class Tempo
 class Persona
 class Cliente
 }
-package "Gestore"{
+package "Gestore" #5B89AE{
 class Gestore
 class Ristorante
 }
-package "AddettoPrenotazione"{
+package "AddettoPrenotazione" #CB8E66{
 class AddettoPrenotazione
 class Prenotazione
 }
-package "Magazziniere"{
+package "Magazziniere" #D3D2C7{
 class Magazziniere
 class Magazzino
 }
 
-package "Produzione" #EEEEEE {
+package "Produzione" #D3F4FB {
 package "Menu"{}
 interface Prenotabile
 class Piatto
 class Ricetta
 }
-package "Menu" #DDDDDD {
+package "Menu"#CAB29F {
 class Menu
 class MenuCarta
 class MenuTematico
@@ -73,6 +75,10 @@ Piatto "1" <-- "1" Ricetta
 Ricetta "1" <-- "1..N" Alimento
 Magazziniere "1" <-- "1" Magazzino
 Magazzino "1" <-- "1..N" Alimento
+Main "use" ..down> "Controller"
+Main "use" ..left> "View"
+Main "use" ..right> "Utility"
+Main "use" ..up> "Model"
 
 'IMPAGINAZIONE
 "Model" --[hidden]right-> "Utility"
@@ -83,7 +89,7 @@ Magazzino "1" <-- "1..N" Alimento
 "Utility" --[hidden]down-> "View"
 "Controller" --[hidden]down> Main
 Cliente --[hidden]down-> "AddettoPrenotazione"
-"Produzione" --[hidden]up-> "Alimentari"
+Prenotabile --[hidden]up-> "Alimentari" #9DE3F6
 
 'CLASSI
 abstract class Alimento {
@@ -260,7 +266,7 @@ class Tempo{
 +{static}parsaData(data : String) : LocalDate
 }
 
-abstract class Persona  {
+abstract class Persona {
 -nome : String
 +Persona(String nome)
 +getNome() : String
@@ -271,7 +277,7 @@ class Cliente extends Persona{
 +Cliente(String nome)
 }
 
-class Gestore extends Persona {
+class Gestore extends Persona{
 -ristorante : Ristorante
 -risOk() : boolean
 +Gestore(nome : String, ristorante : Ristorante)
@@ -280,7 +286,7 @@ class Gestore extends Persona {
 +comunica (data_attuale : LocalDate) : String
 }
 
-class Magazziniere extends Persona {
+class Magazziniere extends Persona{
 -magazzino : Magazzino
 -lista_spesa : ArrayList<Alimento>
 -magOk() : boolean
@@ -453,4 +459,5 @@ class Costanti{
 +{static}BENVENUTO : String
 +{static}CORNICE_INF : String
 }
+
 @enduml
